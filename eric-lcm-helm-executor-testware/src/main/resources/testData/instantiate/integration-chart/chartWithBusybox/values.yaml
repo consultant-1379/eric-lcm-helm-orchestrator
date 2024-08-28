@@ -1,0 +1,40 @@
+# Default values for busybox-example.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# As default registry path, the global registry path will be used.
+global:
+  # Secret must be manually created in the namespace, no default value
+  # pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  timezone: UTC
+
+image:
+  repository: dockerhub-ericsson-remote/busybox
+  tag: 1.32.0
+  pullPolicy: IfNotPresent
+
+productInfo:
+  # R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+  # To automate it when packaging the helm chart rstate can be generated
+  # and below value replaced with correct R-State
+  rstate: R2A
+
+busybox:
+  replicaCount: 1
+probesConfig:
+  readinessProbe:
+    delayBeforeReady: 10 #this value is used in a wait command before creating file which is used to determine readiness of the probe
+    periodSeconds: 5
+    initialDelaySeconds: 5
+  startupProbe:
+    failureThreshold: 30
+    periodSeconds: 10
+
+updateStrategy:
+  # type can be OnDelete or RollingUpdate
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1

@@ -1,0 +1,50 @@
+documents:
+  # document name
+  - name: user-guide
+    # file names of files to be packaged in the document
+    files:
+      - user_guide/user_guide_template.md
+      - user_guide/eric-lcm-executor_architecture_overview.png
+  # document name
+  - name: service-deployment-guide
+    # file names of files to be packaged in the document
+    files:
+      - service_deployment_guide/service_deployment_guide_template.md
+      - service_deployment_guide/eric-lcm-executor_deployment_overview.png
+  # document name
+  - name: app-dev-guide
+    # file names of files to be packaged in the document
+    files:
+      - developers_guide/developers_guide_template.md
+      - developers_guide/eric-lcm-executor_clone_project.png
+      - developers_guide/eric-lcm-executor_maven_build.png
+      - developers_guide/eric-lcm-executor_postman_values.png
+      - developers_guide/eric-lcm-executor_project_configuration.png
+      - developers_guide/eric-lcm-executor_instantiate_operation_example.png
+      - developers_guide/eric-lcm-executor_instantiate_result_example.png
+      - developers_guide/eric-lcm-executor_instantiate_via_hfb_example.png
+      - developers_guide/eric-lcm-executor_instantiate_via_hfb_result_example.png
+      - developers_guide/eric-lcm-executor_k8s-deployment-example.png
+      - developers_guide/eric-lcm-executor_terminate_example.png
+      - developers_guide/eric-lcm-executor_terminate_operation_example.png
+      - developers_guide/eric-lcm-executor_terminate_result_example.png
+      - developers_guide/eric-lcm-executor_update_example.png
+      - developers_guide/eric-lcm-executor_update_after_example.png
+      - developers_guide/eric-lcm-executor_k8s-deployment-example.png
+      - developers_guide/eric-lcm-executor_update_via_hfb_after_example.png
+      - developers_guide/eric-lcm-executor_k8s-deployment-update-example.png
+      - developers_guide/eric-lcm-executor_delete_example.png
+      - developers_guide/eric-lcm-executor_reinstantiate_example.png
+      - developers_guide/eric-lcm-executor_rollback_example.png
+  # characteristics report
+  - name: characteristics-report
+    files:
+      - characteristics_report.md
+  # pri
+  - name: pri
+    files:
+      - pri/pri.html
+  # test report
+  - name: test-report
+    files:
+      - test_report/TestReport.docx

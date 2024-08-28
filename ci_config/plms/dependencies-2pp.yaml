@@ -1,0 +1,9 @@
+modelVersion: '3.0'
+2pp_dependencies:
+  - name: Common Base OS Base Image
+    version: 6.11.0-12
+    evms:
+      register: 'yes'
+    abc_number: CXC 201 2032
+dependencies: []
+

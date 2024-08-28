@@ -1,0 +1,92 @@
+global:
+  bamfaultmappings: eric-bss-bam-integration-faultmappings
+  timezone: UTC
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: "BAM"
+          swltId: "BAMTargetId"
+          customerId: "123456789"
+  security:
+    tls:
+      enabled: false
+  iamClientSecretEnabled: false
+  networkPolicy:
+    enabled: false
+  registry:
+    imagePullPolicy: Always
+    pullSecret: regcred
+    url: armdocker.rnd.ericsson.se
+  pullSecret: regcred
+  crd:
+    enabled: true
+    namespace: eric-crd
+  default:
+    timeout: 900
+    wait: true
+  app:
+    enabled: true
+    namespace: cnam-helmfiles-stage
+  extraEnv:
+    minioAccessKey: "somestrongpassword"
+    minioSecretAccessKey: "somestrongpassword"
+    iamUsername: "keycloak"
+    iamPassword: "keycloak1"
+    ldapFederationAdminSecret: "keycloak"
+    dbCustomUser: "customuser"
+    dbCustomPassword: "custompassword"
+    dbLcmUser: "dblcmuser"
+    dbLcmPassword: "dblcmpassword"
+    dbSuperPassword: "superpassword"
+    dbMetricsPassword: "metricpassword"
+    dbReplicaUser: "replicuser"
+    dbReplicaPassword: "replicpassword"
+  dockercreds:
+    secretname: specifysecretname
+    registry: specifyservername
+    username: specifyusernamename
+    password: specifyusernpassword
+  adpBR:
+    brLabelKey: adpbrlabelkey
+
+storageClass: &storageClass "network-block"
+
+eric-ctrl-bro:
+  enabled: true
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: *storageClass
+      size: 15Gi
+  bro:
+    enableNotifications: false
+    enableAgentDiscovery: false
+  logging:
+    rootLevel: debug
+
+eric-sec-key-management:
+  enabled: true
+  replicas: 2
+  updateStrategy:
+    type: RollingUpdate
+  imageCredentials:
+    registry:
+      imagePullPolicy: IfNotPresent
+  persistence:
+    type: etcd
+    etcd:
+      tls:
+        enabled: false
+  service:
+    tls:
+      enabled: false
+  resources:
+    vault:
+      requests:
+        cpu: "100m"
+        memory: "400Mi"
+      limits:
+        cpu: "300m"
+        memory: "1200Mi"
+
+eric-data-search-engine-curator:
+  enabled: true

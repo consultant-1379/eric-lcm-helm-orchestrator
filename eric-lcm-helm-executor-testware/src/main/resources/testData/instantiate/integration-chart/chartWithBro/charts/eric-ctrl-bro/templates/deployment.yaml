@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-test-bro
+  labels:
+    app: second-test-bro
+spec:
+  strategy:
+    rollingUpdate:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: second-test-bro
+  template:
+    metadata:
+      labels:
+        app: second-test-bro
+    spec:
+      {{ if .Values.global.pullSecret -}}
+      imagePullSecrets:
+        - name: {{ .Values.global.pullSecret }}
+      {{ end -}}
+      containers:
+        - name: second-test-bro
+          image: {{ .Values.global.registry.url | default "armdocker.rnd.ericsson.se" }}/proj-ra-cnam/sample-dasha:1
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP

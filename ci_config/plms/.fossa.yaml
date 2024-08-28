@@ -1,0 +1,14 @@
+version: 3
+server: https://scasfossa.internal.ericsson.com/
+project:
+  id: eric-lcm-helm-orchestrator
+  fetcher: custom
+  team: ADP-CNAM
+  name: Helmfile executor
+revision:
+  branch: master
+targets:
+  only:
+    - type: maven
+      path: .
+

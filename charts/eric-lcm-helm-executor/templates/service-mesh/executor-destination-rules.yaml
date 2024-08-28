@@ -1,0 +1,41 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+{{- if and ( eq (include "eric-lcm-helm-executor.tls-enable" .) "true" ) (eq (include "eric-lcm-helm-executor.service-mesh-enabled" .) "true") }}
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}-destination-rule
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+  annotations:
+  {{- include "eric-lcm-helm-executor.annotations" .| nindent 4 }}
+spec:
+  exportTo:
+    - "."
+  host: {{ template "eric-lcm-helm-executor.name" . }}
+  trafficPolicy:
+    connectionPool:
+      http:
+        http1MaxPendingRequests: {{ index .Values "serviceMesh" "destinationRule-config" "connectionPool" "http1MaxPendingRequests" }}
+        http2MaxRequests: {{ index .Values "serviceMesh" "destinationRule-config" "connectionPool" "http2MaxRequests" }}
+        maxRequestsPerConnection: {{ index .Values "serviceMesh" "destinationRule-config" "connectionPool" "maxRequestsPerConnection" }}
+      tcp:
+        maxConnections: {{ index .Values "serviceMesh" "destinationRule-config" "connectionPool" "maxConnections" }}
+    outlierDetection:
+      baseEjectionTime: {{ index .Values "serviceMesh" "destinationRule-config" "outlierDetection" "baseEjectionTime" }}
+      consecutive5xxErrors: {{ index .Values "serviceMesh" "destinationRule-config" "outlierDetection" "consecutive5xxErrors" }}
+      interval: {{ index .Values "serviceMesh" "destinationRule-config" "outlierDetection" "interval" }}
+      maxEjectionPercent: {{ index .Values "serviceMesh" "destinationRule-config" "outlierDetection" "maxEjectionPercent" }}
+{{- end }}

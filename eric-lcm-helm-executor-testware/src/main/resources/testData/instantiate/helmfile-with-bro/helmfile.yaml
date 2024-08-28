@@ -1,0 +1,14 @@
+helmDefaults:
+  wait: {{ .Values | get "global.default.wait" true }}
+  timeout: {{ .Values | get "global.default.timeout" }}
+  createNamespace: true
+
+---
+
+releases:
+  - name: eric-ctrl-bro
+    chart: ./values-templates/eric-ctrl-bro
+    namespace: {{ .Values | get "global.app.namespace" }}
+    installed: {{ and ( .Values | get "global.app.enabled") ( .Values | get "eric-ctrl-bro.enabled") }}
+    values:
+      - "./values-templates/eric-ctrl-bro.yaml.gotmpl"

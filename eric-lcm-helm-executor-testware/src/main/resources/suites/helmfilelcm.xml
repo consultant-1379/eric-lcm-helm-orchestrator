@@ -1,0 +1,33 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~ COPYRIGHT Ericsson 2024
+ ~
+ ~
+ ~
+ ~ The copyright to the computer program(s) herein is the property of
+ ~
+ ~ Ericsson Inc. The programs may be used and/or copied only with written
+ ~
+ ~ permission from Ericsson Inc. or in accordance with the terms and
+ ~
+ ~ conditions stipulated in the agreement/contract under which the
+ ~
+ ~ program(s) have been supplied.
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<suite name="CN AM TestNg Suite" verbose="10" configfailurepolicy="continue" preserve-order="true">
+
+  <listeners>
+    <listener class-name="com.ericsson.oss.mgmt.lcm.acceptance.listeners.TestNGListener"/>
+  </listeners>
+
+  <test name="Workload Instance tests" parallel="none">
+    <classes>
+      <class name="com.ericsson.oss.mgmt.lcm.acceptance.tests.ClusterConnectionInfoLcmTest">
+      </class>
+      <class name="com.ericsson.oss.mgmt.lcm.acceptance.tests.HelmSourceLCMTest">
+      </class>
+      <class name="com.ericsson.oss.mgmt.lcm.acceptance.tests.BackupAndRestoreTest">
+      </class>
+    </classes>
+  </test>
+</suite>

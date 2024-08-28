@@ -1,0 +1,28 @@
+# Info:
+#     Denotes listing of dependencies, which can't be automatically discovered
+#     or identified but are to be stubbed and included in the analysis.
+#
+# More details: https://github.com/fossas/fossa-cli/blob/master/docs/references/files/fossa-deps.md
+
+referenced-dependencies:
+  - name: https://github.com/helm/helm
+    type: git
+    version: v3.14.4
+  - name: https://github.com/helmfile/helmfile
+    type: git
+    version: 0.163.1
+  - name: https://github.com/databus23/helm-diff
+    type: git
+    version: v3.9.5
+  - name: https://github.com/aslafy-z/helm-git
+    type: git
+    version: 0.11.1
+  - name: https://github.com/rvoicilas/inotify-tools
+    type: git
+    version: 3.22.1.0
+  - name: postgresql14
+    type: rpm-generic
+    arch: x86_64
+    os: sles
+    osVersion: 15SP4
+    version: 14.11-150200.5.39.1

@@ -1,0 +1,27 @@
+version: indevelopment
+documents:
+  - name: 'Service User Guide'
+    filepath: ./.bob/build/doc/html/user-guide.zip
+    default: true
+  - name: "Application Developers Guide"
+    filepath: ./.bob/build/doc/html/app-dev-guide.zip
+  - name: "Service Deployment Guide"
+    filepath: ./.bob/build/doc/html/service-deployment-guide.zip
+  - name: 'API Documentation'
+    external-link: "https://apiguild.internal.ericsson.com/catalog/#api-portal/api-finder/api-viewer?id=0a922707-e81e-4e10-a66a-db4d22c64033&version=1.3.0"
+  - name: "Inner Source README"
+    external-link: "https://gerrit-gamma.gic.ericsson.se/plugins/gitiles/OSS/com.ericsson.orchestration.mgmt/eric-lcm-helm-orchestrator/+/refs/heads/master/README.md"
+  - name: "Contributing Guideline"
+    external-link: "https://gerrit-gamma.gic.ericsson.se/plugins/gitiles/OSS/com.ericsson.orchestration.mgmt/eric-lcm-helm-orchestrator/+/refs/heads/master/CONTRIBUTING.md"
+  - name: "Test Report"
+    external-link:
+      Document_id: "152 83-APR"
+  - name: "Test Specification"
+    external-link:
+      Document_id: "152 41-APR"
+  - name: 'Characteristics Summary Report'
+    filepath: ./.bob/build/doc/html/characteristics-report.zip
+  - name: "Product Revision Information (PRI)"
+    filepath: ./.bob/build/doc/html/pri.zip
+  - name: "Software Vendor List (SVL)"
+    filepath: ./.bob/build/doc-svl/svl.zip

@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "busybox-simple-chart.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "busybox-simple-chart.name" . }}
+    app.kubernetes.io/version: {{ include "busybox-simple-chart.version" . }}
+    helm.sh/chart: {{ template "busybox-simple-chart.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+{{- include "busybox-simple-chart.product-info" . | indent 4 }}
+spec:
+  replicas: {{ .Values.busybox.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "busybox-simple-chart.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  strategy:
+    type: {{ .Values.updateStrategy.type }}
+    {{- if and (eq .Values.updateStrategy.type "RollingUpdate") .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+{{- if .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+{{- end }}
+{{- if .Values.updateStrategy.rollingUpdate.maxSurge }}
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+{{- end }}
+    {{- end }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "busybox-simple-chart.name" . }}
+        app.kubernetes.io/version: {{ include "busybox-simple-chart.version" . }}
+        helm.sh/chart: {{ template "busybox-simple-chart.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+      annotations:
+{{- include "busybox-simple-chart.product-info" . | indent 8 }}
+    spec:
+      {{- if .Values.global.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.global.pullSecret }}
+      {{- end }}
+      containers:
+      - image: "{{ .Values.global.registry.url}}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: waiter
+        env:
+          - name: SECRET_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: login
+          - name: SECRET_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: password
+        args:
+          - /bin/sh
+          - -c
+          - date; echo -e "Before Ready Status"; sleep {{ .Values.probesConfig.readinessProbe.delayBeforeReady }}; date; touch /tmp/iamready; echo -e "\nAfter Ready Status"; sleep 360
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

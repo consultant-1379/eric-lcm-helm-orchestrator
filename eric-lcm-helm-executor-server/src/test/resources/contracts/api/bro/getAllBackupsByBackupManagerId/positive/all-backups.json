@@ -1,0 +1,58 @@
+{
+  "_links": {
+    "first": {
+      "href": "https://host/cnwlcm/v1/backup_and_restore/backupManagerId?page=1"
+    },
+    "prev": {
+      "href": null
+    },
+    "self": {
+      "href": "https://host/cnwlcm/v1/backup_and_restore/backupManagerId?page=1"
+    },
+    "next": {
+      "href": null
+    },
+    "last": {
+      "href": "https://host/cnwlcm/v1/backup_and_restore/backupManagerId?page=1"
+    }
+  },
+  "_page": {
+    "number": 1,
+    "size": 15,
+    "totalPages": 1,
+    "totalElements": 5
+  },
+  "content":
+  [
+    {
+      "id": "myBackupFirst",
+      "name": "myBackupFirst",
+      "creationTime": "2022-03-17T11:07:52.592902Z",
+      "status": "COMPLETE"
+    },
+    {
+      "id": "myBackupSecond",
+      "name": "myBackupSecond",
+      "creationTime": "2022-03-17T11:07:52.592902Z",
+      "status": "COMPLETE"
+    },
+    {
+      "id": "myBackupThird",
+      "name": "myBackupThird",
+      "creationTime": "2022-03-17T11:07:52.592902Z",
+      "status": "COMPLETE"
+    },
+    {
+      "id": "myBackupFourth",
+      "name": "myBackupFourth",
+      "creationTime": "2022-03-17T11:07:52.592902Z",
+      "status": "COMPLETE"
+    },
+    {
+      "id": "myBackupFifth",
+      "name": "myBackupFifth",
+      "creationTime": "2022-03-17T11:07:52.592902Z",
+      "status": "COMPLETE"
+    }
+  ]
+}

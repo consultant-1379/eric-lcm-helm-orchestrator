@@ -1,0 +1,5 @@
+{
+  "workloadInstanceName": "successfulpost",
+  "namespace": "tom",
+  "timeout": 3
+}

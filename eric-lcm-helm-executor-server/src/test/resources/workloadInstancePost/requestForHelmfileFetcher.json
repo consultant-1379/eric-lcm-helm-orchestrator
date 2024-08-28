@@ -1,0 +1,6 @@
+{
+  "url": "https://vnfm.ccd-c16a027-iccr.athtem.eei.ericsson.se/vnfm/onboarding/api/vnfpkgm/v1/vnf_packages/8ef3c290-cf89-49c5-9f59-333e5acf68e8/helmfile",
+  "workloadInstanceName": "successfulpost",
+  "namespace": "tom",
+  "timeout": 3
+}

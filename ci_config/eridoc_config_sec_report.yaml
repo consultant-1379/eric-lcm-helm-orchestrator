@@ -1,0 +1,28 @@
+repository: eridoca
+folderId: 0b004cffca7e4892
+documents:
+  - title: "Defensics Scan Report for {servicename} {version}"
+    file: "./va_reports/defensics-report.zip"
+    decimal-class: "152 83"
+    class-prefix: "1"
+    individual-number: "APR 201 514/0"
+    lang: "en"
+    format: "zip"
+    strategy: "ordinal"
+    eri_document_type: "Test Report"
+    eri_audience: "Workgroup Members - Searchable"
+    eri_conf_class: "Ericsson Confidential"
+    eri_sub_category: "Product Security"
+
+  - title: "CIS-CAT Scan Report for {servicename} {version}"
+    file: "./va_reports/ciscat-reports.zip"
+    decimal-class: "152 83"
+    class-prefix: "2"
+    individual-number: "APR 201 514/0"
+    lang: "en"
+    format: "zip"
+    strategy: "ordinal"
+    eri_document_type: "Test Report"
+    eri_audience: "Workgroup Members - Searchable"
+    eri_conf_class: "Ericsson Confidential"
+    eri_sub_category: "Product Security"

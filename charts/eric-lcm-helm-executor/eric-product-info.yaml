@@ -1,0 +1,17 @@
+productName: "OSS CN AM LCM"
+productNumber: "CXD 101 181"
+images:
+  eric-lcm-helm-executor:
+    productName: "OSS CN AM LCM"
+    productNumber: "CXU 101 1119"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "REPO_PATH"
+    name: "eric-lcm-helm-executor"
+    tag: "VERSION"
+  initContainer:
+    productName: "OSS CN AM LCM"
+    productNumber: "CXU 101 1169"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "REPO_PATH"
+    name: "eric-lcm-helm-executor-init"
+    tag: "VERSION"

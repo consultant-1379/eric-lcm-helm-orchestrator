@@ -1,0 +1,9 @@
+tags:
+  - armdocker.rnd.ericsson.se/proj-adp-eric-ctrl-bro-drop/eric-ctrl-bro:5.0.0-9
+  - armdocker.rnd.ericsson.se/proj-common-assets-cd/monitoring/pm/eric-pm-server:10.18.0-47
+  - armdocker.rnd.ericsson.se/proj-common-assets-cd/monitoring/pm/eric-pm-configmap-reload:10.18.0-47
+  - armdocker.rnd.ericsson.se/proj-common-assets-cd/monitoring/pm/eric-pm-exporter:10.18.0-47
+  - armdocker.rnd.ericsson.se/proj-common-assets-cd/monitoring/pm/eric-pm-initcontainer:10.18.0-47
+  - armdocker.rnd.ericsson.se/proj-common-assets-cd/monitoring/pm/eric-pm-hooklauncher:10.18.0-47
+  - armdocker.rnd.ericsson.se/proj-ra-cnam/sample-dasha:1
+  - armdocker.rnd.ericsson.se/dockerhub-ericsson-remote/busybox:1.32.0

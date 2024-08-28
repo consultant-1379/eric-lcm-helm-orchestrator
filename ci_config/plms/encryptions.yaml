@@ -1,0 +1,22 @@
+modelVersion: 2.0
+uses_encryption:
+  - product_number: CXC 201 2032
+    encryptions:
+      - usage: "Executor supports encrypt traffic between depend components and for mTLS"
+        purpose: "Data confidentiality, OAM only"
+        protocols:
+          - protocol: TLS 1.3
+            usage: "Traffic data termination and transmission. Mutual TLS"
+            standard: "IETF"
+          - protocol: TLS 1.2
+            usage: "Traffic data termination and transmission. Mutual TLS"
+            standard: "IETF"
+        crypto_algorithms:
+          - name: ECDHE
+          - name: ECDSA
+          - name: RSA
+          - name: AES
+            key_length: 256
+            encryption_mode: GCM
+          - name: SHA
+            key_length: 384

@@ -1,0 +1,2706 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+openapi: 3.0.3
+info:
+  version: 1.3.0
+  title: Helmfile Executor
+  description:
+    "<p>This service will accept Helmfile.tgz files and apply them to a target cluster.
+    The result is one or more Helm releases installed on the cluster using one or more namespaces, in parallel/sequential
+    groups.</p>
+    <p>Helmfile leverages the helm-diff plugin to find out what Helm releases need to be updated and delegates the execution
+    to Helm itself.</p>
+    <p>This service will also accept integration charts for those who haven't migrated to Helmfile yet to support legacy.</p>"
+
+servers:
+  - url: /cnwlcm/v1
+
+components:
+  schemas:
+    WorkloadInstanceDto:
+      type: object
+      description: WorkloadInstanceDto describes the workload instance parameters and mostly used as response. Can be returned after instantiate, rollback, update etc
+      properties:
+        workloadInstanceId:
+          type: string
+          description: Identifier of the workloadInstance
+        workloadInstanceName:
+          type: string
+          description: Name of the workloadInstance
+        namespace:
+          type: string
+          description: Namespace where workloadInstance is installed.
+        crdNamespace:
+          type: string
+          description: Namespace where CRD charts are installed.
+        cluster:
+          type: string
+          description: Cluster name where the workloadInstance is instantiated
+        helmSourceVersions:
+          type: array
+          items:
+            type: string
+          description: Identifies versions of helmSources used for lifecycle operations.
+        version:
+          type: integer
+          description: Current version of WorkloadInstance
+        additionalParameters:
+          type: object
+          description:
+            This type represents a list of key-value pairs. The order of
+            the pairs in the list is not significant. In JSON, a set of
+            key- value pairs is represented as an object. It shall comply
+            with the provisions defined in clause 4 of IETF RFC 7159.
+          additionalProperties:
+            type: object
+
+    WorkloadInstanceVersionDto:
+      type: object
+      description: WorkloadInstanceVersionDto describes the versions of helmSource and values file of particular version of
+        workloadInstance and used as response.
+      properties:
+        id:
+          type: string
+          description: Identifier of the workloadInstanceVersion
+        version:
+          type: integer
+          description: Version of the workloadInstance
+        helmSourceVersion:
+          type: string
+          description: Version of the helmSource used for this version of workloadInstance
+        valuesVersion:
+          type: string
+          description: Id of values file used for this version of workloadInstance
+
+    WorkloadInstancePostRequestDto:
+      type: object
+      description: WorkloadInstancePostRequestDto is a request, where user set parameters to describe workload instance.
+      required:
+        - workloadInstanceName
+        - namespace
+      properties:
+        workloadInstanceName:
+          type: string
+          description: Name of the workloadInstance. This value must be unique for each workloadInstance
+        namespace:
+          type: string
+          description: Namespace where workloadInstance will be installed.
+        crdNamespace:
+          type: string
+          description: Namespace where CRD charts will be installed.
+        cluster:
+          type: string
+          description: Cluster name where the workloadInstance will be instantiated
+        timeout:
+          type: integer
+        additionalParameters:
+          type: object
+          description:
+            This type represents a list of key-value pairs. The order of
+            the pairs in the list is not significant. In JSON, a set of
+            key- value pairs is represented as an object. It shall comply
+            with the provisions defined in clause 4 of IETF RFC 7159.
+          additionalProperties:
+            type: object
+
+    WorkloadInstanceOperationPostRequestDto:
+      type: object
+      description: WorkloadInstanceOperationPostRequestDto is the object used for terminate workloadInstance
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: Operation type. Can be only "terminate".
+        deleteNamespace:
+          type: boolean
+          description: The flag to specify if namespace must be deleted after terminate is done
+
+    WorkloadInstancePutRequestDto:
+      type: object
+      description: WorkloadInstancePutRequestDto is the object used for update workloadInstance
+      properties:
+        additionalParameters:
+          type: object
+          description:
+            This type represents a list of key-value pairs. The order of
+            the pairs in the list is not significant. In JSON, a set of
+            key- value pairs is represented as an object. It shall comply
+            with the provisions defined in clause 4 of IETF RFC 7159.
+          additionalProperties:
+            type: object
+        timeout:
+          type: integer
+
+    WorkloadInstanceOperationPutRequestDto:
+      type: object
+      description: WorkloadInstanceOperationPutRequestDto is the object used for manual rollback workloadInstance
+      properties:
+        version:
+          type: integer
+          description: The version of helmSource to which you want to rollback the workloadInstance
+
+    WorkloadInstanceWithChartsRequestDto:
+      type: object
+      description: WorkloadInstanceWithChartsRequestDto is a request, where user set parameters to describe workload instance.
+      required:
+        - workloadInstanceName
+        - namespace
+        - repository
+        - charts
+      properties:
+        workloadInstanceName:
+          type: string
+          description: Name of the workloadInstance. This value must be unique for each workloadInstance
+        namespace:
+          type: string
+          description: Namespace where workloadInstance will be installed.
+        crdNamespace:
+          type: string
+          description: Namespace where CRD charts will be installed.
+        cluster:
+          type: string
+          description: Cluster name where the workloadInstance will be instantiated
+        timeout:
+          type: integer
+        repository:
+          type: string
+          description: The link for the repository from where charts will be pulled
+        charts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChartDto'
+          description: The list of charts, can't be empty
+        additionalParameters:
+          type: object
+          description:
+            This type represents a list of key-value pairs. The order of
+            the pairs in the list is not significant. In JSON, a set of
+            key- value pairs is represented as an object. It shall comply
+            with the provisions defined in clause 4 of IETF RFC 7159.
+          additionalProperties:
+            type: object
+
+    WorkloadInstanceWithChartsPutRequestDto:
+      type: object
+      description: WorkloadInstanceWithChartsPutRequestDto is a request, where user set parameters to update workload instance.
+      properties:
+        repository:
+          type: string
+          description: The link for the repository from where charts will be pulled
+        charts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChartDto'
+          description: The list of charts, can't be empty
+        additionalParameters:
+          type: object
+          description:
+            This type represents a list of key-value pairs. The order of
+            the pairs in the list is not significant. In JSON, a set of
+            key- value pairs is represented as an object. It shall comply
+            with the provisions defined in clause 4 of IETF RFC 7159.
+          additionalProperties:
+            type: object
+        timeout:
+          type: integer
+
+    ChartDto:
+      type: object
+      description: ChartDto is a dto created to describe chart.
+      required:
+        - name
+        - crd
+        - version
+      properties:
+        name:
+          type: string
+          description: Name of the chart. This value must be unique for each chart
+        version:
+          type: string
+          description: Version of the chart, in case of abcense will be used the latest.
+        crd:
+          type: boolean
+          description: The flag to point that chart is CRD or not.
+        order:
+          type: integer
+          description:
+            The order in which chart will be deployed. The orders for CRDs and non-CRDs are independent,
+            CRD charts will be processed first and in their internal order. In case of absence of order -
+            natural order will be used. Charts with the same values in this field are acceptable In both
+            cases you need to spread rule for every chart. If some charts have order but other don't the
+            error will be thrown.
+
+    PagedWorkloadInstanceDto:
+      description: Paged response payload for workload instances
+      type: object
+      required:
+        - _links
+        - _page
+        - content
+      properties:
+        _links:
+          description: Links to first, previous, self, next, last pages of details of workload instances
+          type: object
+          $ref: '#/components/schemas/PaginationLinks'
+        _page:
+          description: Page information of result set.
+          type: object
+          $ref: '#/components/schemas/PaginationInfo'
+        content:
+          description: Array of workload instances
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/WorkloadInstanceDto'
+
+    PagedWorkloadInstanceVersionDto:
+      description: Paged response payload for versions of  workload instance
+      type: object
+      required:
+        - _links
+        - _page
+        - content
+      properties:
+        _links:
+          description: Links to first, previous, self, next, last pages of details of versions
+          type: object
+          $ref: '#/components/schemas/PaginationLinks'
+        _page:
+          description: Page information of result set.
+          type: object
+          $ref: '#/components/schemas/PaginationInfo'
+        content:
+          description: Array of workload instances
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkloadInstanceVersionDto'
+
+    OperationDto:
+      type: object
+      description: OperationDto describes the state of the lifecycle operations performed for workload instance.
+      properties:
+        operationId:
+          type: string
+          description: Identifier of the operation
+        workloadInstanceId:
+          type: string
+          description: Identifier of the workloadInstance
+        state:
+          type: string
+          description:
+            Describes the state of performed operation. The state could be
+            COMPLETED - operation finished successfully
+            PROCESSING - operation is executing, not finished yet
+            FAILED - operation was not successful. The problem might be with release list fetching (only in helmfile case) or in case of errors in code
+        type:
+          type: string
+          description: Type of operation.
+        startTime:
+          type: string
+          description: Time when operation was started.
+
+    PaginationLinks:
+      description: Links to first, previous, self, next, last pages of paginated results
+      type: object
+      required:
+        - self
+      properties:
+        first:
+          description: Link to first page
+          type: object
+          $ref: '#/components/schemas/URILink'
+        prev:
+          description: Link to previous page
+          type: object
+          $ref: '#/components/schemas/URILink'
+        self:
+          description: Link to current page
+          type: object
+          $ref: '#/components/schemas/URILink'
+        next:
+          description: Link to next page
+          type: object
+          $ref: '#/components/schemas/URILink'
+        last:
+          description: Link to last page
+          type: object
+          $ref: '#/components/schemas/URILink'
+
+    PaginationInfo:
+      description: Page information of result set.
+      type: object
+      required:
+        - number
+        - size
+        - totalPages
+        - totalElements
+      properties:
+        number:
+          description: Number of the current page
+          type: integer
+        size:
+          description: Number of results per page
+          type: integer
+        totalPages:
+          description: Total number of pages
+          type: integer
+        totalElements:
+          description: Total number of results
+          type: integer
+
+    PagedOperationDto:
+      description: Paged response payload for operations
+      type: object
+      required:
+        - _links
+        - _page
+        - content
+      properties:
+        _links:
+          description: Links to first, previous, self, next, last pages of details of operations
+          type: object
+          $ref: '#/components/schemas/PaginationLinks'
+        _page:
+          description: Page information of result set.
+          type: object
+          $ref: '#/components/schemas/PaginationInfo'
+        content:
+          description: Array of operations
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationDto'
+
+    PagedBackupsDto:
+      description: Paged response payload for backups
+      type: object
+      required:
+        - _links
+        - _page
+        - content
+      properties:
+        _links:
+          description: Links to first, previous, self, next, last pages of details of backups
+          type: object
+          $ref: '#/components/schemas/PaginationLinks'
+        _page:
+          description: Page information of result set.
+          type: object
+          $ref: '#/components/schemas/PaginationInfo'
+        content:
+          description: Array of backups
+          type: array
+          items:
+            $ref: '#/components/schemas/BackupDto'
+
+    PagedBackupManagersDto:
+      description: Paged response of backupManagers
+      type: object
+      required:
+        - _links
+        - _page
+        - content
+      properties:
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+        _page:
+          $ref: '#/components/schemas/PaginationInfo'
+        content:
+          description: Array of backupManagers
+          type: array
+          items:
+            $ref: '#/components/schemas/BackupManagerDto'
+
+    ClusterConnectionInfoDto:
+      description: Response payload for valid cluster connection info registration
+      type: object
+      required:
+        - id
+        - name
+        - status
+      properties:
+        id:
+          type: string
+          description: Identifier of the ClusterConnectionInfo
+        name:
+          type: string
+          description: Name of the ClusterConnectionInfo
+        status:
+          $ref: '#/components/schemas/ConnectionInfoStatus'
+
+    ConnectionInfoStatus:
+      type: string
+      description: |
+        Whether this cluster connection info is in use or not. "In use" means a workload instance has been deployed using this cluster
+        connection info.
+      enum:
+        - NOT_IN_USE
+        - IN_USE
+
+    OngoingAction:
+      description: Information about the current Action running.
+      type: object
+      properties:
+        actionId:
+          type: string
+          description: The identifier of the currently running Action.
+        backupManagerId:
+          type: string
+          description: The identifier of the BackupManager that owns the currently running Action.
+
+    PagedClusterConnectionInfoDto:
+      description: Paged response payload for cluster connection info
+      type: object
+      required:
+        - _links
+        - _page
+        - content
+      properties:
+        _links:
+          description: Links to first, previous, self, next, last pages of details of operations
+          type: object
+          $ref: '#/components/schemas/PaginationLinks'
+        _page:
+          description: Page information of result set.
+          type: object
+          $ref: '#/components/schemas/PaginationInfo'
+        content:
+          description: Array of cluster connection info
+          type: array
+          items:
+            $ref: '#/components/schemas/ClusterConnectionInfoDto'
+
+    ValuesRequestDto:
+      type: object
+      description: ValuesRequestDto is the object used for modification of day-0-config (additionalParameters)
+      properties:
+        additionalParameters:
+          type: object
+          description:
+            This type represents a list of key-value pairs. The order of
+            the pairs in the list is not significant. In JSON, a set of
+            key- value pairs is represented as an object. It shall comply
+            with the provisions defined in clause 4 of IETF RFC 7159.
+          additionalProperties:
+            type: object
+
+    BroResponseActionDto:
+      type: object
+      description: BroResponseActionDto return identifier of new action
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: |
+            ID of new action
+
+    BroRequestDto:
+      type: object
+      description: BroRequetDto is the object used for BRO actions requests
+      required:
+        - backupName
+      properties:
+        backupName:
+          type: string
+          description: |
+            The name of backup that will be created
+        backupManagerId:
+          type: string
+          description: |
+            ID of BRO manager that will be used for backup creation
+
+
+    ImportBroRequestDto:
+      type: object
+      description: ImportBroRequestDto is the object used for BRO IMPORT action request
+      required:
+        - uri
+        - password
+      properties:
+        uri:
+          type: string
+          description: |
+            URI to import backup from
+        password:
+          type: string
+          description: |
+            Password to be used when importing
+        backupManagerId:
+          type: string
+          description: |
+            ID of BRO manager that will be used for backup creation
+
+    ExportBroRequestDto:
+      type: object
+      description: BroRequetDto is the object used for BRO export requests
+      required:
+        - backupName
+        - uri
+        - password
+      properties:
+        backupName:
+          type: string
+          description: |
+            The name of backup that will be created
+        backupManagerId:
+          type: string
+          description: |
+            ID of BRO manager that will be used for backup creation
+        uri:
+          type: string
+          description: |
+            URI to export backup to
+        password:
+          type: string
+          description: |
+            Password to be used when exporting
+
+    GetHealthResponse:
+      description: Represents Health of Backup and restore orchestrator
+      type: object
+      required:
+        - status
+        - availability
+        - ongoingAction
+        - registeredAgents
+      properties:
+        status:
+          type: string
+          description: Is Healthy if orchestrator is healthy
+        availability:
+          type: string
+          description: |
+            Either \"Busy\" or \"Available\" depending on whether the orchestrator is running an Action.
+        ongoingAction:
+          type: object
+          description: Information about the current Action running.
+          $ref: '#/components/schemas/OngoingAction'
+        registeredAgents:
+          type: array
+          items:
+            type: string
+          description: IDs of registered agents
+
+    GetBackupsResponse:
+      description: Represents Backups in current bro manager
+      type: object
+      properties:
+        backups:
+          description: All backups
+          type: array
+          items:
+            $ref: '#/components/schemas/BackupDto'
+
+    GetBackupManagersResponse:
+      description: Gets all backupManagers
+      type: object
+      properties:
+        backupManagers:
+          description: All backupManagers
+          type: array
+          items:
+            $ref: '#/components/schemas/BackupManagerDto'
+
+    BackupDto:
+      description: Dto which contains the data about particular backup
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            Identity of the backup
+        name:
+          type: string
+          description: |
+            Backup name, provided by the Applications Operations Engineer
+        creationTime:
+          type: string
+          description: |
+            Date and time when the backup was created, i.e., start time of backup procedure
+        status:
+          type: string
+          description: |
+            Status of the backup
+          enum:
+            - COMPLETE
+            - INCOMPLETE
+            - CORRUPTED
+
+    BackupManagerDto:
+      description: Dto which contains the data about particular backupManager
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            Identifier of the backup-manager
+        backupType:
+          type: string
+          description: |
+            Type of backup, for example System Data or User Data
+        backupDomain:
+          type: string
+          description: |
+            Backup domain, for example System
+
+    URILink:
+      description: This type represents a link to a resource.
+      type: object
+      required:
+        - href
+      properties:
+        href:
+          description: URI of the referenced resource.
+          type: string
+          format: url
+
+    ProblemDetails:
+      required:
+        - detail
+        - status
+      type: object
+      properties:
+        type:
+          description: |
+            A URI reference according to IETF RFC 3986 [5] that identifies the problem type.
+            It is encouraged that the URI provides human-readable documentation for the problem (e.g. using HTML) when dereferenced.
+            When this member is not present, its value is assumed to be "about:blank".
+          type: string
+        title:
+          type: string
+          description: |
+            A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem,
+            except for purposes of localization. If type is given and other than "about:blank", this attribute shall also be provided.
+            A short, human-readable summary of the problem type.  It SHOULD NOT change from occurrence to occurrence of the problem,
+            except for purposes of localization (e.g., using proactive content negotiation; see [RFC7231], Section 3.4).
+        status:
+          type: integer
+          description: |
+            The HTTP status code for this occurrence of the problem. The HTTP status code ([RFC7231], Section 6) generated by the origin
+            server for this occurrence of the problem.
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem. It may yield further information if dereferenced.
+      description: |
+        The definition of the general "ProblemDetails" data structure from IETF RFC 7807 [19] is reproduced in this structure.
+        Compared to the general framework defined in IETF RFC 7807 [19], the "status" and "detail" attributes are mandated to be included
+        by the present document, to ensure that the response contains additional textual information about an error. IETF RFC 7807 [19]
+        foresees extensibility of the "ProblemDetails" type. It is possible that particular APIs in the present document, or particular
+        implementations, define extensions to define additional attributes that provide more information about the error. The description
+        column only provides some explanation of the meaning to Facilitate understanding of the design. For a full description,
+        see IETF RFC 7807 [19].
+
+    WorkloadInstanceWithURLRequestDto:
+      type: object
+      description: WorkloadInstanceWithURLRequestDto is the object contains URL fetch helmfile.tgz from another service
+      required:
+        - workloadInstanceName
+        - namespace
+        - url
+      properties:
+        url:
+          type: string
+          format: url
+          description: URL to download the helmfile.tgz.
+        workloadInstanceName:
+          type: string
+          description: Name of the workloadInstance. This value must be unique for each workloadInstance.
+        namespace:
+          type: string
+          description: Namespace where workloadInstance will be installed.
+        crdNamespace:
+          type: string
+          description: Namespace where CRD charts will be installed.
+        cluster:
+          type: string
+          description: Cluster name where the workloadInstance will be instantiated.
+        timeout:
+          type: integer
+        additionalParameters:
+          type: object
+          description:
+            This type represents a list of key-value pairs. The order of
+            the pairs in the list is not significant. In JSON, a set of
+            key- value pairs is represented as an object. It shall comply
+            with the provisions defined in clause 4 of IETF RFC 7159.
+          additionalProperties:
+            type: object
+
+    WorkloadInstanceWithURLPutRequestDto:
+      type: object
+      description: WorkloadInstanceWithURLPutRequestDto is the object contains URL fetch helmfile.tgz from another service
+      properties:
+        url:
+          type: string
+          format: url
+          description: URL to download the helmfile.tgz.
+        additionalParameters:
+          type: object
+          description:
+            This type represents a list of key-value pairs. The order of
+            the pairs in the list is not significant. In JSON, a set of
+            key- value pairs is represented as an object. It shall comply
+            with the provisions defined in clause 4 of IETF RFC 7159.
+          additionalProperties:
+            type: object
+        timeout:
+          type: integer
+
+    DeploymentStateInfoDTO:
+      type: object
+      description: DeploymentStateInfoDTO is an object that contains information about the state of deployment
+      required:
+        - workloadInstanceName
+        - clusterName
+        - namespace
+        - pods
+      properties:
+        workloadInstanceName:
+          type: string
+          description: |
+            Name of Workload instance.
+        clusterName:
+          type: string
+          description: |
+            Name of cluster where workload instanse deployed.
+        namespace:
+          type: string
+          description: |
+            Namespace of cluster where workload instance is deployed.
+        pods:
+          type: object
+          description: |
+            This type represents a Map which contains info about pods.
+            Where key is a name of pod and value is a status of pod.
+          additionalProperties:
+            type: string
+
+  responses:
+    Accepted:
+      description: |
+        Accepted
+        The request was accepted for processing, but the  processing has not been completed. The response body shall be empty.
+        The HTTP response shall include a "Location" HTTP header that contains the URI of the newly-created "CNW LCM operation occurrence"
+        resource corresponding to the operation.
+      headers:
+        Location:
+          description: The resource URI to the operation to track the progress
+          schema:
+            type: string
+            format: url
+      content: { }
+    NoContent:
+      description: |
+        NoContent.
+
+        The request has succeeded, but that the client doesn't need to navigate away from its current page.
+      headers:
+        Location:
+          description: The resource URI to the operation to track the progress
+          schema:
+            type: string
+            format: url
+      content: { }
+    BadRequest:
+      description: |
+        Bad Request If the request is malformed or syntactically incorrect (e.g. if the request URI contains incorrect query parameters or
+        the payload body contains a syntactically incorrect data structure), the API producer shall respond with this response code. --- If the
+        response to a GET request which queries a container resource would be so big that the performance of the API producer is adversely affected,
+        and the API producer does not support paging for the affected resource, it shall respond with this response code. --- If there is an
+        application error related to the client's input that cannot be easily mapped to any other HTTP response code ("catch all error"), the API
+        producer shall respond with this response code.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    BasicOk:
+      description: |
+        OK.
+
+        The request has succeeded.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content: { }
+    Conflict:
+      description: |
+        Conflict Another request is in progress that prohibits the fulfilment of the current request, or the
+        current resource state is inconsistent with the request.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Forbidden:
+      description: |
+        Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond
+        with this response code. The "ProblemDetails" structure shall be provided.  It should include in the "detail" attribute information about
+        the source of the problem, and may indicate how to solve it.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    InternalServerError:
+      description: |
+        Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP
+        response code ("catch all error"), the API producer shall respond withthis response code. The "ProblemDetails" structure shall be provided,
+        and shall include in the "detail" attribute more information about the source of the problem.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    MethodNotAllowed:
+      description: |
+        Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this
+        response code. The "ProblemDetails" structure may be omitted.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    NotAcceptable:
+      description: |
+        Not Acceptable If the "Accept" HTTP header does not contain at least one name of a content type that is acceptable to the API producer,
+        the API producer shall respond with this response code. The "ProblemDetails" structure may be omitted in that case.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    NotFound:
+      description: |
+        Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not
+        willing to disclose that one exists, it shall respond with this response code.  The "ProblemDetails" structure may be provided, including
+        in the "detail" attribute information about the source of the problem, e.g. a wrong resource URI variable.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    RequestedRangeNotSatisfiable:
+      description: |
+        Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not
+        present in the requested resource.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    ServiceUnavailable:
+      description: |
+        Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should
+        respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the "Retry-After" HTTP header and for the
+        alternative to refuse the connection. The "ProblemDetails" structure may be omitted.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Unauthorized:
+      description: |
+        Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that
+        is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in
+        the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    UnprocessableEntity:
+      description: |
+        Unprocessable Entity If the payload body of a request contains syntactically correct data (e.g. well-formed JSON) but the data cannot
+        be processed (e.g. because it fails validation against a schema), the API producer shall respond with this response code. The
+        "ProblemDetails" structure shall be provided, and should include in the "detail" attribute more information about the source of the problem.
+        NOTE 2: This error response code is only applicable for methods that have a request body.
+      headers:
+        Content-Type:
+          description: The MIME type of the body of the response.
+          schema:
+            type: string
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+    WorkloadInstanceAccepted:
+      description: |
+        Accepted.
+
+        The request was accepted for processing, but the processing has not been completed. The response body contains id of created workload
+        instance. The HTTP response shall include a "Location" HTTP header that contains the URI of the newly-created "CNW LCM operation occurrence"
+        resource corresponding to the operation.
+      headers:
+        Location:
+          description: The resource URI to the operation to track the progress
+          schema:
+            type: string
+            format: url
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/WorkloadInstanceDto'
+    PagedWorkloadInstanceOK:
+      description: |
+        OK.
+
+        Get all registered workload instances in paged form.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/PagedWorkloadInstanceDto'
+    WorkloadInstanceOK:
+      description: |
+        OK.
+
+        Get response for valid workloadInstanceId, the resource has been fetched and is transmitted in the message body.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/WorkloadInstanceDto'
+
+    WorkloadInstanceVersionOK:
+      description: |
+        OK.
+
+        Get response for valid workloadInstanceId, the resource has been fetched and is transmitted in the message body.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/WorkloadInstanceVersionDto'
+
+    PagedWorkloadInstanceVersionOK:
+      description: |
+        OK.
+
+        Get paged response for valid workloadInstanceId, the resource has been fetched and is transmitted in the message body.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/PagedWorkloadInstanceVersionDto'
+
+    OperationOK:
+      description: |
+        OK.
+
+        Get response for valid operationId.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/OperationDto'
+
+    OperationLogsOK:
+      description: |
+        OK.
+
+        Get response for valid operationId.
+      content:
+        'text/plain':
+          schema:
+            type: string
+
+    PodsStatusOK:
+      description: |
+        OK.
+
+        Get pods status by workload instance name.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/DeploymentStateInfoDTO'
+
+    ValuesResponse:
+      description: |
+        OK.
+
+        Get values file response.
+      content:
+        'application/x-yaml':
+          schema:
+            type: string
+            format: byte
+
+    GetHealthResponseOK:
+      description: |
+        OK.
+
+        Get health check of BRO.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/GetHealthResponse'
+
+    PagedOperationOK:
+      description: |
+        OK.
+
+        Get all registered operations in paged form.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/PagedOperationDto'
+
+    PagedBackupsOK:
+      description: |
+        OK.
+
+        Gets all backups of a backupManager.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/PagedBackupsDto'
+
+    PagedBackupManagersOK:
+      description: |
+        OK.
+
+        Gets all backupManagers.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/PagedBackupManagersDto'
+
+    ClusterConnectionInfoOK:
+      description: |
+        OK.
+
+        Get response for valid cluster connection info file.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ClusterConnectionInfoDto'
+    ClusterConnectionInfoAccepted:
+      description: |
+        Accepted.
+
+        The request was accepted for processing, but the processing has not been completed. The response body contains id of created workload
+        instance. The HTTP response shall include a "Location" HTTP header that contains the URI of the newly-created "CNW LCM operation occurrence"
+        resource corresponding to the operation.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ClusterConnectionInfoDto'
+
+    PagedClusterConnectionInfoResponse:
+      description: |
+        OK.
+
+        Get all registered cluster connection info  paged form.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/PagedClusterConnectionInfoDto'
+
+    BackupAndRestoreActionCreated:
+      description: |
+        Created.
+
+        Action was created.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/BroResponseActionDto'
+
+paths:
+  '/workload_instances':
+    post:
+      description: |
+        Instantiate CN Workload.
+
+        The POST method instantiates a Workload instance. The request must include workloadInstancePostRequestDto and can include helmfile.tgz,
+        values.yaml and kube.config. All incoming files are validated. Helmfile saved to the database and temporary folder. Values are saved
+        in DB. The kube.config is not saved at all anywhere. A helm command is created using the received files. The helm or helmfile  command
+        is executed, resulting in the workloadInstance being deployed. WorkloadInstanceDto is returned to the user.
+      tags:
+        - Workload Instance
+      requestBody:
+        description: Parameters for the Workload instantiation.
+        required: true
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                workloadInstancePostRequestDto:
+                  $ref: '#/components/schemas/WorkloadInstancePostRequestDto'
+                helmSource:
+                  description: Helmfile or integration chart
+                  type: string
+                  format: binary
+                values:
+                  description: Values file that provides properties for helmSource.
+                  type: string
+                  format: binary
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+              required:
+                - workloadInstancePostRequestDto
+      responses:
+        '202':
+          $ref: '#/components/responses/WorkloadInstanceAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    get:
+      description: |
+        Get all workload instances.
+
+        The GET method extracts all workload instances.
+      tags:
+        - Workload Instance
+      parameters:
+        - name: page
+          description: Requested page number
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: size
+          description: Number of results per page. Default value is 15.
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: sort
+          description: |
+            Sorting definition in form 'field[,direction] where direction is asc or desc, defaulting to asc. This parameter may be
+            used multiple times.
+
+            Examples:
+
+            sort=name
+
+            sort=state,desc
+
+            sort=state,desc&sort=workloadInstanceId,asc
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/PagedWorkloadInstanceOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  '/workload_instances/{workloadInstanceId}':
+    put:
+      description: |
+        Update Workload instance.
+
+        The PUT method updates a Workload instance. The request can include workloadInstancePutRequestDto, helmfile.tgz, values.yaml and kube.config.
+        All incoming files are validated. Helmfile saved to the database and temporary folder. Values are saved in DB. The kube.config is
+        not saved at all anywhere. A helm command is created using the received files. The helm or helmfile command is executed, resulting in the
+        workloadInstance being updated. WorkloadInstanceDto is returned to the user.
+      tags:
+        - Workload Instance
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Parameters for the Workload update.
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                workloadInstancePutRequestDto:
+                  $ref: '#/components/schemas/WorkloadInstancePutRequestDto'
+                helmSource:
+                  description: Helmfile or integration chart. HelmSource must be unique (by version).
+                    If you want to update instance with the same helm source, just send the request
+                    with new parameters, but without helmSource.
+                  type: string
+                  format: binary
+                values:
+                  description: Values file that provides properties for helmSource.
+                  type: string
+                  format: binary
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '202':
+          $ref: '#/components/responses/WorkloadInstanceAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    delete:
+      description: |
+        Delete CN Workload.
+
+        The DELETE method deletes already terminated CN Workload from DB. The request include only identifier of the Workload instance.
+        The workloadinstance is retrieved from the database. Delete operation can be performed for successfully terminated workload
+        instance and can remove the workload instance if Auto-Rollback after instantiate, is completed.
+        If there was connection with a cluster, it will be disconnected on this step.
+      tags:
+        - Workload Instance
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    get:
+      description: |
+        Get information about the workload instance.
+
+        The GET method extract information of workload instance.
+      tags:
+        - Workload Instance
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/WorkloadInstanceOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  '/workload_instances/{workloadInstanceId}/operations':
+    post:
+      description: |
+        Terminate Workload instance destroying its latest HelmSource.
+
+        The POST method terminates a Workload instance. The request must include identifier of the Workload instance and
+        workloadInstanceOperationPostRequestDto, also it can include kube.config. A helm or helmfile  command is created using the received and saved
+        before files. The helm or helmfile command is executed, resulting in the HelmSource being deleted and the workloadInstance being terminated.
+      tags:
+        - Workload Instance
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Parameters for specifying action type.
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                workloadInstanceOperationPostRequestDto:
+                  $ref: '#/components/schemas/WorkloadInstanceOperationPostRequestDto'
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+              required:
+                - workloadInstanceOperationPostRequestDto
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    put:
+      description: |
+        Rollback Workload instance by helmSource version.
+
+        The PUT method performs rollback (manually) the workload instance. The request must include identifier of the Workload instance and
+        workloadInstanceOperationPutRequestDto, also it can include kube.config. A helm or helmfile command is created using the and files which
+        were provided for the determined or previous version. The helm or helmfile command is executed, resulting in the workloadInstance being
+        come back to previous operation with latest helmSource version.
+      tags:
+        - Workload Instance
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Parameters for specifying action type.
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                workloadInstanceOperationPutRequestDto:
+                  $ref: '#/components/schemas/WorkloadInstanceOperationPutRequestDto'
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+              required:
+                - workloadInstanceOperationPutRequestDto
+      responses:
+        '202':
+          $ref: '#/components/responses/WorkloadInstanceAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  '/workload_instances/{workloadInstanceId}/versions':
+    get:
+      description: |
+        Get information about the versions of workload instance.
+
+        The GET method extracts information of the versions of workload instance.
+      tags:
+        - Workload Instance
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+        - name: page
+          description: Requested page number
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: size
+          description: Number of results per page. Default value is 15.
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: sort
+          description: |
+            Sorting definition in form 'field[,direction] where direction is asc or desc, defaulting to asc. This parameter may be
+            used multiple times.
+
+            Examples:
+
+            sort=name
+
+            sort=state,desc
+
+            sort=state,desc&sort=workloadInstanceId,asc
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/PagedWorkloadInstanceVersionOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/workload_instances/{workloadInstanceId}/versions/{version}':
+    get:
+      description: |
+        Get information about the specified version of workload instance.
+
+        The GET method extract information of the version of workload instance.
+      tags:
+        - Workload Instance
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          description: Version value.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/WorkloadInstanceVersionOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/operations/{operationId}':
+    get:
+      description: |
+        Get status of an operation.
+
+        The GET method extract state of operation.
+      tags:
+        - Operations
+      parameters:
+        - name: operationId
+          in: path
+          description: Identifier of the operation.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/OperationOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  '/operations/{operationId}/logs':
+    get:
+      description: |
+        Get logs for operation.
+
+        The GET method extract logs of operation.
+      tags:
+        - Operations
+      parameters:
+        - name: operationId
+          in: path
+          description: Identifier of the operation.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/OperationLogsOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  '/operations/workload_instances/{workloadInstanceId}':
+    get:
+      description: |
+        Get status of all operations by workload instance id.
+
+        The GET method extract state of all operations by workload instance id.
+      tags:
+        - Operations
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the workload instance.
+          required: true
+          schema:
+            type: string
+        - name: page
+          description: Requested page number
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: size
+          description: Number of results per page. Default value is 15.
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: sort
+          description: |
+            Sorting definition in form 'field[,direction] where direction is asc or desc, defaulting to asc. This parameter may be
+            used multiple times.
+
+            Examples:
+
+            sort=name
+
+            sort=state,desc
+
+            sort=state,desc&sort=workloadInstanceId,asc
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/PagedOperationOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/cluster_connection_info':
+    post:
+      description: |
+        Register cluster connection info.
+
+        The POST method register new connection info file. Name should be unique; connection info file should be valid k8s config.
+      tags:
+        - Cluster Connection Info
+      requestBody:
+        description: Parameters for the register cluster connection info.
+        required: true
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+                crdNamespace:
+                  description: CRD namespace is the namespace to install the CRD Helm charts into.
+                  type: string
+              required:
+                - clusterConnectionInfo
+      responses:
+        '201':
+          $ref: '#/components/responses/ClusterConnectionInfoAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    get:
+      description: |
+        Get status of all cluster connection info.
+
+        The GET method extract state of all cluster connection info.
+      tags:
+        - Cluster Connection Info
+      parameters:
+        - name: page
+          description: Requested page number
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: size
+          description: Number of results per page. Default value is 15.
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: sort
+          description: |
+            Sorting definition in form 'field[,direction] where direction is asc or desc, defaulting to asc. This parameter may be
+            used multiple times.
+
+            Examples:
+
+            sort=name
+
+            sort=status,desc
+
+            sort=status,desc&sort=name,asc
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/PagedClusterConnectionInfoResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  '/cluster_connection_info/{clusterConnectionInfoId}':
+    delete:
+      description: |
+        Deregister cluster connection info.
+
+        The Delete method deregister connection info.
+      tags:
+        - Cluster Connection Info
+      parameters:
+        - name: clusterConnectionInfoId
+          description: Id of cluster connection info file.
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: |
+            No Content
+
+            The cluster connection info resource was deleted successfully. The response body shall be empty.
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    get:
+      description: Fetch cluster connection info by id
+      tags:
+        - Cluster Connection Info
+      parameters:
+        - name: clusterConnectionInfoId
+          description: Id of cluster connection info file.
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ClusterConnectionInfoOK'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  '/values/{version}':
+    get:
+      description: |
+        NOT SUPPORTED
+      tags:
+        - Values
+      parameters:
+        - name: version
+          in: path
+          description: Identifier of the values.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ValuesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    put:
+      description: |
+        NOT SUPPORTED
+#        Modificate day-0-config.
+#
+#                The PUT method updates values. The request can include valuesRequestDto and values.yaml.
+#                All incoming files are validated. Values are saved in DB. Resulting file with combined data
+#                from file and request object is returned to the user.
+#                Possible cases:
+#                  - valuesRequestDto is present, values is empty: existing file will be updated with new parameters (they have higher priority)
+#                  - valuesRequestDto is empty, values is present: existing file will be fully replaced by new
+#                  - valuesRequestDto is present, values is present: existing file will be fully replaced by new one and updated with parameters
+#                  - valuesRequestDto is empty, values is empty: BAD_REQUEST response will be triggered, at lease one parameter is required
+      tags:
+        - Values
+      parameters:
+        - name: version
+          in: path
+          description: Identifier of the values.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Parameters for the day-0-config (additional parameters).
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                valuesRequestDto:
+                  $ref: '#/components/schemas/ValuesRequestDto'
+                values:
+                  description: Values file that provides properties.
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '202':
+          $ref: '#/components/responses/ValuesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/helmfile_builder/workload_instances':
+    post:
+      description: |
+        Instantiate CN Workload through the helmfile builder.
+
+        The POST method instantiates a Workload instance with internally built helmfile. The request must include WorkloadInstanceWithChartsRequestDto
+        and could include values.yaml and kube.config. All incoming files are validated. Helmfile saved to the database and temporary folder.
+        Values are saved in DB. The kube.config is not saved anywhere. The helmfile  command is executed, resulting in the workloadInstance
+        being deployed. WorkloadInstanceDto is returned to the user.
+      tags:
+        - Helmfile Builder
+      requestBody:
+        description: Parameters for the Workload instantiation.
+        required: true
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                workloadInstanceWithChartsRequestDto:
+                  $ref: '#/components/schemas/WorkloadInstanceWithChartsRequestDto'
+                globalValues:
+                  description: Values file that provides common properties for helmfile.
+                  type: string
+                  format: binary
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+              required:
+                - workloadInstanceWithChartsRequestDto
+      responses:
+        '202':
+          $ref: '#/components/responses/WorkloadInstanceAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/helmfile_builder/workload_instances/{workloadInstanceId}':
+    put:
+      description: |
+        Update Workload instance through the helmfile builder.
+
+        The PUT method updates a Workload instance. The request can include workloadInstanceWithChartsPutRequestDto, values.yaml and
+        kube.config. All incoming files are validated. Helmfile saved to the database and temporary folder. Values are saved in DB.
+        The kube.config is not saved at all anywhere. A helm command is created using the received files. The helm or helmfile command
+        is executed, resulting in the workloadInstance being updated. WorkloadInstanceDto is returned to the user.
+      tags:
+        - Helmfile Builder
+      parameters:
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Parameters for the Workload update.
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                workloadInstanceWithChartsPutRequestDto:
+                  $ref: '#/components/schemas/WorkloadInstanceWithChartsPutRequestDto'
+                globalValues:
+                  description: Values file that provides common properties for helmfile.
+                  type: string
+                  format: binary
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '202':
+          $ref: '#/components/responses/WorkloadInstanceAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/backup_and_restore':
+    post:
+      description: |
+        Create Backup Request
+
+        The POST method for create a backup for all services in current namespase.
+        This endpoint accepts "backupName" the name of backup to be used
+        and "backupManagerId" ID of manager to be used for backup creation
+      tags:
+        - BRO
+      requestBody:
+        description: Parameters for the Create backup.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroRequestDto'
+      responses:
+        '201':
+          $ref: '#/components/responses/BackupAndRestoreActionCreated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    delete:
+      description: |
+        Delete Backup Request
+
+        The DELETE method for delete a backup.
+        This endpoint accepts "backupName" the name of backup to be used
+        and "backupManagerId" ID of manager to be used for backup deleting
+      tags:
+        - BRO
+      requestBody:
+        description: Parameters for the Delete backup.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroRequestDto'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    put:
+      description: |
+        Restore Backup Request
+
+        The RESTORE method for restore a backup.
+        This endpoint accepts "backupName" the name of backup to be used
+        and "backupManagerId" ID of manager to be used for backup restoring
+      tags:
+        - BRO
+      requestBody:
+        description: Parameters for the Restore backup.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroRequestDto'
+      responses:
+        '202':
+          $ref: '#/components/responses/BackupAndRestoreActionCreated'
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/backup_and_restore/imports':
+    post:
+      description: |
+        Import backup.
+
+        The POST method for import a backup from determined path.
+        This endpoint accepts "uri" to import backup from and
+        "password" to be used when importing.
+      tags:
+        - BRO
+      requestBody:
+        description: Parameters for the Import backup.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportBroRequestDto'
+      responses:
+        '201':
+          $ref: '#/components/responses/BackupAndRestoreActionCreated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/backup_and_restore/exports':
+    post:
+      description: |
+        Export Backup Request
+
+        The POST method for export a backup.
+        This endpoint accepts "backupName" the name of backup to be exported, "backupManagerId" ID of manager to be used for choose the nmanager, "uri" URI to export backup to, "password" Password to be used when exporting.
+      tags:
+        - BRO
+      requestBody:
+        description: Parameters for the Export backup.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportBroRequestDto'
+      responses:
+        '201':
+          $ref: '#/components/responses/BackupAndRestoreActionCreated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/backup_and_restore/health':
+    get:
+      description: |
+        Health check for test connection with BRO
+      tags:
+        - BRO
+      responses:
+        '200':
+          $ref: '#/components/responses/GetHealthResponseOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/backup_and_restore/{backupManagerId}':
+    get:
+      description: |
+        Gets all backups of a backupManager.
+      tags:
+        - BRO
+      parameters:
+        - name: backupManagerId
+          in: path
+          description: Identifier of the Backup manager.
+          required: true
+          schema:
+            type: string
+        - name: page
+          description: Requested page number
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: size
+          description: Number of results per page. Default value is 15.
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: sort
+          description: |
+            Sorting definition in form 'field[,direction] where direction is asc or desc, defaulting to asc. This parameter may be
+            used multiple times.
+
+            Examples:
+
+            sort=name
+
+            sort=state,desc
+
+            sort=state,desc&sort=id,asc
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/PagedBackupsOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/backup_and_restore/managers':
+    get:
+      description: |
+        Gets all backupManagers
+      tags:
+        - BRO
+      parameters:
+        - name: page
+          description: Requested page number
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: size
+          description: Number of results per page. Default value is 15.
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: sort
+          description: |
+            Sorting definition in form 'field[,direction] where direction is asc or desc, defaulting to asc. This parameter may be
+            used multiple times.
+
+            Examples:
+
+            sort=name
+
+            sort=state,desc
+
+            sort=state,desc&sort=id,asc
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/PagedBackupManagersOK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  '/helmfile_fetcher/workload_instances':
+    post:
+      description: |
+        Fetch helmfile by url and instantiate.
+
+        The POST method contains WorkloadInstanceWithURLRequestDto which includes url. Send GET request and get helmfile.tgz. Then instantiates a
+        Workload instance with helmfile.tgz. The request must include WorkloadInstanceWithURLRequestDto and could include values.yaml, kube.config,
+        additional data. All incoming files are validated. Helmfile saved to the database and temporary folder. Values are saved in DB.
+        The kube.config is not saved anywhere. The helmfile command is executed, resulting in the workloadInstance being deployed.
+        WorkloadInstanceDto is returned to the user.
+      tags:
+        - Helmfile Fetcher
+      requestBody:
+        description: Parameters for the fetch helmfile and INSTANTIATE workload instance.
+        required: true
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                workloadInstanceWithURLRequestDto:
+                  $ref: '#/components/schemas/WorkloadInstanceWithURLRequestDto'
+                values:
+                  description: Values file that provides common properties for helmfile.
+                  type: string
+                  format: binary
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+              required:
+                - workloadInstanceWithURLRequestDto
+      parameters:
+        - in: query
+          name: isUrlToHelmRegistry
+          required: false
+          schema:
+            default: true
+            type: boolean
+          description: The flag which indicates that credentials are required for helm chart registry. Default value is true
+      responses:
+        '202':
+          $ref: '#/components/responses/WorkloadInstanceAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  '/helmfile_fetcher/workload_instances/{workloadInstanceId}':
+    put:
+      description: |
+        Fetch helmfile by url and update.
+        
+        The PUT method contains WorkloadInstanceWithURLPutRequestDto which includes url. Send GET request and get helmfile.tgz. Then update a
+                Workload instance with helmfile.tgz. The request must include workloadInstanceId, WorkloadInstanceWithURLPutRequestDto and could include values.yaml,
+                isUrlToHelmRegistry. All incoming files are validated. Helmfile is saved to the database and temporary folder. Values are saved in DB.
+                The kube.config is not saved anywhere. The helmfile command is executed, resulting in the workloadInstance being deployed.
+                WorkloadInstanceDto is returned to the user.
+      tags:
+        - Helmfile Fetcher
+      parameters:
+        - in: query
+          name: isUrlToHelmRegistry
+          required: false
+          schema:
+            default: true
+            type: boolean
+          description: The flag which indicates that credentials are required for helm chart registry. Default value is true
+        - name: workloadInstanceId
+          in: path
+          description: Identifier of the Workload instance.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Parameters to fetch helmfile and UPDATE workload instance.
+        required: true
+        content:
+          'multipart/form-data':
+            schema:
+              type: object
+              properties:
+                workloadInstanceWithURLPutRequestDto:
+                  $ref: '#/components/schemas/WorkloadInstanceWithURLPutRequestDto'
+                values:
+                  description: Values file that provides common properties for helmfile.
+                  type: string
+                  format: binary
+                clusterConnectionInfo:
+                  description: File with cluster connection info.
+                  type: string
+                  format: binary
+              required:
+                - workloadInstanceWithURLPutRequestDto
+      responses:
+        '202':
+          $ref: '#/components/responses/WorkloadInstanceAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '416':
+          $ref: '#/components/responses/RequestedRangeNotSatisfiable'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'

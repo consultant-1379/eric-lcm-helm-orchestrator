@@ -1,0 +1,433 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}
+  annotations:
+  {{- if .Values.bandwidth.maxEgressRate }}
+    {{- $annotations := include "eric-lcm-helm-executor.annotations-with-prometheus" . | fromYaml -}}
+    {{- $kubernetes := include "eric-lcm-helm-executor.kubernetes-io" . | fromYaml -}}
+    {{- include "eric-lcm-helm-executor.mergeAnnotations" (dict "location" .Template.Name "sources" (list $annotations $kubernetes)) | nindent 4 }}
+  {{- else }}
+    {{- include "eric-lcm-helm-executor.annotations-with-prometheus" . | nindent 4 }}
+  {{- end }}
+    {{- $dstAnn := include "eric-lcm-helm-executor.dstAnnotations" . | fromYaml }}
+  labels:
+    {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+    {{- $dstLabels := include "eric-lcm-helm-executor.dstLabels" . | fromYaml }}
+spec:
+  strategy:
+    type: {{ .Values.updateStrategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "eric-lcm-helm-executor.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+      {{- if .Values.logshipper.enabled }}
+        {{- if eq "true" (include "eric-lcm-helm-executor.log-streaming-activated" .) }}
+          {{- $annotations := include "eric-lcm-helm-executor.annotations" . | fromYaml -}}
+          {{- $logshipper := include "eric-log-shipper-sidecar.LsAppArmorProfileAnnotation" . | fromYaml -}}
+          {{- include "eric-lcm-helm-executor.mergeAnnotations" (dict "location" .Template.Name "sources" (list $annotations $logshipper)) | nindent 8 }}
+        {{- end }}
+      {{- else }}
+        {{- include "eric-lcm-helm-executor.annotations" . | nindent 8 }}
+      {{- end -}}
+      {{- if ( include "eric-lcm-helm-executor.service-mesh-volume" .) }}
+        {{ include "eric-lcm-helm-executor.service-mesh-volume" .| indent 8 | trim }}
+      {{- end }}
+      labels:
+        {{- include "eric-lcm-helm-executor.labels" . | nindent 8  -}}
+        {{- include "eric-lcm-helm-executor.service-mesh-ism2osm-labels" .| indent 8 }}
+    spec:
+      {{- if include "eric-lcm-helm-executor.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-lcm-helm-executor.pullSecrets" . }}
+      {{- end }}
+      serviceAccountName: {{ template "eric-lcm-helm-executor.name" . }}
+      securityContext:
+        fsGroup: {{ include "eric-lcm-helm-executor.fsGroup.coordinated" . }}
+        runAsUser: 207487
+        {{- include "eric-lcm-helm-executor.podSeccompProfile" . | indent 8 | trim }}
+    {{- if .Values.affinity.podAntiAffinity }}
+      affinity:
+    {{- include "eric-lcm-helm-executor.affinity" .| nindent 8 }}
+    {{- end }}
+      containers:
+        - name: eric-lcm-helm-executor
+          image: {{ template "eric-lcm-helm-executor.mainImagePath" . }}
+          imagePullPolicy: {{ template "eric-lcm-helm-executor.imagePullPolicy" . }}
+          securityContext:
+            capabilities:
+              drop:
+                - all
+            runAsNonRoot: true
+            runAsUser: 207487
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: TMPDIR
+              value: {{ template "eric-lcm-helm-executor.tmp" . | quote }}
+            - name: TZ
+              value: {{ template "eric-lcm-helm-executor.timezone" . }}
+            - name: SERVICE_ID
+              value: "eric-lcm-helm-executor"
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: "prod"
+            - name: JAVA_INITIAL_RAM_PERCENTAGE
+              value: {{ index .Values.resources "eric-lcm-helm-executor" "jvm" "initialMemoryAllocationPercentage" | quote }}
+            - name: JAVA_SMALL_RAM_PERCENTAGE
+              value: {{ index .Values.resources "eric-lcm-helm-executor" "jvm" "smallMemoryAllocationMaxPercentage" | quote }}
+            - name: JAVA_LARGE_RAM_PERCENTAGE
+              value: {{ index .Values.resources "eric-lcm-helm-executor" "jvm" "largeMemoryAllocationMaxPercentage" | quote }}
+            - name: KUBERNETES_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: PG_SERVICE
+              value: {{ .Values.postgress.service | default "eric-data-document-database-pg" }}
+            - name: PG_DBNAME
+              value: {{ .Values.postgress.dbName }}
+            - name: HELMREPO_URL
+              value: {{ index .Values "helm-registry" "service" | default "eric-lcm-helm-chart-registry" }}.{{ .Release.Namespace }}.svc.cluster.local
+            - name: HELMREPO_PORT
+              value: {{ index .Values "helm-registry" "externalPort" | default 8080 | quote }}
+            - name: CRT_PATH
+              value: {{ .Values.certificates.path | quote }}
+            - name: CRT_ENABLED
+              value: {{ .Values.certificates.enrollment.enabled | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.executorConfig.logging.level.root | quote }}
+            - name: BRO_HOST
+              value: {{ .Values.executorConfig.bro.host | default "eric-ctrl-bro" | quote }}
+            - name: BRO_PORT
+              value: {{ .Values.executorConfig.bro.port | quote }}
+            - name: HFE_AUTO_ROLLBACK_ENABLED
+              value: {{ index .Values "executorConfig" "auto-rollback" "enabled" | quote }}
+            - name: DELETE_NAMESPACE_DEFAULT
+              value: {{ .Values.executorConfig.deleteNamespace.default | default "true" | quote }}
+            {{- if index .Values "container-registry" "url" }}
+            - name: container_url
+              value: {{ index .Values "container-registry" "url" }}
+            {{- end }}
+            - name: "spring.task.execution.shutdown.await-termination-period"
+              value: {{ mul .Values.terminationGracePeriodSeconds 1000 | quote }}
+            - name: mTLS_STATE
+              value: {{ include "eric-lcm-helm-executor.tls-enable" . | quote }}
+            {{- if (not (eq (include "eric-lcm-helm-executor.tls-enable" .) "false")) }}
+            - name: "PGSSLMODE"
+              value: "verify-full"
+            - name: "PGSSLCERT"
+              value: "{{ template "eric-lcm-helm-executor.tmp" . }}/mtls/db/cert/cert.pem"
+            - name: "PGSSLKEY"
+              value: "{{ template "eric-lcm-helm-executor.tmp" . }}/mtls/db/cert/key.pem"
+            - name: "PGSSLROOTCERT"
+              value: "{{ template "eric-lcm-helm-executor.tmp" . }}/mtls/db/ca/cliCAcertbundle.pem"
+            - name: "PG_SERVER_CERT"
+              value: "{{ template "eric-lcm-helm-executor.tmp" . }}/mtls/db/server/srvcert.pem"
+            - name: "PGSSLKEYDER"
+              value: "{{ template "eric-lcm-helm-executor.tmp" . }}/mtls/db/cert/clientkey.pk8"
+            - name: "HCR_CA"
+              value: "/opt/mtls/hcr/ca/cacertbundle.pem"
+            - name: "HCR_CERT"
+              value: "/opt/mtls/hcr/cert/cert.pem"
+            - name: "HCR_KEY"
+              value: "/opt/mtls/hcr/cert/key.pem"
+            {{- if .Values.dst.enabled }}
+            - name: "DST_CA"
+              value: "/opt/mtls/dst/ca/cacertbundle.pem"
+            - name: "DST_CERT"
+              value: "/opt/mtls/dst/cert/cert.pem"
+            - name: "DST_KEY"
+              value: "/opt/mtls/dst/cert/key.pem"
+            {{- end }}
+            {{- end }}
+            {{- if .Values.logshipper.enabled }}
+            - name: LOG_PATH
+              value: {{ .Values.logPath }}
+            {{- else }}
+            - name: LOG_PATH
+              value: {{ template "eric-lcm-helm-executor.tmp" . | quote }}
+            {{- end }}
+            {{- if .Values.directory }}
+              {{- if .Values.directory.root }}
+            - name: "directory.root"
+              value: {{ .Values.directory.root }}
+              {{- end }}
+            {{- end }}
+            {{- include "eric-lcm-helm-executor.dstEnv" . | indent 12 }}
+          resources:
+            limits:
+              cpu: {{ index .Values.resources "eric-lcm-helm-executor" "limits" "cpu" | quote }}
+              memory: {{ index .Values.resources "eric-lcm-helm-executor" "limits" "memory" | quote }}
+            {{- if index $.Values.resources "eric-lcm-helm-executor" "limits" "ephemeral-storage" }}
+              ephemeral-storage: {{ index .Values.resources "eric-lcm-helm-executor" "limits" "ephemeral-storage" | quote }}
+            {{- end }}
+            requests:
+              cpu: {{ index .Values.resources "eric-lcm-helm-executor" "requests" "cpu" | quote }}
+              memory: {{ index .Values.resources "eric-lcm-helm-executor" "requests" "memory" | quote }}
+            {{- if index $.Values.resources "eric-lcm-helm-executor" "requests" "ephemeral-storage" }}
+              ephemeral-storage: {{ index .Values.resources "eric-lcm-helm-executor" "requests" "ephemeral-storage" | quote }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: {{ index .Values.probes "eric-lcm-helm-executor" "livenessProbe" "initialDelaySeconds" }}
+            periodSeconds: {{ index .Values.probes "eric-lcm-helm-executor" "livenessProbe" "periodSeconds" }}
+            timeoutSeconds: {{ index .Values.probes "eric-lcm-helm-executor" "livenessProbe" "timeoutSeconds" }}
+            failureThreshold: {{ index .Values.probes "eric-lcm-helm-executor" "livenessProbe" "failureThreshold" }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: {{ index .Values.probes "eric-lcm-helm-executor" "readinessProbe" "initialDelaySeconds" }}
+            periodSeconds: {{ index .Values.probes "eric-lcm-helm-executor" "readinessProbe" "periodSeconds" }}
+            timeoutSeconds: {{ index .Values.probes "eric-lcm-helm-executor" "readinessProbe" "timeoutSeconds" }}
+            failureThreshold: {{ index .Values.probes "eric-lcm-helm-executor" "readinessProbe" "failureThreshold" }}
+          volumeMounts:
+            - name: eric-lcm-helm-executor-tmp
+              mountPath: {{ template "eric-lcm-helm-executor.tmp" . | quote }}
+            - name: home-dir-path
+              mountPath: "/home/"
+            - name: application-config
+              mountPath: /config/
+            - name: eric-lcm-helm-executor-log-path
+              mountPath: {{ .Values.logPath | quote }}
+            {{- if (not (eq (include "eric-lcm-helm-executor.tls-enable" .) "false")) }}
+            - name: db-clientcert
+              mountPath: /opt/mtls/db/cert
+              readOnly: true
+            - name: db-cacert
+              mountPath: /opt/mtls/db/ca
+              readOnly: true
+            - name: db-server
+              mountPath: /opt/mtls/db/server
+              readOnly: true
+            - name: hcr-ca
+              mountPath: /opt/mtls/hcr/ca
+              readOnly: true
+            - name: hcr-client
+              mountPath: /opt/mtls/hcr/cert
+              readOnly: true
+              {{- if .Values.dst.enabled }}
+            - name: dst-ca
+              mountPath: /opt/mtls/dst/ca
+              readOnly: true
+            - name: dst-client
+              mountPath: /opt/mtls/dst/cert
+              readOnly: true
+              {{- end }}
+            - name: init-sip-tls-ca
+              mountPath: /opt/mtls/ca
+              readOnly: true
+            {{- if .Values.logshipper.enabled }}
+              {{- if eq "true" (include "eric-lcm-helm-executor.log-streaming-activated" .) }}
+                  {{- include "eric-log-shipper-sidecar.log-shipper-sidecar-mounts" . | indent 12 }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sleep 5; kill -QUIT 1"]
+        {{- if .Values.logshipper.enabled }}
+          {{- if eq "true" (include "eric-lcm-helm-executor.log-streaming-activated" .) }}
+          {{- $logshipperImageDict := dict "logshipperSidecarImage" ((((.Values).global).logShipper).config).image -}}
+          {{- include "eric-log-shipper-sidecar.log-shipper-sidecar-container" (mergeOverwrite . $logshipperImageDict ) | indent 8 }}
+          {{- end }}
+        {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- if (index .Values.podPriority "eric-lcm-helm-executor" "priorityClassName") }}
+      priorityClassName: {{ index .Values.podPriority "eric-lcm-helm-executor" "priorityClassName" | quote }}
+      {{- end }}
+      initContainers:
+        - name: init
+          image: {{ template "eric-lcm-helm-executor.initImagePath" . }}
+          imagePullPolicy: {{ template "eric-lcm-helm-executor.imagePullPolicy" . }}
+          securityContext:
+            capabilities:
+              drop:
+                - all
+            runAsNonRoot: true
+            runAsUser: 207487
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+          resources:
+            limits:
+              cpu: {{ .Values.resources.init.limits.cpu | quote }}
+              memory: {{ .Values.resources.init.limits.memory | quote }}
+            {{- if index $.Values.resources.init.limits "ephemeral-storage" }}
+              ephemeral-storage: {{ index .Values.resources.init.limits "ephemeral-storage" | quote }}
+            {{- end }}
+            requests:
+              cpu: {{ .Values.resources.init.requests.cpu | quote }}
+              memory: {{ .Values.resources.init.requests.memory | quote }}
+            {{- if index $.Values.resources.init.requests "ephemeral-storage" }}
+              ephemeral-storage: {{ index .Values.resources.init.requests "ephemeral-storage" | quote }}
+            {{- end }}
+          env:
+            - name: TMPDIR
+              value: {{ template "eric-lcm-helm-executor.tmp" . | quote }}
+            - name: TZ
+              value: {{ template "eric-lcm-helm-executor.timezone" . }}
+            - name: mTLS_STATE
+              value: {{ include "eric-lcm-helm-executor.tls-enable" . | quote }}
+            - name: "PGHOST"
+              value: {{ .Values.postgress.service | default "eric-data-document-database-pg" }}.{{ .Release.Namespace }}.svc.cluster.local
+            - name: "PGPORT"
+              value: {{ .Values.postgress.port | quote }}
+            - name: "PGUSER"
+              value: "postgres"
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgress.credentials.kubernetesSecretName | default "eric-data-document-database-pg-credentials" | quote }}
+                  key: {{ .Values.postgress.credentials.keyForSuperPw | default "super-pwd" | quote }}
+            - name: TARGET_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgress.credentials.kubernetesSecretName | default "eric-data-document-database-pg-credentials" | quote }}
+                  key: {{ .Values.postgress.credentials.keyForUserId | default "custom-user" | quote }}
+            - name: TARGET_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgress.credentials.kubernetesSecretName | default "eric-data-document-database-pg-credentials" | quote }}
+                  key: {{ .Values.postgress.credentials.keyForUserPw | default "custom-pwd" | quote }}
+            - name: "TARGET_DB"
+              value: {{ .Values.postgress.dbName }}
+            {{- if (not (eq (include "eric-lcm-helm-executor.tls-enable" .) "false")) }}
+            - name: "PGSSLMODE"
+              value: "verify-full"
+            - name: "PGSSLCERT"
+              value: "/opt/mtls/cert/cert.pem"
+            - name: "PGSSLKEY"
+              value: "/opt/mtls/cert/key.pem"
+            - name: "PGSSLROOTCERT"
+              value: "/opt/mtls/ca/cacertbundle.pem"
+            {{- end }}
+          volumeMounts:
+            - name: eric-lcm-helm-executor-tmp
+              mountPath: {{ template "eric-lcm-helm-executor.tmp" . | quote }}
+            {{- if (not (eq (include "eric-lcm-helm-executor.tls-enable" .) "false")) }}
+            - name: init-cert
+              mountPath: /opt/mtls/cert
+              readOnly: true
+            - name: init-sip-tls-ca
+              mountPath: /opt/mtls/ca
+              readOnly: true
+            {{- end }}
+      {{- $global := fromJson (include "eric-lcm-helm-executor.global" .) -}}
+      {{- if (or .Values.nodeSelector $global.nodeSelector) }}
+      nodeSelector: {{ include "eric-lcm-helm-executor.NodeSelector" . | nindent 8 }}
+      {{- end}}
+      volumes:
+        - name: home-dir-path
+          emptyDir:
+          {{- if .Values.storage.homedir.storageAllocation }}
+            sizeLimit: {{ .Values.storage.homedir.storageAllocation | quote }}
+          {{- end }}
+          {{- if .Values.storage.homedir.storageMedium }}
+            medium: {{ .Values.storage.homedir.storageMedium | quote }}
+          {{- end }}
+        - name: eric-lcm-helm-executor-tmp
+          emptyDir:
+          {{- if .Values.storage.tmpdir.storageAllocation }}
+            sizeLimit: {{ .Values.storage.tmpdir.storageAllocation | quote }}
+          {{- end }}
+          {{- if .Values.storage.tmpdir.storageMedium }}
+            medium: {{ .Values.storage.tmpdir.storageMedium | quote }}
+          {{- end }}
+        - name: eric-lcm-helm-executor-log-path
+          emptyDir:
+          {{- if .Values.storage.logdir.storageAllocation }}
+            sizeLimit: {{ .Values.storage.logdir.storageAllocation | quote }}
+          {{- end }}
+          {{- if .Values.storage.logdir.storageMedium }}
+            medium: {{ .Values.storage.logdir.storageMedium | quote }}
+          {{- end }}
+        - name: application-config
+          configMap:
+            name: {{ template "eric-lcm-helm-executor.name" . }}-configmap
+        {{- if hasKey (index .Values "helm-registry") "ingressSecret" }}
+        - name: helmchart-ingress-secret
+          secret:
+            secretName: {{ index .Values "helm-registry" "ingressSecret" }}
+            defaultMode: 0644
+        {{- end }}
+        {{- if .Values.logshipper.enabled }}
+          {{- if eq "true" (include "<log_Producer_microservice_name>.log-streaming-activated" .) }}
+           {{- include "eric-log-shipper-sidecar.log-shipper-sidecar-volumes" . | indent 8 }}
+          {{- end }}
+        {{- end }}
+        {{- if (not (eq (include "eric-lcm-helm-executor.tls-enable" .) "false")) }}
+        - name: init-sip-tls-ca
+          secret:
+            secretName: eric-sec-sip-tls-trusted-root-cert
+            defaultMode: 0440
+        - name: init-cert
+          secret:
+            secretName: {{ template "eric-lcm-helm-executor.name" . }}-postgres-sip-tls-ca-cert
+            defaultMode: 0440
+        - name: db-clientcert
+          secret:
+            secretName: {{ template "eric-lcm-helm-executor.name" . }}-pg-sip-tls-cert
+            defaultMode: 0440
+        - name: db-cacert
+          secret:
+            secretName: {{ .Values.postgress.service }}-client-ca
+            defaultMode: 0440
+        - name: db-server
+          secret:
+            secretName: {{ .Values.postgress.service }}-root-cert
+            defaultMode: 0440
+        - name: hcr-client
+          secret:
+            secretName: {{ template "eric-lcm-helm-executor.name" . }}-hcr-sip-tls-cert
+            defaultMode: 0440
+        - name: hcr-ca
+          secret:
+            secretName: eric-sec-sip-tls-trusted-root-cert
+            defaultMode: 0440
+        {{- if .Values.dst.enabled }}
+        - name: dst-client
+          secret:
+            secretName: {{ template "eric-lcm-helm-executor.name" . }}-dst-sip-tls-cert
+            defaultMode: 0440
+        - name: dst-ca
+          secret:
+            secretName: eric-sec-sip-tls-trusted-root-cert
+            defaultMode: 0440
+          {{- end }}
+        {{- end }}
+      {{- if include "eric-lcm-helm-executor.tolerations" . }}
+      tolerations: {{ include "eric-lcm-helm-executor.tolerations" . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,3 @@
+{
+  "url": "http://eric-lcm-helm-chart-registry.${YOUR_SIGNUM}.svc.cluster.local:8080/internal/charts/eric-ctrl-bro-7.8.0-34.tgz"
+}

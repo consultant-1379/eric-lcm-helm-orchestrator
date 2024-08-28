@@ -1,0 +1,109 @@
+1) Manually create secret for ingress in case cm-yang-provider and CertM did not install
+
+kubectl create secret tls my-tls-secret \
+--key < private key filename> \
+--cert < certificate filename> \
+-n <NAMESPACE>
+
+Deploy:
+helm upgrade --install <RELEASE NAME> \
+--wait \
+--timeout 1800s \
+--namespace <NAMESPACE> \
+--create-namespace \
+--values <PATH TO CUSTOM VALUES.YAML> \
+--set eric-lcm-helm-executor.ingress.tls.existingSecret=my-tls-secret \
+--debug <PATH TO CHART>
+
+2) Offline generation secret for ingress with cm-yang-provider and CertM
+
+openssl genrsa -out rootCA.key 2048
+
+#Replace CN=ROOTCA in subj with your value
+openssl req -x509 -sha512 -new -key rootCA.key -days 10000 -out rootCA.crt -subj '/C=US/ST=Oregon/L=Portland/CN=ROOTCA'
+base64 rootCA.crt | tr -d \\n > rootCA-base64.pem
+
+#Replace <HOSTNAME> with FQDN of your ingress
+openssl genrsa 4096 -noout > <HOSTNAME>.key
+openssl req -new -sha512 -out <HOSTNAME>.csr -key <HOSTNAME>.key -subj '/C=US/ST=Oregon/L=Portland/CN=<HOSTNAME>'
+openssl x509 -sha512 -req -days 5000 -in <HOSTNAME>.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out <HOSTNAME>.crt
+cat <HOSTNAME>.key > p12-input.txt
+cat <HOSTNAME>.crt >> p12-input.txt
+openssl pkcs12 -export -in p12-input.txt -out container.p12
+base64 container.p12 | tr -d \\n > container-base64.p12
+
+#Open connection to eric-cm-yang-provider
+kubectl port-forward svc/eric-cm-yang-provider 1830:830 -n <NAMESSPACE>
+
+#Connect to CM-YANG 
+ssh -t -p 1830 user1@127.0.0.1
+
+#Insert your configuration for CA cert and ingress cert pkg like below
+(Note the #### cat cert-base64.pem #### where your base64 encoded certificatet should be pasted):
+(Note the #### cat container-base64.p12 #### and #### password used when creating PKCS#12 ####
+
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+    <capability>urn:ietf:params:netconf:capability:writable-running:1.0</capability>
+    <capability>urn:ietf:params:netconf:capability:rollback-on-error:1.0</capability>
+  </capabilities>
+</hello>
+]]>]]>
+<rpc message-id="1"
+     xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <truststore xmlns="urn:ietf:params:xml:ns:yang:ietf-truststore"
+                  xmlns:ts="urn:ietf:params:xml:ns:yang:ietf-truststore">
+        <certificates>
+          <name>eric-lcm-helm-executor</name>
+          <description>External CA</description>
+        </certificates>
+      </truststore>
+    </config>
+  </edit-config>
+</rpc>
+]]>]]>
+<rpc message-id="1"
+     xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <action xmlns="urn:ietf:params:xml:ns:yang:1"
+          xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <truststore xmlns="urn:ietf:params:xml:ns:yang:ietf-truststore">
+      <certificates>
+        <name>eric-lcm-helm-executor</name>
+        <install-certificate-pem xmlns="urn:rdns:com:ericsson:oammodel:ericsson-truststore-ext">
+          <name>caCert</name>
+          <pem>#### cat cert-base64.pem ####</pem>
+        </install-certificate-pem>
+      </certificates>
+    </truststore>
+  </action>
+</rpc>
+]]>]]>
+<rpc message-id="1"
+     xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <action xmlns="urn:ietf:params:xml:ns:yang:1"
+          xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <keystore xmlns="urn:ietf:params:xml:ns:yang:ietf-keystore">
+      <asymmetric-keys>
+        <install-asymmetric-key-pkcs12 xmlns="urn:rdns:com:ericsson:oammodel:ericsson-keystore-ext">
+          <name>eric-lcm-helm-executor</name>
+          <certificate-name>eric-lcm-helm-executor</certificate-name>
+          <p12>#### cat container-base64.p12 ####</p12>
+          <p12-password>#### password used when creating PKCS#12 ####</p12-password>
+        </install-asymmetric-key-pkcs12>
+      </asymmetric-keys>
+    </keystore>
+  </action>
+</rpc>
+]]>]]>
+
+
+3) Online generation secret for ingress with cm-yang-provider and CertM
+
+In Development

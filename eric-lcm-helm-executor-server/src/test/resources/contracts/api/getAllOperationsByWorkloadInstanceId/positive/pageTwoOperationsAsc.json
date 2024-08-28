@@ -1,0 +1,41 @@
+{
+  "_links": {
+    "first": {
+      "href": "https://host/cnwlcm/v1/operations/workload_instances/workload_instanceId?page=1&size=2"
+    },
+    "prev": {
+      "href": "https://host/cnwlcm/v1/operations/workload_instances/workload_instanceId?page=1&size=2"
+    },
+    "self": {
+      "href": "https://host/cnwlcm/v1/operations/workload_instances/workload_instanceId?page=2&size=2"
+    },
+    "next": {
+      "href": "https://host/cnwlcm/v1/operations/workload_instances/workload_instanceId?page=3&size=2"
+    },
+    "last": {
+      "href": "https://host/cnwlcm/v1/operations/workload_instances/workload_instanceId?page=5&size=2"
+    }
+  },
+  "_page": {
+    "number": 2,
+    "size": 2,
+    "totalPages": 5,
+    "totalElements": 9
+  },
+  "content": [
+    {
+      "operationId": "firstId",
+      "workloadInstanceId": "workloadInstanceId",
+      "state": "FAILED",
+      "type": "INSTANTIATE",
+      "startTime": "2021-12-03T10:43:35.013094"
+    },
+    {
+      "operationId": "secondId",
+      "workloadInstanceId": "workloadInstanceId",
+      "state": "FAILED",
+      "type": "INSTANTIATE",
+      "startTime": "2021-12-03T10:44:26.022979"
+    }
+  ]
+}

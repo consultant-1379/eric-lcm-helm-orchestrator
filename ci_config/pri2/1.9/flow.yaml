@@ -1,0 +1,88 @@
+# *****************************************************************************
+# Json import collector
+---
+- json_import_collector__DPRAF
+- json_import_collector__MANUAL
+
+# *****************************************************************************
+#  Git collectors used
+- git_collector__Feature
+- git_collector__Bug
+- git_collector__Deprecation
+- git_collector__Vulnerabilities
+- git_collector__Abrupt_nbc
+
+# *****************************************************************************
+- jira_collector__No_feature_in_jira:
+    depends_on:
+      - git_collector__Feature
+
+# *****************************************************************************
+- jira_collector__Bug:
+    depends_on:
+      - git_collector__Bug
+
+# *****************************************************************************
+- jira_collector__Unfinished_tasks:
+    depends_on:
+      - git_collector__Bug
+      - git_collector__Feature
+      - git_collector__Deprecation
+
+# *****************************************************************************
+- jira_collector__Deprecation_done:
+    depends_on:
+      - git_collector__Deprecation
+
+# *****************************************************************************
+- jira_collector__Deprecation_approved
+
+# *****************************************************************************
+- jira_collector__Vulnerabilities:
+    depends_on:
+      - git_collector__Vulnerabilities
+
+# *****************************************************************************
+# All open bugs according to search querry in config.yaml
+- jira_collector__Open_bug
+
+# *****************************************************************************
+- jira_collector__Abrupt_nbc:
+    depends_on:
+      - git_collector__Abrupt_nbc
+
+# *****************************************************************************
+- html_generator:
+    depends_on:
+      - json_import_collector__DPRAF
+      - json_import_collector__MANUAL
+      - jira_collector__No_feature_in_jira
+      - jira_collector__Deprecation_done
+      - jira_collector__Deprecation_approved
+      - jira_collector__Bug
+      - jira_collector__Open_bug
+      - jira_collector__Unfinished_tasks
+      - jira_collector__Vulnerabilities
+      - jira_collector__Abrupt_nbc
+
+# *****************************************************************************
+- pdf_generator:
+    depends_on:
+      - json_import_collector__DPRAF
+      - json_import_collector__MANUAL
+      - jira_collector__No_feature_in_jira
+      - jira_collector__Deprecation_done
+      - jira_collector__Deprecation_approved
+      - jira_collector__Bug
+      - jira_collector__Open_bug
+      - jira_collector__Unfinished_tasks
+      - jira_collector__Vulnerabilities
+      - jira_collector__Abrupt_nbc
+
+# *****************************************************************************
+# For now we don't include information about specific work done into release mail
+# Additional information can be viewed either on Marketplace or EriDoc, the link is provided
+- json_generator:
+    depends_on:
+      - json_import_collector__DPRAF
+      - json_import_collector__MANUAL

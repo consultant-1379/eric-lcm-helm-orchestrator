@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Config
+clusters:
+  - name: "hahn117"
+    crdNamespace: eric-crd-ns
+    cluster:
+      server: "https://mocha.rnd.gic.ericsson.se/k8s/clusters/c-mdw5r"
+  - name: "hahn500"
+    crdNamespace: eric-crd-ns
+    cluster:
+      server: "https://gevalia.rnd.gic.ericsson.se/k8s/clusters/c-lx48g"
+
+users:
+  - name: "hahn117"
+    user:
+      token: ""
+  - name: "hahn100"
+    user:
+      token: ""
+
+
+contexts:
+  - name: "hahn117"
+    context:
+      user: "hahn117"
+      cluster: "hahn117"
+  - name: "hahn100"
+    context:
+      user: "hahn100"
+      cluster: "hahn100"
+
+current-context: "hahn117"

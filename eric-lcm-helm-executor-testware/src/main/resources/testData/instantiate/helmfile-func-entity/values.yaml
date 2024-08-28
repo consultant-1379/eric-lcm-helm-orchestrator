@@ -1,0 +1,14 @@
+cn-am-test-app-a:
+  fuu: bar
+
+cn-am-test-app-b:
+  fuu: bar
+
+cn-am-test-app-c:
+  fuu: bar
+
+functional-entity-1:
+  enabled: true
+
+functional-entity-2:
+  enabled: false

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Config
+clusters:
+- name: "hahn117"
+  crdNamespace: eric-crd-ns
+  cluster:
+    server: "https://mocha.rnd.gic.ericsson.se/k8s/clusters/c-mdw5r"
+
+
+
+users:
+- name: "hahn117"
+  user:
+    token: "kubeconfig-u-fwbgvrg4wg:587vzphd27lwn4vwrtv2h6b65fmcjs8wcd9bc9xwhrvw49q2mnw68w"
+
+
+
+
+contexts:
+- name: "hahn117"
+  context:
+    user: "hahn117"
+    cluster: "hahn117"
+
+
+
+current-context: "hahn117"

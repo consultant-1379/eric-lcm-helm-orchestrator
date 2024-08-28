@@ -1,0 +1,50 @@
+global:
+    crd:
+        enabled: ENC[AES256_GCM,data:gXmMFQ==,iv:Zp/V9M6B8z4OfZPISozSCQ/mPBR4TJ1hA300rO9Wonc=,tag:9uB3rS1R4iHlrFA/eaed+g==,type:bool]
+cn-am-test-app-a:
+    enabled: ENC[AES256_GCM,data:vf6l7g==,iv:+e4X//3qjN7D6WfdS1rc6xVmR/tpGplPU65GtvgWggM=,tag:EBV04tHYduO24bnhAn6OPg==,type:bool]
+    fuu: ENC[AES256_GCM,data:/NvJ,iv:C4lnta7Ol599dxtdn+z3yd8US/XoKNOxD39mbEs7msI=,tag:uKjhuB1RF+PW5ehSkIb3ew==,type:str]
+    name: ENC[AES256_GCM,data:rQsGDaaXQCkeFVZJu3gPwA==,iv:iVQeTuR7o/3n7LWZ+t58nYWNSAGOCNHKsepwES564lw=,tag:qpPA0zNDOG23DIoXkEWYfw==,type:str]
+cn-am-test-app-b:
+    enabled: ENC[AES256_GCM,data:jL+5MA==,iv:qJ12o6rtrj/eTIBuNRbecs6/j5wiPOCFK+ap7dS5a3Q=,tag:JE0SD6dIGupQYuNlq0Kw3A==,type:bool]
+    fuu: ENC[AES256_GCM,data:zB66,iv:tyxYPt4+oh6NMs8mwX8V/cs5/+YDk+We2y58TuAdtDY=,tag:55a0FW/R7ws3JkAncwAZuA==,type:str]
+    name: ENC[AES256_GCM,data:8QhStdRxj4BdrqfVPXdvsw==,iv:yQvFvkh7XDeUoD4pnZPxBAjU82znLmT+/okUhwJqA0s=,tag:tZhGVYXsr7HuQiDb124a5w==,type:str]
+cn-am-test-app-c:
+    enabled: ENC[AES256_GCM,data:0EbNqno=,iv:Nk2JMjZ7LSv0tXotavxLggApfigo6m/vWGKx2ScVpu4=,tag:ponkydAYjGy4stNQSAHz5A==,type:bool]
+    fuu: ENC[AES256_GCM,data:XATl,iv:Kl+t2zrdNsdvP5C4v2XBZzTfXv0qSAjaLqCgAtr/yy4=,tag:o1VkCVzBQwGxBGHzrxhjmQ==,type:str]
+    name: ENC[AES256_GCM,data:AxSW+KyfV6deaBs9b668Dw==,iv:D1sAv3wEkygXiAJPUIk6DLp5wBpUrId47qUAOEYDP80=,tag:0qtOY7nDzg03WOpuab/5Jw==,type:str]
+cn-am-test-crd:
+    enabled: ENC[AES256_GCM,data:3g0VPuc=,iv:z0Aw48QsENVM8sBTCpDy5qcXRgSDiXqRZuvdD8j2JVA=,tag:j6a0ZYjeSmTQaEiiIGkp7A==,type:bool]
+    fuu: ENC[AES256_GCM,data:pjcE,iv:eSYn7TlwtYdvPLdGAgyWdFnu0qWxdQ+CiF1mkznOfmY=,tag:XA1vPunfM63HyMuhW3ugKQ==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age: []
+    lastmodified: "2022-05-30T17:15:22Z"
+    mac: ENC[AES256_GCM,data:h6XxUl9O44kb+EKtfoc0bD5QeW63rY3R0R0ny9D442MNPeE/KopndVjOGmMiCkEIVxeRPzH/2H3IMjF4hyLShxNeawNvt+KAQluAjf0LIvr5Hac6S9WQbeEjfs8u7B0r+abvqvD7jBZbL3/DGIyUFbZbPWT+qmkQKWwkYIoqXvg=,iv:tNSv+BYfR1o27d0lv0cUE6ug2exbH/9gxOOdB8SwMk8=,tag:glqDwxG+q1ATb2TB1ep70g==,type:str]
+    pgp:
+        - created_at: "2022-05-30T17:15:22Z"
+          enc: |
+            -----BEGIN PGP MESSAGE-----
+            Version: GnuPG v2.0.22 (GNU/Linux)
+
+            hQIMA+MSm0AjbFjQAQ/+N2f7kpYFpLQzVBjbP1O/uVMK8bGQ48PDp9m/9XAGBhFb
+            cDVyhmDb3Rcv/V3lBOosjXPfefJoToNOw88/LtZ+koiSH/TAXmyh7lajXExATbx0
+            4hSa4GOFb0JBFc8br6a5zTaKzKPY89+FUzUKR0inA8M72elCPcK01Q2FWg2jGduv
+            CjAnlyeILs16NuTO+ugAfokgYUNfHqRot1RAcRO6Db3RkKe3kOwRfSQFe9U3FN6o
+            3JSAEo4ghC5J//B3TROwXYrp4mSZQqrdrMxV0T4Nq13luZzdMl5dspBXGpwnivEY
+            DZTKUCc3Q54HPk0B6Md4X//v8hIe4TSV/kDV8OZeW7tH0I1QoWVvfJZ9PGgLXQUU
+            LHgfrn3uTk5dGPHsMc/QJMqBH+A6qSM6DPTQTh1J0xVSxmnCUI/MYC0eEqS7wNkR
+            oHWUmOlCMk7iIGEOMTTgZqnB0v0fU0JU6mR9ZWq3FkTI0ITDa1dXeIwzFJbLuwuP
+            um2xaettKPl9Mbre7ezhU2CKJc+mRVnggaa8x6XKg+yyQpGiJUQ7s6Pe8llFeZ9S
+            S3GZxQ/a4gNkIEemQicNg74m/McBQP02sjGux/QWqaiVl6W5KGafltO+E5g8MsZL
+            gUJq/Ik+uzmYUbsIcoUAMsynKS3QYxDvdBZId0mgS83Mj4AImC80sKEcAOnL7+PS
+            XgEU+NtwXPsijzujD7TPAu7BvuZQ3PYSFBEcit7uKNls5qe+XZEt8uQIkWiz/546
+            TUPW1haMUt3oERcHo+bIJwT0NnIDy3+jhQ7n9FGY0OMaZ0NxPCZSB7khlcTTE2U=
+            =jrn3
+            -----END PGP MESSAGE-----
+          fp: 8F9300563F4827EB
+    unencrypted_suffix: _unencrypted
+    version: 3.7.1

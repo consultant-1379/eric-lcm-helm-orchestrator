@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    COPYRIGHT Ericsson 2024
+
+    The copyright to the computer program(s) herein is the property of
+    Ericsson Inc. The programs may be used and/or copied only with written
+    permission from Ericsson Inc. or in accordance with the terms and
+    conditions stipulated in the agreement/contract under which the
+    program(s) have been supplied.
+
+-->
+<settings xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <mirrors>
+        <mirror>
+            <id>nexus</id>
+            <url>https://arm1s11-eiffel052.eiffel.gic.ericsson.se:8443/nexus/content/groups/eo-repositories</url>
+            <mirrorOf>external:*</mirrorOf>
+        </mirror>
+    </mirrors>
+    <pluginGroups>
+        <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+    </pluginGroups>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <repositories>
+                <repository>
+                    <id>EOrepositories</id>
+                    <name>eo-repositories</name>
+                    <url>https://arm1s11-eiffel052.eiffel.gic.ericsson.se:8443/nexus/content/groups/eo-repositories/</url>
+                </repository>
+                <repository>
+                    <id>ProjectRepo</id>
+                    <name>ProjectRepo</name>
+                    <url>file://${project.basedir}/libs</url>
+                </repository>
+            </repositories>
+            <properties>
+                <sonar.host.url>https://codeanalyzer2.internal.ericsson.com</sonar.host.url>
+                <sonar.login>REPLACEUSERNAME</sonar.login>
+                <sonar.password>REPLACEPASSWORD</sonar.password>
+                <sonar.projectKey>${project.artifactId}</sonar.projectKey>
+                <sonar.projectName>${project.name}</sonar.projectName>
+                <sonar.projectVersion>${project.version}</sonar.projectVersion>
+            </properties>
+        </profile>
+    </profiles>
+    <servers>
+        <server>
+            <id>eo-snapshots</id>
+            <username>REPLACEUSERNAME</username>
+            <password>REPLACEPASSWORD</password>
+        </server>
+        <server>
+            <id>eo-releases</id>
+            <username>REPLACEUSERNAME</username>
+            <password>REPLACEPASSWORD</password>
+        </server>
+    </servers>
+    <activeProfiles>
+        <activeProfile>local</activeProfile>
+    </activeProfiles>
+</settings>

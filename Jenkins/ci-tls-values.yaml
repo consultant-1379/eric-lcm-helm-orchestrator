@@ -1,0 +1,172 @@
+global:
+  iamClientSecretEnabled: false
+  networkPolicy:
+    enabled: false
+  registry:
+    imagePullPolicy: Always
+    pullSecret: regcred
+  security:
+    tls:
+      enabled: true
+  pullSecret: regcred
+
+eric-lcm-helm-executor:
+  enabled: true
+  docker-registry:
+    url: "docker.tls.hahn117.rnd.gic.ericsson.se"
+    username: "dockeruser"
+    password: "dockerpassword"
+  helm-registry:
+    name: "internal"
+    username: "changeit"
+    password: "changeit"
+  postgress:
+    service: "eric-data-document-database-pg"
+    dbName: "eric-exec-db"
+    credentials:
+      kubernetesSecretName: "eric-data-document-database-pg-credentials"
+      keyForUserId: "LcmUserKey"
+      keyForUserPw: "LcmPasswdKey"
+      keyForSuperPw: "super-pwd"
+  ingress:
+    enabled: true
+    hostname: "tls.hahn117.rnd.gic.ericsson.se"
+    path: /
+    tls:
+      enabled: true
+      passthrough : false
+      existingSecret: ""
+    certificates:
+      asymmetricKeyCertificateName: "eric-lcm-helm-executor/eric-lcm-helm-executor"
+      trustedCertificateListName: "eric-lcm-helm-executor"
+    annotations: {}
+
+eric-lcm-helm-chart-registry:
+  enabled: true
+  env:
+    secret:
+      BASIC_AUTH_USER: "changeit"
+      BASIC_AUTH_PASS: "changeit"
+    s3:
+      enabled: true
+      host: "eric-data-object-storage-mn"
+    s3Secret: "eric-ccr-server-db-secret"
+  persistentVolumeClaim:
+    enabled: false
+  ingress:
+    enabled: true
+    generateSelfSignedCerts: true
+    hostname: "helm.tls.hahn117.rnd.gic.ericsson.se"
+    useHttpProxy: false
+    tls:
+      secretName: "eric-helm-chart-registry-tls-secret"
+  brAgent:
+    enabled: false
+
+eric-data-document-database-pg:
+  enabled: true
+  postgresDatabase: lcm-pg-db
+  credentials:
+    kubernetesSecretName: eric-data-document-database-pg-credentials
+    keyForUserId: custom-user
+    keyForUserPw: custom-pwd
+    keyForSuperPw: super-pwd
+    keyForMetricsPw: metrics-pwd
+    keyForReplicaId: replica-user
+    keyForReplicaPw: replica-pwd
+  service:
+    endpoints:
+      postgresExporter:
+      tls:
+        enforced: true
+
+eric-data-object-storage-mn:
+  enabled: true
+  imageCredentials:
+    pullPolicy: Always
+    registry:
+      pullSecret: regcred
+  credentials:
+    kubernetesSecretName: eric-ccr-server-db-secret
+  autoEncryption:
+    enabled: false
+
+eric-data-message-bus-kf:
+  enabled: true
+  replicaCount: 3
+  imagePullPolicy: "IfNotPresent"
+  persistentVolumeClaim:
+    enabled: false
+  persistence:
+    persistentVolumeClaim:
+      size: "5Gi"
+      enabled: true
+  readynessProbeTimeoutSeconds: 10
+  service:
+     endpoints:
+       messagebuskf:
+          sasl:
+             enforced: "required"
+          tls:
+             enforced: "required"
+             verifyClientCertificate: "required"
+             servcertTimeToLive: 3600
+             servcertRenewalLeadTime: 3000
+       dataCoordinator:
+          tls:
+             enforced: "required"
+             clientTimeToLive: 3600
+             clientRenewalLeadTime: 3000
+  security:
+    tls:
+      messagebuskf:
+        port: 9093
+        provider: "sip-tls"
+
+eric-pm-server:
+  enabled: true
+eric-sec-sip-tls:
+  enabled: true
+eric-sec-key-management:
+  enabled: true
+eric-data-distributed-coordinator-ed:
+  enabled: true
+eric-data-coordinator-zk:
+  enabled: true
+
+eric-log-transformer:
+  enabled: false
+eric-data-search-engine:
+  enabled: false
+eric-data-search-engine-curator:
+  enabled: false
+eric-cm-mediator:
+  enabled: false
+eric-sec-certm:
+  enabled: false
+eric-cm-yang-provider:
+  enabled: false
+eric-sec-access-mgmt:
+  enabled: false
+eric-sec-ldap-server:
+  enabled: false
+cm-adapter:
+  enabled: false
+eric-fm-database-pg:
+  enabled: false
+eric-fh-alarm-handler:
+  enabled: false
+eric-fh-snmp-alarm-provider:
+  enabled: false
+eric-ctrl-bro:
+  enabled: false
+eric-bss-bam-faultmap-mutator:
+  enabled: false
+eric-cnom-server:
+  enabled: false
+eric-cnom-document-database-mg:
+  enabled: false
+eric-log-shipper:
+  enabled: false
+eric-lcm-container-registry:
+  enabled: false

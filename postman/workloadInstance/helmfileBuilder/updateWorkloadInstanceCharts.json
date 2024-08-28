@@ -1,0 +1,11 @@
+{
+  "repository": "https://arm.sero.gic.ericsson.se/artifactory/proj-adp-gs-all-helm",
+  "charts" :[
+    {
+      "name": "eric-ctrl-bro",
+      "version": "5.0.0-9",
+      "crd": false
+    }
+  ],
+  "timeout": 5
+}

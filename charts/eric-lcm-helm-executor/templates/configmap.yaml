@@ -1,0 +1,112 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}-configmap
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+  annotations:
+  {{- include "eric-lcm-helm-executor.annotations" .| nindent 4 }}
+data:
+  application.properties: |
+    management.endpoint.metrics.enabled=true
+    management.endpoints.web.exposure.include=*
+    management.endpoint.prometheus.enabled=true
+    management.metrics.export.prometheus.enabled=true
+    management.metrics.web.server.auto-time-requests=true
+    management.metrics.enable.jvm=true
+    management.metrics.distribution.percentiles-histogram.http.server.requests=true
+    management.metrics.distribution.sla.http.server.requests=100ms,300ms,500ms
+  application.yaml: |
+    spring:
+      datasource:
+        {{- if and ( eq (include "eric-lcm-helm-executor.tls-enable" .) "true" ) (eq (include "eric-lcm-helm-executor.service-mesh-enabled" .) "false") }}
+        url: "jdbc:postgresql://${PG_SERVICE}.{{ .Release.Namespace }}.svc.cluster.local:5432/${PG_DBNAME}?verifyServerCertificate=true&useSSL=true&requireSSL=true&sslcert=${PGSSLCERT}&sslkey=${PGSSLKEYDER}&sslrootcert=${PGSSLROOTCERT}&user={{ template "eric-lcm-helm-executor.pg-creds-username" . }}"
+        {{- else }}
+        url: "jdbc:postgresql://${PG_SERVICE}.{{ .Release.Namespace }}.svc.cluster.local:5432/${PG_DBNAME}"
+        {{ include "eric-lcm-helm-executor.pg-credentials" . }}
+        {{- end }}
+        hikari:
+          data-source-properties: stringtype=unspecified
+      config:
+        import: "kubernetes:"
+      jpa:
+        properties:
+          hibernate:
+            jdbc:
+              lob:
+                non_contextual_creation: true
+      cloud:
+        kubernetes:
+          secrets:
+            useNameAsPrefix: true
+            fail-fast: true
+            enableApi: true
+            enabled: true
+            namespace: ${KUBERNETES_NAMESPACE}
+            usePrefixAsName: true
+            sources:
+              - name: {{ .Values.postgress.credentials.kubernetesSecretName | default "eric-data-document-database-pg-credentials" | quote }}
+              - name: {{ index .Values "helm-registry" "credentials" "kubernetesSecretName" | default "eric-lcm-helm-chart-registry" | quote }}
+              - name: {{ index .Values "container-registry" "credentials" "kubernetesSecretName" | default "eric-lcm-helm-executor-container-creds" | quote }}
+    directory:
+      certificates: ${CRT_PATH}
+    logPath : ${LOG_PATH}
+    logging:
+      level:
+        root: ${LOG_LEVEL}
+    server:
+      port: {{ .Values.service.port }}
+      shutdown: "graceful"
+    management:
+      endpoint:
+        health:
+          probes:
+            enabled: true
+      health:
+        livenessState:
+          enabled: true
+        readinessState:
+          enabled: true
+      certificates:
+        enrollment:
+          enabled: ${CRT_ENABLED}
+    helmrepo:
+      name: {{ index .Values "helm-registry" "name" }}
+      {{ include "eric-lcm-helm-executor.hcr-credentials" . }}
+    {{- if index .Values "container-registry" "url" }}
+    container-registry:
+      url: ${container_url}
+      {{ include "eric-lcm-helm-executor.cr-credentials" . }}
+    {{- end }}
+    security:
+      tls:
+        enabled: ${mTLS_STATE}
+      serviceMesh:
+        enabled: {{ include "eric-lcm-helm-executor.service-mesh-enabled" . | default "false"}}
+    bro:
+      host: ${BRO_HOST}
+      port: ${BRO_PORT}
+    operation:
+      timeout: {{ .Values.executorConfig.operation.timeout }}
+    auto-rollback:
+      enabled: ${HFE_AUTO_ROLLBACK_ENABLED}
+    deleteNamespace:
+      default: ${DELETE_NAMESPACE_DEFAULT}
+    refresher:
+      secret-name: {{ index .Values "container-registry" "credentials" "kubernetesSecretName" | default "eric-lcm-helm-executor-container-creds" | quote }}
+      namespace: ${KUBERNETES_NAMESPACE}

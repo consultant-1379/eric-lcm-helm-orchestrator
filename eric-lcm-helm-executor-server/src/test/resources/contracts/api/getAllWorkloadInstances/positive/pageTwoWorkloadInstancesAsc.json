@@ -1,0 +1,46 @@
+{
+  "_links": {
+    "first": {
+      "href": "https://host/cnwlcm/v1/workload_instances?page=1&size=2"
+    },
+    "prev": {
+      "href": "https://host/cnwlcm/v1/workload_instances?page=1&size=2"
+    },
+    "self": {
+      "href": "https://host/cnwlcm/v1/workload_instances?page=2&size=2"
+    },
+    "next": {
+      "href": "https://host/cnwlcm/v1/workload_instances?page=3&size=2"
+    },
+    "last": {
+      "href": "https://host/cnwlcm/v1/workload_instances?page=5&size=2"
+    }
+  },
+  "_page": {
+    "number": 2,
+    "size": 2,
+    "totalPages": 5,
+    "totalElements": 9
+  },
+  "content":
+  [
+    {
+      "workloadInstanceId": "firstId",
+      "workloadInstanceName": "name",
+      "namespace": "namespace",
+      "cluster": "cluster",
+      "additionalParameters": {
+        "testKey": "testValue"
+      }
+    },
+    {
+      "workloadInstanceId": "secondId",
+      "workloadInstanceName": "name",
+      "namespace": "namespace",
+      "cluster": "cluster",
+      "additionalParameters": {
+        "testKey": "testValue"
+      }
+    }
+  ]
+}

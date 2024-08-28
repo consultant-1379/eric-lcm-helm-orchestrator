@@ -1,0 +1,36 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+repositories:
+  - name: adp
+    url: https://arm.sero.gic.ericsson.se/artifactory/proj-adp-gs-all-helm
+
+
+releases:
+  - name: eric-lcm-container-registry
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: {{ .Values | get "eric-lcm-container-registry" "adp" }}/eric-lcm-container-registry
+    version: 4.3.0+23
+    installed: {{ .Values | get "eric.lcm.container.registry.enabled" true }}
+    values:
+      - values-templates/container-registry.yaml.gotmpl
+  - name: eric-lcm-helm-chart-registry
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: {{ .Values | get "eric-lcm-helm-chart-registry" "adp" }}/eric-lcm-helm-chart-registry
+    version: 3.3.0+23
+    installed: {{ .Values | get "eric.lcm.helm.chart.registry.enabled" true }}
+    values:
+      - values-templates/helm-chart-registry.yaml.gotmpl

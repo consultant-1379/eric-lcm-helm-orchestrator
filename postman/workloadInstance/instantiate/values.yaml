@@ -1,0 +1,22 @@
+global:
+  crd:
+    enabled: true
+
+cn-am-test-app-a:
+  enabled: true
+  fuu: bar
+  name: cn-am-test-app-a
+
+cn-am-test-app-b:
+  enabled: true
+  fuu: bar
+  name: cn-am-test-app-b
+
+cn-am-test-app-c:
+  enabled: false
+  fuu: bar
+  name: cn-am-test-app-c
+
+cn-am-test-crd:
+  enabled: false
+  fuu: bar

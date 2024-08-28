@@ -1,0 +1,74 @@
+{
+  "metadata": {
+    "serviceHelmChartName": "eric-lcm-helm-orchestrator",
+    "usedSchemaVersion": "3.0 or later",
+    "fileVersion": "0.8.0",
+    "dateEdited": "2023-05-02",
+    "prefixList": [ "hfe", "jvm", "executor" ]
+  },
+    "metrics":
+    [
+      {
+        "pmMetric": "hfe_instantiation_requests_total",
+        "metricDescription": "Counts the total number of Instantiation request.",
+        "metricType": "Counter",
+        "metricStatus": "stable",
+        "metricCategory": "RED",
+        "metricLabel": [
+          {"label": "operation"}
+        ]
+      },
+      {
+        "pmMetric": "hfe_termination_requests_total",
+        "metricDescription": "Counts the total number of Termination request.",
+        "metricType": "Counter",
+        "metricStatus": "stable",
+        "metricCategory": "RED",
+        "metricLabel": [
+          {"label": "operation"}
+        ]
+      },
+      {
+        "pmMetric": "hfe_upgrade_requests_total",
+        "metricDescription": "Counts the total number of Upgrade request.",
+        "metricType": "Counter",
+        "metricStatus": "stable",
+        "metricCategory": "RED",
+        "metricLabel": [
+          {"label": "operation"}
+        ]
+      },
+      {
+        "pmMetric": "jvm_memory_max_bytes",
+        "metricDescription": "The maximum amount of memory in bytes that can be used for memory management.",
+        "metricType": "Gauge",
+        "metricStatus": "stable",
+        "metricCategory": "Use",
+        "initialValue": 0
+      },
+      {
+        "pmMetric": "jvm_threads_daemon_threads",
+        "metricDescription": "The current number of live daemon threads.",
+        "metricType": "Gauge",
+        "metricStatus": "stable",
+        "metricCategory": "Use",
+        "initialValue": 0
+      },
+      {
+        "pmMetric": "jvm_threads_peak_threads",
+        "metricDescription": "The peak live thread count since the Java virtual machine started or peak was reset.",
+        "metricType": "Gauge",
+        "metricStatus": "stable",
+        "metricCategory": "Use",
+        "initialValue": 0
+      },
+      {
+        "pmMetric": "executor_pool_size_threads",
+        "metricDescription": "The current number of threads in the pool.",
+        "metricType": "Gauge",
+        "metricStatus": "stable",
+        "metricCategory": "Use",
+        "initialValue": 0
+      }
+    ]
+  }

@@ -1,0 +1,29 @@
+{{- if .Values.networkPolicy -}}
+{{- if .Values.networkPolicy.enabled -}}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "eric-ran-rad-rce-base.name" . }}-policy
+  labels:
+{{ include "eric-ran-rad-rce-base.labels" . | indent 4 }}
+  annotations:
+{{ include "eric-ran-rad-rce-base.annotations" . | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "eric-ran-rad-rce-base.name" . }}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: eric-eo-api-gateway
+    - podSelector:
+        matchLabels:
+          app: eric-pm-server
+    ports:
+    - port: {{ .Values.service.port }}
+      protocol: TCP
+{{- end }}
+{{- end }}

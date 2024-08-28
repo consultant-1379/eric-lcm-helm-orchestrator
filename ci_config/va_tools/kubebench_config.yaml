@@ -1,0 +1,17 @@
+KubeBench:  #Do not modify this
+
+#    This configuration support ENV variables
+#    The environment variables must have !ENV before them and be in this format to be parsed: ${VAR_NAME}.
+#    E.g.:
+#    scanner:
+#        arm_path: !ENV 'https://arm.sel..${PROD}:${VER}'
+#        something_else: !ENV '${AWESOME_ENV_VAR}/var/${A_SECOND_AWESOME_VAR}'
+    Product: 'eric-lcm-helm-executor' #Name of your product(this is an optional parameter now, newly added for analytics)
+    Product_internal: "Helmfile Executor"
+    Product_contact: "PDLSUNFLOW@pdl.internal.ericsson.com"
+    KubeconfigFile: config   #Mount its dir to /opt/kubebench/conf
+    Targets: 'all' #Other Options: master,controlplane,node,etcd,policies # one or more by comma separated.
+    Version: '' #1.19, 1.17  #Only if you want to override the default option.
+    Timeout: 60  #Max Wait time in seconds for the Pod to become successful, 60 secs is default.
+    DisplayReportConsole: True #Make it true if you want the reports to be displayed in console
+    Namespace: 'va-executor' #Mandate Option to be filled.Enter the respective namespace to which you have access and which exists.

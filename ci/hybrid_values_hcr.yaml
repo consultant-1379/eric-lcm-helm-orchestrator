@@ -1,0 +1,43 @@
+#================================
+#Value for duplicate variables
+BRO_BRA_STATE: &BRO_BRA_STATE false
+storageClass: &storageClass "network-block"
+document-database-pg-credentials: &databasePgCred "eric-data-document-database-pg-credentials"
+eric-lcm-db-user-name: &dbLcmUser "customname"
+container_cred_id: &container_cred_id "container_cred_id"
+container_cred_pass: &container_cred_pass "container_cred_pass"
+#================================
+global:
+  timezone: UTC
+  security:
+    tls:
+      enabled: false
+  iamClientSecretEnabled: false
+  networkPolicy:
+    enabled: false
+  extraEnv:
+    container_cred_id: *container_cred_id
+    container_cred_pass: *container_cred_pass
+  adpBR:
+    brLabelKey: adpbrlabelkey
+
+rstate: RSTATE
+
+nameOverride: ""
+fullnameOverride: ""
+
+
+#eric-lcm-helm-chart-registry:
+enabled: true
+env:
+  secret:
+    BASIC_AUTH_USER: "admin"
+    BASIC_AUTH_PASS: "pass"
+  s3:
+    enabled: false
+persistentVolumeClaim:
+  enabled: false
+ingress:
+  enabled: false
+brAgent:
+  enabled: *BRO_BRA_STATE

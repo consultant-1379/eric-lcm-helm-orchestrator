@@ -1,0 +1,151 @@
+modelVersion: 2.0
+description: "Custom rules for HFE"
+
+docker-images:
+  - adp-helm-kubectl: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-py3kubehelmbuilder:${env.HELM_KUBECTL_TAG}
+
+
+import:
+  common: ../common-properties.yaml
+
+
+properties:
+  - image-secret: armdocker
+
+
+var:
+  - commit-author
+  - commit-email
+  - commithash
+  - commithash-full
+  - docker-config-basepath
+  - image-full-name-internal
+  - version
+  - version-prefix
+  - version-prefix: VERSION_PREFIX
+env:
+  - COLLECT_LOGS_SCRIPT_LOCATION (default="https://arm.sero.gic.ericsson.se/artifactory/proj-ADP_GS_Support_FTP-generic-local/collect_ADP_logs")
+  - ENABLE_HELM_V3 (default=true)
+  - HELM_INSTALL_TIMEOUT (default=5m0s)
+  - HELM_KUBECTL_TAG (default=latest)
+  - HELM_RELEASE (default=${common.helm-chart-name}-release)
+  - HOME
+  - K8S_NAMESPACE (default=${common.helm-chart-name}-${var.commithash})
+  - KUBECONFIG
+  - PWD
+
+
+# Rules to execute
+rules:
+  images-build:
+    - task: commit
+      cmd:
+        - git rev-parse --short HEAD > .bob/var.commithash
+        - git rev-parse HEAD > .bob/var.commithash-full
+        - echo $(git log -1 --format='%aN' | sed 's/(EXT)//g') > .bob/var.commit-author
+        - git log -1 --format='%aE' > .bob/var.commit-email
+    - task: build-image
+      cmd: DOCKER_BUILDKIT=1 docker build .
+        --tag ${common.image-registry-name}/${common.image-path-ci-internal}/${common.docker-image-name}:${var.version}
+        --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        --build-arg CBO_VERSION=${common.cbos-image-version}
+        --build-arg COMMIT=${var.commithash}
+        --build-arg CONTAINER_ID=${common.container-id}
+        --build-arg HELM_DIFF_VERSION=${common.helm-diff_version}
+        --build-arg HELM_GIT_VERSION=${common.helm-git_version}
+        --build-arg HELM_VERSION=${common.helm_version}
+        --build-arg HELMFILE_VERSION=${common.helmfile_version}
+        --build-arg PRODUCT_NAME="${common.image-prod-name}"
+        --build-arg PRODUCT_NUMBER="${common.image-product-number}"
+        --build-arg PRODUCT_VERSION="${var.version}"
+    - task: build-init-image
+      cmd: DOCKER_BUILDKIT=1 docker build ${env.PWD}/Docker/init_container/
+        --tag ${common.image-registry-name}/${common.image-path-ci-internal}/${common.docker-image-name}-init:${var.version}
+        --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        --build-arg CBO_VERSION=${common.cbos-image-version}
+        --build-arg COMMIT=${var.commithash}
+        --build-arg CONTAINER_ID=${common.container-id}
+        --build-arg POSTGRESQL_VERSION=${common.postgresql_version}
+        --build-arg PRODUCT_NAME="${common.initcontainer-image-prod-name}"
+        --build-arg PRODUCT_NUMBER="${common.initcontainer-image-prod-number}"
+        --build-arg PRODUCT_VERSION="${var.version}"
+    - task: prepare-image-for-ciscat
+      cmd:
+       - sed -i '/zypper install/a iproute2 util-linux which rpm hostname gawk \\' ${env.PWD}/Dockerfile
+    - task: build-image-for-scan
+      cmd: DOCKER_BUILDKIT=1 docker build .
+        --tag ${common.image-registry-name}/${common.image-path-ci-internal}/${common.docker-image-name}-ciscat:${var.version}
+        --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        --build-arg CBO_VERSION=${common.cbos-image-version}
+        --build-arg COMMIT=${var.commithash}
+        --build-arg CONTAINER_ID=${common.container-id}
+        --build-arg HELM_DIFF_VERSION=${common.helm-diff_version}
+        --build-arg HELM_GIT_VERSION=${common.helm-git_version}
+        --build-arg HELM_VERSION=${common.helm_version}
+        --build-arg HELMFILE_VERSION=${common.helmfile_version}
+        --build-arg PRODUCT_NAME="${common.image-prod-name}"
+        --build-arg PRODUCT_NUMBER="${common.image-product-number}"
+        --build-arg PRODUCT_VERSION="${var.version}"
+
+  init-image-ci-publish:
+    - task: init-image-push-internal
+      cmd: docker push ${common.image-registry-name}/${common.image-path-ci-internal}/${common.docker-image-name}-init:${var.version}
+
+  init-image-publish:
+    - task: init-image-tag-public
+      cmd: docker tag ${common.image-registry-name}/${common.image-path-ci-internal}/${common.docker-image-name}-init:${var.version} ${common.image-registry-name}/${common.image-path-drop}/${common.docker-image-name}-init:${var.version}
+    - task: init-image-push-public
+      cmd: docker push ${common.image-registry-name}/${common.image-path-drop}/${common.docker-image-name}-init:${var.version}
+
+  helm-install:
+    - rule: helm-install-prep
+    - rule: helm-install-dep1
+    - task: helm-install-or-upgrade
+      docker-image: adp-helm-kubectl
+      docker-flags: &docker_flags_kube_config
+        - "--env HOME=${env.HOME}"
+        - "--env K8S_NAMESPACE=${env.K8S_NAMESPACE}"
+        - "--env KUBECONFIG=${env.KUBECONFIG}"
+        - "--env ENABLE_HELM_V3"
+        - "--env COLLECT_LOGS_SCRIPT_LOCATION"
+        - "--volume ${env.PWD}:${env.PWD}"
+        - "--volume ${env.HOME}:${env.HOME}"
+        - "--volume ${env.KUBECONFIG}:${env.KUBECONFIG}"
+        - "--volume ${var.docker-config-basepath}:${var.docker-config-basepath}"
+      cmd:
+        - kubectl delete clusterrolebinding ${env.K8S_NAMESPACE} || echo "clusterrolebinding does not exist"
+        - kubectl create clusterrolebinding ${env.K8S_NAMESPACE} --clusterrole=cluster-admin --serviceaccount=${env.K8S_NAMESPACE}:${common.helm-chart-name}
+
+  helm-install-dep1:
+    - task: helm-install-db
+      docker-image: adp-helm-kubectl
+      docker-flags: *docker_flags_kube_config
+      cmd:
+        - helm repo add chart-repo https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-adp-gs-all-helm
+        - helm pull chart-repo/eric-data-document-database-pg -d ${env.PWD}/.bob/
+        - helm upgrade --install db-release ${env.PWD}/.bob/eric-data-document-database-pg-*
+            --namespace ${env.K8S_NAMESPACE}
+            --values ${env.PWD}/ci/hybrid_values_db.yaml
+            --set eric-log-shipper.logshipper.autodiscover.namespace=${env.K8S_NAMESPACE}
+            --set imageCredentials.pullSecret=${image-secret}
+            --timeout ${env.HELM_INSTALL_TIMEOUT}
+            --wait
+
+  helm-install-prep:
+    - rule: find-docker-config-basepath
+    - task: helm-install-prep
+      docker-image: adp-helm-kubectl
+      docker-flags: *docker_flags_kube_config
+      cmd: kubectl create secret generic ${image-secret}
+        --from-file=.dockerconfigjson=$HOME/.docker/config.json
+        --type=kubernetes.io/dockerconfigjson
+        --namespace ${env.K8S_NAMESPACE} || true
+    - task: helm-install-db-secret
+      docker-image: adp-helm-kubectl
+      docker-flags: *docker_flags_kube_config
+      cmd: kubectl apply -f ${env.PWD}/ci/hybrib_ci_pre_item.yaml
+        --namespace ${env.K8S_NAMESPACE}
+
+  find-docker-config-basepath:
+    - task: find-docker-config-basepath
+      cmd: dirname $HOME/.docker/config.json > .bob/var.docker-config-basepath

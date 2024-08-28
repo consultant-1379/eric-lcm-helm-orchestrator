@@ -1,0 +1,34 @@
+{
+	"id": "1f01bf5e-cefe-416b-949f-8155eb6c977c",
+	"name": "Helmfile Executor",
+	"values": [
+		{
+			"key": "host",
+			"value": "localhost",
+			"enabled": true
+		},
+		{
+			"key": "port",
+			"value": "8080",
+			"enabled": true
+		},
+		{
+			"key": "workloadId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "clusterConnectionInfoId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "backupManagerId",
+			"value": "DEFAULT",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2021-11-08T13:26:42.190Z",
+	"_postman_exported_using": "Postman/8.10.0"
+}

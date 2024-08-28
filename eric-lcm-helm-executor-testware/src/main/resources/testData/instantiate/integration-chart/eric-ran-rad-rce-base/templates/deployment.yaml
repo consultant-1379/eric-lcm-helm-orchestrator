@@ -1,0 +1,153 @@
+{{- $global := fromJson (include "eric-ran-rad-rce-base.global" .) -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eric-ran-rad-rce-base.name" . }}
+  labels: {{- include "eric-ran-rad-rce-base.labels" . | nindent 4 }}
+  annotations: {{- include "eric-ran-rad-rce-base.annotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{- include "eric-ran-rad-rce-base.selector-labels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.updateStrategy.type }}
+{{- if and (eq .Values.updateStrategy.type "RollingUpdate") .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+{{- if .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+{{- end }}
+{{- if .Values.updateStrategy.rollingUpdate.maxSurge }}
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+{{- end }}
+{{- end }}
+  template:
+    metadata:
+      labels: {{- include "eric-ran-rad-rce-base.labels" . | nindent 8 }}
+{{- if or (eq .Values.global.log.output "stream") (eq .Values.global.log.output "all") }}
+        eric-log-transformer-access: "true"
+{{- end }}
+      annotations: {{- include "eric-ran-rad-rce-base.annotations" . | nindent 8 }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: {{ .Values.service.port | quote }}
+    spec:
+      {{- with index .Values.podPriority "eric-ran-rad-rce-base" "priorityClassName" }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "eric-ran-rad-rce-base.topologySpreadConstraints" . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "eric-ran-rad-rce-base.service-account.name" . }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      containers:
+        - name: {{ include "eric-ran-rad-rce-base.eric-ran-rad-rce-base-container-name" . }}
+          image: {{ template "eric-ran-rad-rce-base.imagePath" (dict "root" . "container" "eric-ran-rad-rce-base") }}
+          imagePullPolicy: {{ template "eric-ran-rad-rce-base.imagePullPolicy" (dict "root" . "container" "eric-ran-rad-rce-base") }}
+          env:
+            - name: SERVICE_PORT
+              value: "{{ .Values.service.port }}"
+            - name: CONFIG_FILE
+              value: "/app/etc/config.json"
+            - name: LOGCONTROL_FILE
+              value: "/app/etc/logcontrol/logcontrol.json"
+            - name: WATCH_CONFIG_UPDATE
+              value: "true"
+            - name: APP_LOG_TLS_KEY
+              value: {{ index .Values  "secrets" "rAppLogTlsKeyFileName" | quote }}
+            - name: APP_LOG_TLS_CERT
+              value: {{ index .Values "secrets" "rAppLogTlsCertFileName" | quote }}
+            - name: LOG_TLS_CA_CERT
+              value: {{ index .Values "secrets" "logTlsCACertFileName" | quote }}
+            - name: SERVICE_NAME
+              value: {{ .Chart.Name }}
+            - name: CONTAINER_NAME
+              value: {{ .Chart.Name }}
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                 fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: APPVERSION
+              value: {{ .Chart.AppVersion }}
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: http
+{{ toYaml (index .Values "probes" "eric-ran-rad-rce-base" "livenessProbe") | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: http
+{{ toYaml (index .Values "probes" "eric-ran-rad-rce-base" "readinessProbe") | indent 12 }}
+          resources:
+            {{- toYaml (index .Values "resources" "eric-ran-rad-rce-base") | nindent 12 }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: "/app/etc"
+              readOnly: true
+            - name: logcontrol-volume
+              mountPath: "/app/etc/logcontrol"
+              readOnly: true
+{{- if or (eq .Values.global.log.output "stream") (eq .Values.global.log.output "all") }}
+            - name: logcacert
+              mountPath: /etc/tls-ca/log/
+              readOnly: true
+            - name: rapplogcerts
+              mountPath: /etc/tls/log/
+              readOnly: true
+{{- end }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "eric-ran-rad-rce-base.name" . }}-config
+        - name: logcontrol-volume
+          configMap:
+            name: {{ include "eric-ran-rad-rce-base.name" . }}-log-control
+{{- if or (eq .Values.global.log.output "stream") (eq .Values.global.log.output "all") }}
+        - name: rapplogcerts
+          secret:
+            secretName: {{ index .Values "secrets" "rAppLogCertsSecretName" | quote }}
+            defaultMode: 420
+        - name: logcacert
+          secret:
+            secretName: {{ index .Values "secrets" "logCACertSecretName" | quote }}
+            defaultMode: 420
+{{- end }}
+      {{- if include "eric-ran-rad-rce-base.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-ran-rad-rce-base.pullSecrets" . }}
+      {{- end }}
+
+      {{- if (or (index .Values.nodeSelector "eric-ran-rad-rce-base") $global.nodeSelector) }}
+      nodeSelector: {{- include "eric-ran-rad-rce-base.nodeSelector" (merge (dict "workload" "eric-ran-rad-rce-base") .) | nindent 8 }}
+      {{- end }}
+
+{{ include "eric-ran-rad-rce-base.affinity" . | indent 6 }}
+
+      {{- with (index .Values.tolerations "eric-ran-rad-rce-base") }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}

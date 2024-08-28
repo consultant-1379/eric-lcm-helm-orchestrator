@@ -1,0 +1,6 @@
+{
+  "backupName": "myBackup",
+  "backupManagerId": "DEFAULT",
+  "uri": "sftp://host:port/remotepath",
+  "password": "12345"
+}

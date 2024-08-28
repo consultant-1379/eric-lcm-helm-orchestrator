@@ -1,0 +1,27 @@
+{{- if .Values.global -}}
+{{- if and .Values.global.networkPolicy .Values.networkPolicy -}}
+{{- if and .Values.global.networkPolicy.enabled .Values.networkPolicy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}-default-allow
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+  annotations: {{- include "eric-lcm-helm-executor.annotations" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "eric-lcm-helm-executor.name" . }}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          {{ include "eric-lcm-helm-executor.name" . }}-access: "true"
+          {{- include "eric-lcm-helm-executor.networkPolicy.matchLabels" . | nindent 4 }}
+    ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+{{- end }}
+{{- end }}
+{{- end }}

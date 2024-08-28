@@ -1,0 +1,2 @@
+1. Chart busybox-simple-chart is installed, pod will automatically report readiness in {{ .Values.probesConfig.readinessProbe.delayBeforeReady }} seconds
+

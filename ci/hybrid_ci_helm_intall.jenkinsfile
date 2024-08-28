@@ -1,0 +1,10 @@
+def bob = "./bob/bob"
+
+def custom_ruleset = "${bob} -r ci/custom_ruleset.yaml"
+
+stage('Helm Dependency Install(custom stage)') {
+    withCredentials([usernamePassword(credentialsId: 'SELI_ARTIFACTORY', usernameVariable: 'SELI_ARTIFACTORY_REPO_USER', passwordVariable: 'SELI_ARTIFACTORY_REPO_PASS'),
+                     file(credentialsId: 'docker-config-json', variable: 'DOCKER_CONFIG_JSON')]) {
+        sh "${custom_ruleset} helm-install"
+    }
+}

@@ -1,0 +1,4 @@
+---
+apiVersion: v1
+name: cn-am-test-app-a
+version: 0.0.2

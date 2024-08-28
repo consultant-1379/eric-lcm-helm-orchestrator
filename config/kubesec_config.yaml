@@ -1,0 +1,15 @@
+Kubesec:
+  Product: "eric-lcm-helm-executor"
+  Product_internal: "Helmfile Executor"
+  Product_contact: "PDLSUNFLOW@pdl.internal.ericsson.com"
+  KubesecYAML:
+    Scan: True
+    armLinks:
+      Links:
+#        - "https://arm.sero.gic.ericsson.se/artifactory/proj-bdgs-cn-app-mgmt-drop-helm/eric-lcm-helm-executor/eric-lcm-helm-executor-{version}.tgz"
+      valuesOverride:
+  KubesecCluster:
+    Scan: False
+    KubeconfigFile: "config"
+    namespace: "myapp-ns"
+

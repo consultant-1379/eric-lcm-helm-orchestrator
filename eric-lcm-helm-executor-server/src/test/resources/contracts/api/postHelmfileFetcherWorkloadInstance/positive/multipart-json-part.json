@@ -1,0 +1,5 @@
+{
+  "workloadInstanceName": "successfulpost",
+  "namespace": "tom",
+  "url": "https://localhost:8080/vnfm/onboarding/api/vnfpkgm/v1/vnf_packages/7f85bdd1-4a51-404a-9025-971ce80ab01f"
+}

@@ -1,0 +1,11 @@
+bases:
+  - repositories.yaml
+
+releases:
+  - name: eric-sec-sip-tls-crd
+    chart: {{ .Values | get "eric-sec-sip-tls-crd.registry" "adp" }}/eric-sec-sip-tls-crd
+    version: 2.4.0+44
+    namespace: {{ .Values | get "global.crd.namespace" "eric-crd-ns" }}
+    installed: {{ .Values | get "global.crd.enabled" true }}
+    values:
+      - ./values-templates/eric-sec-sip-tls-crd.yaml.gotmpl

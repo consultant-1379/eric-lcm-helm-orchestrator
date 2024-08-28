@@ -1,0 +1,19 @@
+{
+  "workloadInstanceId": "testId",
+  "workloadInstanceName": "testName",
+  "namespace": "testNamespace",
+  "cluster": "testCluster",
+  "repository": "https://arm.sero.gic.ericsson.se/artifactory/proj-adp-gs-all-helm",
+  "charts" :[
+    {
+      "name": "chart-1",
+      "version": "5.0.0-9",
+      "crd": false
+    },
+    {
+      "name": "chart-2",
+      "version": "2.24.0+10",
+      "crd": true
+    }
+  ]
+}

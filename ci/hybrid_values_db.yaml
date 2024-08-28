@@ -1,0 +1,54 @@
+#================================
+#Value for duplicate variables
+BRO_BRA_STATE: &BRO_BRA_STATE false
+storageClass: &storageClass "network-block"
+document-database-pg-credentials: &databasePgCred "eric-data-document-database-pg-credentials"
+eric-lcm-db-user-name: &dbLcmUser "customname"
+container_cred_id: &container_cred_id "container_cred_id"
+container_cred_pass: &container_cred_pass "container_cred_pass"
+#================================
+global:
+  timezone: UTC
+  security:
+    tls:
+      enabled: false
+  iamClientSecretEnabled: false
+  networkPolicy:
+    enabled: false
+  extraEnv:
+    container_cred_id: *container_cred_id
+    container_cred_pass: *container_cred_pass
+  adpBR:
+    brLabelKey: adpbrlabelkey
+
+rstate: RSTATE
+
+nameOverride: ""
+fullnameOverride: ""
+
+
+#eric-data-document-database-pg:
+enabled: true
+postgresDatabase: lcm-pg-db
+credentials:
+  kubernetesSecretName: *databasePgCred
+  keyForUserId: "custom-user"
+  keyForUserPw: "custom-pwd"
+  keyForSuperPw: "super-pwd"
+  keyForMetricsPw: "metrics-pwd"
+  keyForReplicaId: "replica-user"
+  keyForReplicaPw: "replica-pwd"
+highAvailability:
+  synchronousModeEnabled: false
+  replicaCount: 1
+persistentVolumeClaim:
+  storageClassName: *storageClass
+brAgent:
+  enabled: *BRO_BRA_STATE
+  logicalDBBackupEnable: false
+  backupDataModelConfig: "eric-data-document-database-pg-brm-conf"
+  backupTypeList:
+    - default-db
+    - executor-db
+  RootLogLevel: "debug"
+  PGAgentLogLevel: "debug"

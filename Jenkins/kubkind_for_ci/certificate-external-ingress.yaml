@@ -1,0 +1,29 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+{{ if .Values.ingress.enabled }}
+apiVersion: certm.sec.ericsson.com/v1
+kind: ExternalCertificate
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}-ingress-tls
+  annotations: 
+    {{- include "eric-lcm-helm-executor.annotations" . | nindent 4 }}
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+spec:
+  generated-secret-name: {{ template "eric-lcm-helm-executor.name" . }}-ingress-tls
+  generated-secret-type: tls
+  asymmetric-key-certificate-name: {{ .Values.ingress.certificates.asymmetricKeyCertificateName | quote }}
+{{- end -}}

@@ -1,0 +1,22 @@
+Kubehunter:
+  Product: "eric-lcm-helm-executor"
+  Product_internal: "Helmfile Executor"
+  Product_contact: "PDLSUNFLOW@pdl.internal.ericsson.com"
+  RemoteScan:
+    Scan: True
+    NodeIp: all
+    KubeconfigFile: "config"
+  InterfaceScan: False
+  NetworkScanCIDR:
+  CommonFields:
+    CheckAsPod: True
+    Statistics: True
+    IncludePatchedVersions: False
+    ActiveHunt: False
+    ReportFormat: "json"
+    DisplayReportConsole: True
+  CustomScan:
+    Scan: False
+    Parameters: "-h"
+    DisplayReportConsole: False
+

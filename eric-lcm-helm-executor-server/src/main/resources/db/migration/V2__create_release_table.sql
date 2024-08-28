@@ -1,0 +1,11 @@
+-- -----------------------------------------------------
+-- Table `release`
+-- -----------------------------------------------------
+CREATE TABLE release (
+    ID VARCHAR(250) NOT NULL UNIQUE,
+    NAME VARCHAR(250) NOT NULL,
+    ENABLED BOOLEAN NOT NULL,
+    WORKLOAD_INSTANCE_ID VARCHAR(250) NOT NULL,
+    FOREIGN KEY (WORKLOAD_INSTANCE_ID) REFERENCES WORKLOAD_INSTANCE (ID) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    UNIQUE (NAME, WORKLOAD_INSTANCE_ID)
+);

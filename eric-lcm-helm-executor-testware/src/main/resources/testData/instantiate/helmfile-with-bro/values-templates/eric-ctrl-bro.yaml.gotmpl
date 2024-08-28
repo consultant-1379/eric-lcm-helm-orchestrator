@@ -1,0 +1,7 @@
+{{ if hasKey .Values "global" }}
+global:
+{{ .Values | get "global" | toYaml | indent 2 }}
+{{ end }}
+{{ if hasKey .Values .Release.Name }}
+{{ .Values | get .Release.Name | toYaml }}
+{{ end }}

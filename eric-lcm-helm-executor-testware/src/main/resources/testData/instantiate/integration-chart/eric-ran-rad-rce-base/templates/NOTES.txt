@@ -1,0 +1,15 @@
+{{- if .Values.apiGatewayRoute.enabled -}}
+RCE hello-world API can be accessed at url
+    {{- if .Values.ingress.uniquePathName }}
+    https://{{ index .Values "ingress" "host" }}/{{ index .Values "ingress" "uniquePathName" }}/rce/v0/hello
+    {{- else}}
+    https://{{ index .Values "ingress" "host" }}/rce/v0/hello
+    {{- end}}
+RCE hello-world UI can be accessed at url
+    {{- if .Values.ingress.uniquePathName }}
+    https://{{ index .Values "ingress" "host" }}/{{ index .Values "ingress" "uniquePathName" }}/rce-ui/#rce-base
+    {{- else}}
+    https://{{ index .Values "ingress" "host" }}/rce-ui/#rce-base
+    {{- end}}
+{{- end }}
+

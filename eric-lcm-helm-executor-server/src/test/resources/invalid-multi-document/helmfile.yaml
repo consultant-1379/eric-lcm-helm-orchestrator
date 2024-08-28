@@ -1,0 +1,105 @@
+bases:
+  - repositories.yaml
+  - environments.yaml
+
+---
+helmDefaults:
+  wait: {{ .Values | get "global.default.wait" true }}
+  timeout: {{ .Values | get "global.default.timeout" }}
+
+missingFileHandler: Error
+
+helmfiles:
+  - path: crds-helmfile.yaml
+    values:
+      - {{ toYaml .Values | nindent 6 }}
+
+releases:
+  - name: prerequisite
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: ./values-templates/prerequisite
+    installed: {{ .Values | get "prerequisite.enabled" true }}
+  - name: eric-lcm-container-registry
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-lcm-container-registry
+    version: 4.6.0+30
+    installed: {{ .Values | get "eric-lcm-container-registry.enabled" true }}
+    values:
+      - values-templates/container-registry.yaml.gotmpl
+  - name: eric-lcm-helm-chart-registry
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-lcm-helm-chart-registry
+    version: 3.6.0+32
+    installed: {{ .Values | get "eric-lcm-helm-chart-registry.enabled" true }}
+    values:
+      - values-templates/helm-chart-registry.yaml.gotmpl
+  - name: eric-lcm-helm-executor
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: cn-app/eric-lcm-helm-executor
+    version: 0.1.0-93
+    installed: {{ .Values | get "eric-lcm-helm-executor.enabled" true }}
+    values:
+      - values-templates/eric-lcm-helm-executor.yaml.gotmpl
+  - name: eric-data-document-database-pg
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-data-document-database-pg
+    version: 6.0.0-0
+    installed: {{ .Values | get "eric-data-document-database-pg.enabled" true }}
+    values:
+      - values-templates/eric-data-document-database-pg.yaml.gotmpl
+  - name: eric-data-distributed-coordinator-ed
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-data-distributed-coordinator-ed
+    version: 2.6.0+19
+    installed: {{ .Values | get "eric-data-distributed-coordinator-ed.enabled" true }}
+    values:
+      - values-templates/eric-data-distributed-coordinator-ed.yaml.gotmpl
+  - name: eric-sec-key-management
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-sec-key-management
+    version: 2.18.0-10
+    installed: {{ .Values | get "eric-sec-key-management.enabled" true }}
+    values:
+      - values-templates/eric-sec-key-management.yaml.gotmpl
+  - name: eric-sec-sip-tls
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-sec-sip-tls
+    version: 2.5.0+27
+    installed: {{ .Values | get "eric-sec-sip-tls.enabled" true }}
+    values:
+      - values-templates/eric-sec-sip-tls.yaml.gotmpl
+  - name: eric-log-shipper
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-log-shipper
+    version: 5.8.0-3
+    installed: {{ .Values | get "eric-log-shipper.enabled" true }}
+    values:
+      - values-templates/eric-log-shipper.yaml.gotmpl
+  - name: eric-log-transformer
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-log-transformer
+    version: 5.8.0-1
+    installed: {{ .Values | get "eric-log-transformer.enabled" true }}
+    values:
+      - values-templates/eric-log-transformer.yaml.gotmpl
+  - name: eric-pm-server
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-pm-server
+    version: 6.1.0-58
+    installed: {{ .Values | get "eric-pm-server.enabled" true }}
+    values:
+      - values-templates/eric-pm-server.yaml.gotmpl
+  - name: eric-data-search-engine
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-data-search-engine
+    version: 6.3.0-43
+    installed: {{ .Values | get "eric-data-search-engine.enabled" true }}
+    values:
+      - values-templates/eric-data-search-engine.yaml.gotmpl
+  - name: eric-data-search-engine-curator
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: adp/eric-data-search-engine-curator
+    version: 2.5.0-13
+    installed: {{ .Values | get "eric-data-search-engine-curator.enabled" true }}
+    values:
+      - values-templates/eric-data-search-engine-curator.yaml.gotmpl

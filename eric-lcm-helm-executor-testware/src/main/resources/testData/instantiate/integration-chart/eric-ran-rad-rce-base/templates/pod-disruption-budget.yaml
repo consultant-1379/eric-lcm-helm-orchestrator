@@ -1,0 +1,21 @@
+{{- if gt (.Values.replicaCount | int) 1 }}
+{{ if .Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" }}
+apiVersion: policy/v1
+{{ else }}
+apiVersion: policy/v1beta1
+{{ end }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "eric-ran-rad-rce-base.pdb.name" . }}
+  labels: {{- include "eric-ran-rad-rce-base.labels" . | nindent 4 }}
+  annotations: {{- include "eric-ran-rad-rce-base.annotations" . | nindent 4 }}
+spec:
+{{- if not (kindIs "invalid" .Values.podDisruptionBudget.minAvailable) }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+{{- end }}
+{{- if not (kindIs "invalid" .Values.podDisruptionBudget.maxUnavailable) }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+{{- end }}
+  selector:
+    matchLabels: {{- include "eric-ran-rad-rce-base.selector-labels" . | nindent 6 }}
+{{- end }}

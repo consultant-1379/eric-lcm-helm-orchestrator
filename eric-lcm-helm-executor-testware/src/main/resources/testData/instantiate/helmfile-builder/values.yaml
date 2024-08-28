@@ -1,0 +1,95 @@
+global:
+  bamfaultmappings: eric-bss-bam-integration-faultmappings
+  timezone: UTC
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: "BAM"
+          swltId: "BAMTargetId"
+          customerId: "123456789"
+  security:
+    tls:
+      enabled: false
+  iamClientSecretEnabled: false
+  networkPolicy:
+    enabled: false
+  registry:
+    imagePullPolicy: Always
+    pullSecret: regcred 
+    url: armdocker.rnd.ericsson.se
+  pullSecret: regcred
+  crd:
+    enabled: true
+    namespace: eric-crd
+  default:
+    timeout: 900
+    wait: true
+  app:
+    enabled: true
+    namespace: cnam-helmfiles-stage
+  extraEnv:
+    minioAccessKey: "somestrongpassword"
+    minioSecretAccessKey: "somestrongpassword"
+    iamUsername: "keycloak"
+    iamPassword: "keycloak1"
+    ldapFederationAdminSecret: "keycloak"
+    dbCustomUser: "customuser"
+    dbCustomPassword: "custompassword"
+    dbLcmUser: "dblcmuser"
+    dbLcmPassword: "dblcmpassword"
+    dbSuperPassword: "superpassword"
+    dbMetricsPassword: "metricpassword"
+    dbReplicaUser: "replicuser"
+    dbReplicaPassword: "replicpassword"
+  dockercreds:
+    secretname: specifysecretname
+    registry: specifyservername
+    username: specifyusernamename
+    password: specifyusernpassword
+  adpBR:
+    brLabelKey: adpbrlabelkey
+
+storageClass: &storageClass "network-block"
+
+eric-ctrl-bro:
+  enabled: true
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: *storageClass
+      size: 15Gi
+  bro:
+    enableNotifications: false
+    enableAgentDiscovery: false
+  logging:
+    rootLevel: debug
+
+eric-pm-server:
+  enabled: true
+  rbac:
+    appMonitoring:
+      configFileCreate: false
+      enabled: false
+  server:
+    baseURL: "metrics/viewer/"
+    prefixURL: "metrics/viewer/"
+    persistentVolume:
+      enabled: false
+      storageClass: *storageClass
+  resources:
+    server:
+      requests:
+        cpu: "250m"
+        memory: "512Mi"
+      limits:
+        cpu: "2"
+        memory: "2048Mi"
+  service:
+    endpoints:
+      scrapeTargets:
+        tls:
+          enforced: "optional"
+      reverseproxy:
+        tls:
+          verifyClientCertificate: "optional"
+  config:
+    recording_rules: {}

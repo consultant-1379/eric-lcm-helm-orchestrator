@@ -1,0 +1,2862 @@
+{
+	"info": {
+		"_postman_id": "62ff9393-acd7-4227-b6e5-74fedd17df61",
+		"name": "Helmfile Executor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24505251"
+	},
+	"item": [
+		{
+			"name": "cluster",
+			"item": [
+				{
+					"name": "Create cluster",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "clusterConnectionInfo",
+									"contentType": "text/plain",
+									"description": "postman/cluster/create/cluster-connection-info.config",
+									"type": "file",
+									"src": "YOUR_PATH"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/cluster_connection_info",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"cluster_connection_info"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create cluster",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "clusterConnectionInfo",
+											"contentType": "text/plain",
+											"description": "postman/cluster/create/cluster-connection-info.config",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/cluster/create/cluster-connection-info.config"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/cluster_connection_info",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"cluster_connection_info"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 12:37:17 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"2aca2bb6-7e93-4426-812b-1c495cb92c53\",\n    \"name\": \"cluster-connection-info.config\",\n    \"status\": \"NOT_IN_USE\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get cluster list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/cluster_connection_info",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"cluster_connection_info"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get cluster list",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/cluster_connection_info",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"cluster_connection_info"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 12:37:26 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_links\": {\n        \"first\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/cluster_connection_info?page=1\"\n        },\n        \"prev\": null,\n        \"self\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/cluster_connection_info?page=1\"\n        },\n        \"next\": null,\n        \"last\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/cluster_connection_info?page=1\"\n        }\n    },\n    \"_page\": {\n        \"number\": 1,\n        \"size\": 15,\n        \"totalPages\": 1,\n        \"totalElements\": 1\n    },\n    \"content\": [\n        {\n            \"id\": \"2aca2bb6-7e93-4426-812b-1c495cb92c53\",\n            \"name\": \"hahn117\",\n            \"status\": \"NOT_IN_USE\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get cluster",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/cluster_connection_info/{{clusterConnectionInfoId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"cluster_connection_info",
+								"{{clusterConnectionInfoId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get cluster",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/cluster_connection_info/2aca2bb6-7e93-4426-812b-1c495cb92c53",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"cluster_connection_info",
+										"2aca2bb6-7e93-4426-812b-1c495cb92c53"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 12:45:01 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"2aca2bb6-7e93-4426-812b-1c495cb92c53\",\n    \"name\": \"hahn117\",\n    \"status\": \"NOT_IN_USE\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete cluster",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/cluster_connection_info/{{clusterConnectionInfoId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"cluster_connection_info",
+								"{{clusterConnectionInfoId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete cluster",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/cluster_connection_info/2aca2bb6-7e93-4426-812b-1c495cb92c53",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"cluster_connection_info",
+										"2aca2bb6-7e93-4426-812b-1c495cb92c53"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 12:46:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "workload_instance",
+			"item": [
+				{
+					"name": "helmfileFetcher",
+					"item": [
+						{
+							"name": "Fetch helmfile by url and instantiate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseHeadersLocation = pm.response.headers.get(\"Location\");",
+											"pm.environment.set(\"operationId\", responseHeadersLocation.substring(responseHeadersLocation.lastIndexOf(\"/\") + 1)); "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "workloadInstanceWithURLRequestDto",
+											"description": "postman/workloadInstance/instantiate/workloadInstanceURLPostFullOk.json",
+											"type": "file",
+											"src": "YOUR_PATH"
+										},
+										{
+											"key": "values",
+											"description": "postman/workloadInstance/instantiate/values.yaml",
+											"type": "file",
+											"src": "YOUR_PATH",
+											"disabled": true
+										},
+										{
+											"key": "clusterConnectionInfo",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/helmfile_fetcher/workload_instances",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"helmfile_fetcher",
+										"workload_instances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch helmfile by url and update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "workloadInstanceWithURLPutRequestDto",
+											"description": "postman/workloadInstance/helmfileFetcher/update/workloadInstanceWithURLPutRequestDto.json",
+											"type": "file",
+											"src": "YOUR_PATH"
+										},
+										{
+											"key": "values",
+											"description": "postman/workloadInstance/instantiate/values.yaml",
+											"type": "file",
+											"src": "YOUR_PATH",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/helmfile_fetcher/workload_instances/{{workloadInstanceId}}",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"helmfile_fetcher",
+										"workload_instances",
+										"{{workloadInstanceId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Instantiate workload instance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let responseHeadersLocation = pm.response.headers.get(\"Location\");",
+									"pm.environment.set(\"operationId\", responseHeadersLocation.substring(responseHeadersLocation.lastIndexOf(\"/\") + 1)); "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "helmSource",
+									"description": "postman/workloadInstance/instantiate/helmsource-1.2.3-4.tgz",
+									"type": "file",
+									"src": "YOUR_PATH"
+								},
+								{
+									"key": "workloadInstancePostRequestDto",
+									"description": "postman/workloadInstance/instantiate/workloadInstancePostFullOk.json",
+									"type": "file",
+									"src": "YOUR_PATH"
+								},
+								{
+									"key": "values",
+									"description": "postman/workloadInstance/instantiate/values.yaml",
+									"type": "file",
+									"src": "YOUR_PATH"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Instantiate Workload",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "helmSource",
+											"description": "postman/workloadInstance/instantiate/helmsource-1.2.3-4.tgz",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/workloadInstance/instantiate/helmfile-test-1.2.3-4.tgz"
+										},
+										{
+											"key": "workloadInstancePostRequestDto",
+											"description": "postman/workloadInstance/instantiate/workloadInstancePostFullOk.json",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/workloadInstance/instantiate/workloadInstancePostFullOk.json"
+										},
+										{
+											"key": "values",
+											"description": "postman/workloadInstance/instantiate/values.yaml",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/workloadInstance/instantiate/values.yaml"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"workload_instances"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Location",
+									"value": "http://0:0:0:0:0:0:0:1/cnwlcm/v1/operations/f2942fd2-7538-46a2-9e85-4b78a6779633"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:00:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"workloadInstanceId\": \"edbf3a69-4939-430a-bcc8-82ae58a75c09\",\n    \"workloadInstanceName\": \"successfulpost\",\n    \"namespace\": \"tmp-func-test\",\n    \"crdNamespace\": \"eric-crd-ns\",\n    \"cluster\": \"cluster-connection-info.config\",\n    \"helmSourceVersions\": [\n        \"1.2.3-4\"\n    ],\n    \"version\": null,\n    \"additionalParameters\": {\n        \"cn-am-test-app-a.enabled\": true\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update workload instance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let responseHeadersLocation = pm.response.headers.get(\"Location\");",
+									"pm.environment.set(\"operationId\", responseHeadersLocation.substring(responseHeadersLocation.lastIndexOf(\"/\") + 1)); "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "helmSource",
+									"description": "postman/workloadInstance/update/helmfile-3.4.5-6.tgz",
+									"type": "file",
+									"src": "YOUR_PATH"
+								},
+								{
+									"key": "workloadInstancePutRequestDto",
+									"description": "postman/workloadInstance/update/workloadInstancePut.json",
+									"type": "file",
+									"src": "YOUR_PATH"
+								},
+								{
+									"key": "values",
+									"description": "postman/workloadInstance/update/values.yaml",
+									"type": "file",
+									"src": "YOUR_PATH"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances",
+								"{{workloadId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Workload",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "helmSource",
+											"description": "postman/workloadInstance/update/helmfile-3.4.5-6.tgz",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/workloadInstance/update/helmfile-test-1.2.3+6.tgz"
+										},
+										{
+											"key": "workloadInstancePutRequestDto",
+											"description": "postman/workloadInstance/update/workloadInstancePut.json",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/workloadInstance/update/workloadInstancePut.json"
+										},
+										{
+											"key": "values",
+											"description": "postman/workloadInstance/update/values.yaml",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/workloadInstance/update/values.yaml"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"workload_instances",
+										"{{workloadId}}"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Location",
+									"value": "http://0:0:0:0:0:0:0:1/cnwlcm/v1/operations/b4671924-5b49-42b9-9e92-e29340d613a2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:09:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"workloadInstanceId\": \"edbf3a69-4939-430a-bcc8-82ae58a75c09\",\n    \"workloadInstanceName\": \"successfulpost\",\n    \"namespace\": \"tmp-func-test\",\n    \"crdNamespace\": \"eric-crd-ns\",\n    \"cluster\": \"cluster-connection-info.config\",\n    \"helmSourceVersions\": [\n        \"1.2.3-4\",\n        \"1.2.3--6\"\n    ],\n    \"version\": 1,\n    \"additionalParameters\": {\n        \"cn-am-test-app-a.enabled\": true\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get workload instances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get workload instances",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"workload_instances"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:14:01 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_links\": {\n        \"first\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/workload_instances?page=1\"\n        },\n        \"prev\": null,\n        \"self\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/workload_instances?page=1\"\n        },\n        \"next\": null,\n        \"last\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/workload_instances?page=1\"\n        }\n    },\n    \"_page\": {\n        \"number\": 1,\n        \"size\": 15,\n        \"totalPages\": 1,\n        \"totalElements\": 1\n    },\n    \"content\": [\n        {\n            \"workloadInstanceId\": \"edbf3a69-4939-430a-bcc8-82ae58a75c09\",\n            \"workloadInstanceName\": \"successfulpost\",\n            \"namespace\": \"tmp-func-test\",\n            \"crdNamespace\": \"eric-crd-ns\",\n            \"cluster\": \"cluster-connection-info.config\",\n            \"helmSourceVersions\": [\n                \"1.2.3-4\",\n                \"1.2.3--6\"\n            ],\n            \"version\": 2,\n            \"additionalParameters\": {\n                \"cn-am-test-app-a.enabled\": true\n            }\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get workload instance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances",
+								"{{workloadId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get workload instance",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"workload_instances",
+										"{{workloadId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:12:30 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"workloadInstanceId\": \"edbf3a69-4939-430a-bcc8-82ae58a75c09\",\n    \"workloadInstanceName\": \"successfulpost\",\n    \"namespace\": \"tmp-func-test\",\n    \"crdNamespace\": \"eric-crd-ns\",\n    \"cluster\": \"cluster-connection-info.config\",\n    \"helmSourceVersions\": [\n        \"1.2.3-4\",\n        \"1.2.3--6\"\n    ],\n    \"version\": 2,\n    \"additionalParameters\": {\n        \"cn-am-test-app-a.enabled\": true\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Terminate workload instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "workloadInstanceOperationPostRequestDto",
+									"description": "postman/workloadInstance/terminate/terminate.json",
+									"type": "file",
+									"src": "YOUR_PATH"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{localhost}}:{{localport}}/cnwlcm/v1/workload_instances/{{workloadId}}/operations",
+							"protocol": "http",
+							"host": [
+								"{{localhost}}"
+							],
+							"port": "{{localport}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances",
+								"{{workloadId}}",
+								"operations"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Terminate workload instance",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "workloadInstanceOperationPostRequestDto",
+											"description": "postman/workloadInstance/terminate/terminate.json",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/workloadInstance/terminate/terminate.json"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}/operations",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"workload_instances",
+										"{{workloadId}}",
+										"operations"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Location",
+									"value": "http://0:0:0:0:0:0:0:1/cnwlcm/v1/operations/239361de-bd03-4a2b-b2e8-d7a2036f4db3"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:21:30 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Delete workload instance",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances",
+								"{{workloadId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rollback workload instance",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "workloadInstanceOperationPutRequestDto",
+									"description": "postman/workloadInstance/rollback/workloadInstanceRollback.json",
+									"type": "file",
+									"src": "YOUR_PATH"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}/operations",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances",
+								"{{workloadId}}",
+								"operations"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Rollback workload instance",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "workloadInstanceOperationPutRequestDto",
+											"description": "postman/workloadInstance/rollback/workloadInstanceRollback.json",
+											"type": "file",
+											"src": "/home/zbuzdar/work/master-lcm/eric-lcm-helm-orchestrator/postman/workloadInstance/rollback/workloadInstanceRollback.json"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}/operations",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"workload_instances",
+										"{{workloadId}}",
+										"operations"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Location",
+									"value": "http://0:0:0:0:0:0:0:1/cnwlcm/v1/operations/25315673-cd27-4189-be3c-ed1bd5c7b90a"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:15:25 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"workloadInstanceId\": \"edbf3a69-4939-430a-bcc8-82ae58a75c09\",\n    \"workloadInstanceName\": \"successfulpost\",\n    \"namespace\": \"tmp-func-test\",\n    \"crdNamespace\": \"eric-crd-ns\",\n    \"cluster\": \"cluster-connection-info.config\",\n    \"helmSourceVersions\": [\n        \"1.2.3-4\",\n        \"1.2.3--6\"\n    ],\n    \"version\": 2,\n    \"additionalParameters\": {\n        \"cn-am-test-app-a.enabled\": true\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get VERSIONS by workload instance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}/versions",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances",
+								"{{workloadId}}",
+								"versions"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get VERSIONS by workload instance",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}/versions",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"workload_instances",
+										"{{workloadId}}",
+										"versions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:10:32 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_links\": {\n        \"first\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/workload_instances/edbf3a69-4939-430a-bcc8-82ae58a75c09/versions?page=1\"\n        },\n        \"prev\": null,\n        \"self\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/workload_instances/edbf3a69-4939-430a-bcc8-82ae58a75c09/versions?page=1\"\n        },\n        \"next\": null,\n        \"last\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/workload_instances/edbf3a69-4939-430a-bcc8-82ae58a75c09/versions?page=1\"\n        }\n    },\n    \"_page\": {\n        \"number\": 1,\n        \"size\": 15,\n        \"totalPages\": 1,\n        \"totalElements\": 2\n    },\n    \"content\": [\n        {\n            \"id\": \"9eb8c194-214e-4f87-8398-48d121fe3894\",\n            \"version\": 1,\n            \"helmSourceVersion\": \"1.2.3-4\",\n            \"valuesVersion\": \"102e161c-898b-42ae-8c0e-09e659bdb5a0\"\n        },\n        {\n            \"id\": \"b8bb9fc7-84f2-45ae-92b0-8df8aecf3c46\",\n            \"version\": 2,\n            \"helmSourceVersion\": \"1.2.3--6\",\n            \"valuesVersion\": \"4ef090da-ca4b-4db7-b9ec-c687f38d0fa4\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get version by workload instance and number",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}/versions/<VERSION-NUMBER>",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"workload_instances",
+								"{{workloadId}}",
+								"versions",
+								"<VERSION-NUMBER>"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get version by workload instance and number",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/workload_instances/{{workloadId}}/versions/1",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"workload_instances",
+										"{{workloadId}}",
+										"versions",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:11:40 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"9eb8c194-214e-4f87-8398-48d121fe3894\",\n    \"version\": 1,\n    \"helmSourceVersion\": \"1.2.3-4\",\n    \"valuesVersion\": \"102e161c-898b-42ae-8c0e-09e659bdb5a0\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "values",
+			"item": [
+				{
+					"name": "Get values by valuesId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/values/{{valuesId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"values",
+								"{{valuesId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get values by valuesId",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/values/7e4402fb-8868-4114-8f13-a47773b262f3",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"values",
+										"7e4402fb-8868-4114-8f13-a47773b262f3"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "yaml",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/x-yaml"
+								},
+								{
+									"key": "Content-Length",
+									"value": "237"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 09 Dec 2021 21:11:03 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "global:\n  crd:\n    enabled: true\ncn-am-test-app-a:\n  enabled: false\n  fuu: bar\n  name: cn-am-test-app-a\ncn-am-test-app-b:\n  enabled: false\n  fuu: bar\n  name: cn-am-test-app-b\ncn-am-test-crd:\n  fuu: bar\ncn-am-test-app-c:\n  enabled: false\n"
+						}
+					]
+				},
+				{
+					"name": "Update values",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "valuesRequestDto",
+									"description": "postman/workloadInstance/update/workloadInstancePut.json",
+									"type": "file",
+									"src": "YOUR_PATH"
+								},
+								{
+									"key": "values",
+									"description": "postman/workloadInstance/update/values.yaml",
+									"type": "file",
+									"src": "YOUR_PATH"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/values/{{valuesId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"values",
+								"{{valuesId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update values",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "valuesRequestDto",
+											"description": "postman/workloadInstance/update/workloadInstancePut.json",
+											"type": "file",
+											"src": "/home/zkosole/Postman resources/workloadInstance/update/workloadInstancePut.json"
+										},
+										{
+											"key": "values",
+											"description": "postman/workloadInstance/update/values.yaml",
+											"type": "file",
+											"src": "/home/zkosole/Postman resources/workloadInstance/update/values.yaml"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/values/7e4402fb-8868-4114-8f13-a47773b262f3",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"values",
+										"7e4402fb-8868-4114-8f13-a47773b262f3"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "yaml",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/x-yaml"
+								},
+								{
+									"key": "Content-Length",
+									"value": "237"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 09 Dec 2021 21:16:54 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "global:\n  crd:\n    enabled: true\ncn-am-test-app-a:\n  enabled: false\n  fuu: bar\n  name: cn-am-test-app-a\ncn-am-test-app-b:\n  enabled: false\n  fuu: bar\n  name: cn-am-test-app-b\ncn-am-test-crd:\n  fuu: bar\ncn-am-test-app-c:\n  enabled: false\n"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "operation",
+			"item": [
+				{
+					"name": "Get operation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/operations/<OPERATION-ID>",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"operations",
+								"<OPERATION-ID>"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get operation",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/operations/f2942fd2-7538-46a2-9e85-4b78a6779633",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"operations",
+										"f2942fd2-7538-46a2-9e85-4b78a6779633"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:02:40 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"operationId\": \"f2942fd2-7538-46a2-9e85-4b78a6779633\",\n    \"workloadInstanceId\": \"edbf3a69-4939-430a-bcc8-82ae58a75c09\",\n    \"state\": \"COMPLETED\",\n    \"type\": \"INSTANTIATE\",\n    \"startTime\": \"2021-11-08T15:00:53.285175\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get all operations by workload instance id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/operations/workload_instances/{{workloadId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"operations",
+								"workload_instances",
+								"{{workloadId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get all operations by workload instance id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/operations/workload_instances/{{workloadId}}",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"operations",
+										"workload_instances",
+										"{{workloadId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:02:58 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_links\": {\n        \"first\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/operations?page=1\"\n        },\n        \"prev\": null,\n        \"self\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/operations?page=1\"\n        },\n        \"next\": null,\n        \"last\": {\n            \"href\": \"http://localhost:8080/cnwlcm/v1/operations?page=1\"\n        }\n    },\n    \"_page\": {\n        \"number\": 1,\n        \"size\": 15,\n        \"totalPages\": 1,\n        \"totalElements\": 1\n    },\n    \"content\": [\n        {\n            \"operationId\": \"f2942fd2-7538-46a2-9e85-4b78a6779633\",\n            \"workloadInstanceId\": \"edbf3a69-4939-430a-bcc8-82ae58a75c09\",\n            \"state\": \"COMPLETED\",\n            \"type\": \"INSTANTIATE\",\n            \"startTime\": \"2021-11-08T15:00:53.285175\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get operation logs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/operations/<OPERATION-ID>/logs",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"operations",
+								"<OPERATION-ID>",
+								"logs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get pods state by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/operations/<OPERATION-ID>/pods/state",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"operations",
+								"<OPERATION-ID>",
+								"pods",
+								"state"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get pods state by id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/operations/4671a72d-04a8-42ff-bf5b-2f0a4acfcdeb/pods/state",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"operations",
+										"4671a72d-04a8-42ff-bf5b-2f0a4acfcdeb",
+										"pods",
+										"state"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 20 Dec 2021 12:19:18 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"podsState\": \"PROCESSING\",\n    \"pods\": {\n        \"example3\": \"PROCESSING\",\n        \"example2\": \"PROCESSING\",\n        \"example1\": \"PROCESSING\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Health check",
+			"item": [
+				{
+					"name": "Readiness probe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/actuator/health/readiness",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"actuator",
+								"health",
+								"readiness"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Readiness probe",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/actuator/health/readiness",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"actuator",
+										"health",
+										"readiness"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.spring-boot.actuator.v3+json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:22:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"UP\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Liveness probes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/actuator/health/liveness",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"actuator",
+								"health",
+								"liveness"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Liveness probes",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/actuator/health/liveness",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"actuator",
+										"health",
+										"liveness"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.spring-boot.actuator.v3+json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:23:37 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"UP\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Helmfile builder",
+			"item": [
+				{
+					"name": "Instantiate through the helmfile builder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let responseHeadersLocation = pm.response.headers.get(\"Location\");",
+									"pm.environment.set(\"operationId\", responseHeadersLocation.substring(responseHeadersLocation.lastIndexOf(\"/\") + 1)); "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "workloadInstanceWithChartsRequestDto",
+									"description": "postman/workloadInstance/helmfileBuilder/workloadInstanceCharts.json",
+									"type": "file",
+									"src": "/home/zbuzdar/work/eric-lcm-helm-orchestrator/postman/workloadInstance/instantiate/workloadInstanceCharts.json"
+								},
+								{
+									"key": "globalValues",
+									"description": "postman/workloadInstance/helmfileBuilder/values.yaml",
+									"type": "file",
+									"src": "/home/zbuzdar/work/eric-lcm-helm-orchestrator/postman/workloadInstance/helmfileBuilder/values.yaml"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/helmfile_builder/workload_instances",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"helmfile_builder",
+								"workload_instances"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Instantiate workload instance",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "workloadInstanceWithChartsRequestDto",
+											"description": "postman/workloadInstance/helmfileBuilder/workloadInstanceCharts.json",
+											"type": "file",
+											"src": "/home/zbuzdar/work/eric-lcm-helm-orchestrator/postman/workloadInstance/instantiate/workloadInstanceCharts.json"
+										},
+										{
+											"key": "globalValues",
+											"description": "postman/workloadInstance/helmfileBuilder/values.yaml",
+											"type": "file",
+											"src": "/home/zbuzdar/work/eric-lcm-helm-orchestrator/postman/workloadInstance/helmfileBuilder/values.yaml"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/helmfile_builder/workload_instances",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"helmfile_builder",
+										"workload_instances"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Location",
+									"value": "http://127.0.0.1/cnwlcm/v1/operations/9704fcca-001b-4a0a-81da-db663abd003d"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 22 Dec 2021 10:23:34 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"workloadInstanceId\": \"15979880-85ed-4f8e-bffc-fd3871556c18\",\n    \"workloadInstanceName\": \"successfulpost\",\n    \"namespace\": \"zbuzdar-local\",\n    \"crdNamespace\": \"eric-crd-ns\",\n    \"cluster\": null,\n    \"helmSourceVersions\": [\n        \"0.1.0-1\"\n    ],\n    \"version\": null,\n    \"additionalParameters\": null\n}"
+						},
+						{
+							"name": "Instantiate through the helmfile builder with Orders",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "workloadInstanceWithChartsRequestDto",
+											"description": "postman/workloadInstance/helmfileBuilder/helmfileBuilderWithOrder/workloadInstanceCharts.json",
+											"type": "file",
+											"src": "/home/zbonval/Documents/Postman-Collection/helmfile-executor/postman/workloadInstance/helmfileBuilder/helmfileBuilderWithOrder/workloadInstanceCharts.json"
+										},
+										{
+											"key": "globalValues",
+											"description": "postman/workloadInstance/helmfileBuilder/helmfileBuilderWithOrder/values.yaml",
+											"type": "file",
+											"src": "/home/zbonval/Documents/Postman-Collection/helmfile-executor/postman/workloadInstance/helmfileBuilder/helmfileBuilderWithOrder/values.yaml"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/helmfile_builder/workload_instances",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"helmfile_builder",
+										"workload_instances"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Location",
+									"value": "http://0:0:0:0:0:0:0:1/cnwlcm/v1/operations/322bac5d-4aad-45e3-b195-a05a34c4d77d"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 13 Feb 2022 18:53:17 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"workloadInstanceId\": \"6f6848ed-7e3a-4dd4-ae22-b4fca1f84f16\",\n    \"workloadInstanceName\": \"successfulpost\",\n    \"namespace\": \"zbonval\",\n    \"crdNamespace\": null,\n    \"cluster\": null,\n    \"helmSourceVersions\": [\n        \"0.1.0-1\"\n    ],\n    \"version\": null,\n    \"additionalParameters\": {\n        \"eric-ctrl-bro.bro.enableAgentDiscovery\": true\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update through the helmfile builder",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "workloadInstanceWithChartsPutRequestDto",
+									"description": "postman/workloadInstance/helmfileBuilder/updateWorkloadInstanceCharts.json",
+									"type": "file",
+									"src": "/home/zbuzdar/work/eric-lcm-helm-orchestrator/postman/workloadInstance/helmfileBuilder/updateWorkloadInstanceCharts.json"
+								},
+								{
+									"key": "globalValues",
+									"description": "postman/workloadInstance/helmfileBuilder/values.yaml",
+									"type": "file",
+									"src": "/home/zbuzdar/work/eric-lcm-helm-orchestrator/postman/workloadInstance/helmfileBuilder/values.yaml"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/helmfile_builder/workload_instances/{{workloadId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"helmfile_builder",
+								"workload_instances",
+								"{{workloadId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update workload instance",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "workloadInstanceWithChartsPutRequestDto",
+											"description": "postman/workloadInstance/helmfileBuilder/updateWorkloadInstanceCharts.json",
+											"type": "file",
+											"src": "/home/zbuzdar/work/eric-lcm-helm-orchestrator/postman/workloadInstance/helmfileBuilder/updateWorkloadInstanceCharts.json"
+										},
+										{
+											"key": "globalValues",
+											"description": "postman/workloadInstance/helmfileBuilder/values.yaml",
+											"type": "file",
+											"src": "/home/zbuzdar/work/eric-lcm-helm-orchestrator/postman/workloadInstance/helmfileBuilder/values.yaml"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/helmfile_builder/workload_instances/5ffd34ba-acad-4248-9b24-f3919f48017b",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"helmfile_builder",
+										"workload_instances",
+										"5ffd34ba-acad-4248-9b24-f3919f48017b"
+									]
+								}
+							},
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Location",
+									"value": "http://0:0:0:0:0:0:0:1/cnwlcm/v1/operations/b4671924-5b49-42b9-9e92-e29340d613a2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Nov 2021 13:09:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"workloadInstanceId\": \"5ffd34ba-acad-4248-9b24-f3919f48017b\",\n    \"workloadInstanceName\": \"successfulpost\",\n    \"namespace\": \"zbuzdar-local\",\n    \"crdNamespace\": \"eric-crd-ns\",\n    \"cluster\": null,\n    \"helmSourceVersions\": [\n        \"0.1.0-1\",\n        \"0.1.0-2\"\n    ],\n    \"version\": 1,\n    \"additionalParameters\": null\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Security",
+			"item": [
+				{
+					"name": "PrivateKey",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "privateKey",
+									"type": "file",
+									"src": "/home/private.key"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/security/private_key",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"security",
+								"private_key"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "PrivateKey201_CREATED",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "privateKey",
+											"type": "file",
+											"src": "/home/zbonval/Downloads/private.key"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/security/private_key",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"security",
+										"private_key"
+									]
+								}
+							},
+							"status": "CREATED",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 19 Jun 2022 12:35:00 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "BRO",
+			"item": [
+				{
+					"name": "Create backup on BRO",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"backupName\": \"myBackup\",\n  \"backupManagerId\": \"DEFAULT\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"backup_and_restore"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create backup 201 Create",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"backupName\": \"myBackup\",\n  \"backupManagerId\": \"DEFAULT\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"backup_and_restore"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 31 Mar 2022 13:08:52 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"46035\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete backup on BRO",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"backupName\": \"myBackup\",\n  \"backupManagerId\": \"DEFAULT\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"backup_and_restore"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete backup 204 NoContent",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"backupName\": \"myBackup\",\n  \"backupManagerId\": \"DEFAULT\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"backup_and_restore"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 31 Mar 2022 13:16:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Import backup from BRO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"uri\": \"http://host:port/v1/backup-manager/default-db/backup/export-test\",\n  \"password\": \"123456\",\n  \"backupManagerId\": \"DEFAULT\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/imports",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"backup_and_restore",
+								"imports"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Import backup from BRO 201 Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uri\": \"http://host:port/v1/backup-manager/default-db/backup/export-test\",\n    \"password\": \"123456\",\n    \"backupManagerId\": \"DEFAULT\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/imports",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"backup_and_restore",
+										"imports"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 01 Apr 2022 11:25:19 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"27360\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Export backup to BRO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"backupName\": \"myBackup\",\n    \"backupManagerId\": \"DEFAULT\",\n    \"uri\": \"sftp://ericsson@bur-sftp-svc.sftp:22/eso/\",\n    \"password\": \"ericsson\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/exports",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"backup_and_restore",
+								"exports"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Export backup to BRO 201 Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"backupName\": \"myBackup\",\n    \"backupManagerId\": \"DEFAULT\",\n    \"uri\": \"sftp://ericsson@bur-sftp-svc.sftp:22/eso/\",\n    \"password\": \"ericsson\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/exports",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"backup_and_restore",
+										"exports"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 03 Apr 2022 09:28:21 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"53865\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Gets backup by backupManagerId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "page",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "size",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "sort",
+									"value": "creationTime, asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/{{backupManagerId}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"backup_and_restore",
+								"{{backupManagerId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Gets backups of a backupManager 200 OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/{{backupManagerId}}",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"backup_and_restore",
+										"{{backupManagerId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 03 Apr 2022 10:37:49 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_links\": {\n        \"first\": {\n            \"href\": \"http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/DEFAULT?page=1\"\n        },\n        \"prev\": null,\n        \"self\": {\n            \"href\": \"http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/DEFAULT?page=1\"\n        },\n        \"next\": null,\n        \"last\": {\n            \"href\": \"http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/DEFAULT?page=1\"\n        }\n    },\n    \"_page\": {\n        \"number\": 1,\n        \"size\": 2,\n        \"totalPages\": 1,\n        \"totalElements\": 1\n    },\n    \"content\": [\n        {\n            \"id\": \"DefaultBackup\",\n            \"name\": \"DefaultBackup\",\n            \"creationTime\": \"2022-04-03T09:40:29.996423Z\",\n            \"status\": \"CORRUPTED\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Gets all backupManagers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "page",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "size",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "sort",
+									"value": "id,asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/managers",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"backup_and_restore",
+								"managers"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Gets all backupManagers 200 Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/managers",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"backup_and_restore",
+										"managers"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 05 Apr 2022 11:22:19 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_links\": {\n        \"first\": {\n            \"href\": \"http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/managers?page=1\"\n        },\n        \"prev\": {\n            \"href\": \"http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/managers?page=2\"\n        },\n        \"self\": {\n            \"href\": \"http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/managers?page=3\"\n        },\n        \"next\": null,\n        \"last\": {\n            \"href\": \"http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore/managers?page=3\"\n        }\n    },\n    \"_page\": {\n        \"number\": 3,\n        \"size\": 6,\n        \"totalPages\": 3,\n        \"totalElements\": 18\n    },\n    \"content\": [\n        {\n            \"id\": \"DEFAULT\",\n            \"backupType\": null,\n            \"backupDomain\": null\n        },\n        {\n            \"id\": \"DEFAULT-eric-data-document-database-pg\",\n            \"backupType\": null,\n            \"backupDomain\": null\n        },\n        {\n            \"id\": \"default-db\",\n            \"backupType\": null,\n            \"backupDomain\": null\n        },\n        {\n            \"id\": \"executor-db\",\n            \"backupType\": null,\n            \"backupDomain\": null\n        },\n        {\n            \"id\": \"DEFAULT-eric-data-object-storage-mn\",\n            \"backupType\": null,\n            \"backupDomain\": null\n        },\n        {\n            \"id\": \"all-application-data\",\n            \"backupType\": null,\n            \"backupDomain\": null\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Restore backup",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"backupName\": \"DefaultBackup\",\n    \"backupManagerId\": \"DEFAULT\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"cnwlcm",
+								"v1",
+								"backup_and_restore"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Restore backup 202 Accepted",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"backupName\": \"DefaultBackup\",\n    \"backupManagerId\": \"DEFAULT\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/cnwlcm/v1/backup_and_restore",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"cnwlcm",
+										"v1",
+										"backup_and_restore"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 05 Apr 2022 11:01:52 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"40246\"\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}

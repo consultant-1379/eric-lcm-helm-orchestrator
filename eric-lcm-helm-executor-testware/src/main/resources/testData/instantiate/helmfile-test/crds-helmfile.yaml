@@ -1,0 +1,7 @@
+releases:
+  - name: cn-am-test-crd
+    chart: ./test-charts/cn-am-test-crd
+    namespace: {{ .Values | get "global.crd.namespace" }}
+    installed: {{ .Values | get "global.crd.enabled" true }}
+    values:
+      - ./values-templates/cn-am-test-crd.yaml.gotmpl

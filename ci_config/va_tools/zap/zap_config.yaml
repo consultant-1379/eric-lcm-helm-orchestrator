@@ -1,0 +1,24 @@
+zapConfig:
+  baseUrl: "http://eric-lcm-helm-executor:8888"
+  scanType: "full"
+  config_dir: "va_tools/zap/"
+  globalConfig:
+  endpoints:
+  - name: "eric-lcm-helm-executor-query"
+    url: "/"
+    config:
+      - id: "10035"
+        action: "IGNORE"
+        message: "Strict-Transport-Security Header Not Set - Not applicable to ref app"
+      - id: "40042"
+        action: "INFO"
+        message: "Spring Actuator Information Leak"
+  report:
+    dir: "va_reports/zap_reports"
+    format:
+    - html
+    - json
+    - md
+    - xml
+  properties:
+    zap_container_port: 9625

@@ -1,0 +1,8 @@
+{
+  "workloadInstanceName": "not-unique-name",
+  "namespace": "test-namespace",
+  "cluster": "testCluster",
+  "additionalParameters": {
+    "testKey": "testValue"
+  }
+}

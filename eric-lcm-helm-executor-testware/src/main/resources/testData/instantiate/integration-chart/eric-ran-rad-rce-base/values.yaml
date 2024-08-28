@@ -1,0 +1,153 @@
+# Default values for eric-ran-rad-rce-base.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  log:
+    output: "stdout" # Supported values "stdout", "stream", "all"
+
+imageCredentials:
+  pullSecret:
+  eric-ran-rad-rce-base:
+    registry:
+      imagePullPolicy:
+      url:
+    repoPath: # see default in eric-product-info.yaml
+  helm-test:
+    registry:
+      imagePullPolicy:
+      url:
+    repoPath: # see default in eric-product-info.yaml
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 25%
+    maxSurge: 25%
+
+replicaCount: 1
+
+podDisruptionBudget:
+  minAvailable: 0
+
+nameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+
+config:
+  executionInterval: 30
+
+resources:
+  eric-ran-rad-rce-base:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  helm-test:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+      ephemeral-storage: 1Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+      ephemeral-storage: 1Mi
+
+nodeSelector:
+  eric-ran-rad-rce-base: {}
+  eric-ran-rad-rce-base-test: {}
+
+# Tolerations for singleton deployment
+tolerations:
+  eric-ran-rad-rce-base: []
+  eric-ran-rad-rce-base-test: []
+
+# Example tolerations for non singleton deployment
+#tolerations:
+#  eric-ran-rad-rce-base:
+#    - key: node.kubernetes.io/not-ready
+#      operator: Exists
+#      effect: NoExecute
+#      tolerationSeconds: 0
+#    - key: node.kubernetes.io/unreachable
+#      operator: Exists
+#      effect: NoExecute
+#      tolerationSeconds: 0
+#  eric-ran-rad-rce-base-test:
+#    - key: node.kubernetes.io/not-ready
+#      operator: Exists
+#      effect: NoExecute
+#      tolerationSeconds: 0
+#    - key: node.kubernetes.io/unreachable
+#      operator: Exists
+#      effect: NoExecute
+#      tolerationSeconds: 0
+
+topologySpreadConstraints: []
+
+# DR-D1120-050 podAntiAffinity applies for microservices with replicaCount > 1.
+# The rule is not checked for microservices implemented as Singleton.
+# The change is safe to be added for Singleton as the default podAntiAffinity
+# of soft will not impact scheduling.
+affinity:
+  podAntiAffinity: "soft"
+
+annotations: {}
+
+labels: {}
+
+terminationGracePeriodSeconds: 30
+
+probes:
+  eric-ran-rad-rce-base:
+    livenessProbe:
+      initialDelaySeconds: 1
+      periodSeconds: 10
+      timeoutSeconds: 10
+      failureThreshold: 3
+    readinessProbe:
+      initialDelaySeconds: 1
+      periodSeconds: 10
+      timeoutSeconds: 10
+      successThreshold: 3
+      failureThreshold: 3
+
+podPriority:
+  eric-ran-rad-rce-base:
+    priorityClassName : ""
+  eric-ran-rad-rce-base-test:
+    priorityClassName : ""
+
+networkPolicy:
+  enabled: false
+
+apiGatewayRoute:
+  enabled: false
+  credentials:
+    username: "cnamuser"
+    password: "cnampasswd"
+  svr:
+    path: /rce/v0/**
+  ui:
+    path: /rce-ui/**
+
+ingress:
+  host: ""
+  uniquePathName: ""
+
+logging:
+  protocol: "http"
+  host: la.stsvp1eic29.stsoss.sero.gic.ericsson.se
+  level: "info"
+
+secrets:
+  logCACertSecretName: "la-cacert-secret"
+  logTlsCACertFileName: "ca.crt"
+  rAppLogCertsSecretName: "rce-rapp-mtls-secret"
+  rAppLogTlsKeyFileName: "tls.key"
+  rAppLogTlsCertFileName: "tls.crt"

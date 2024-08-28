@@ -1,0 +1,33 @@
+{
+  "testreport": {
+    "revision": "Helmfile Executor",
+    "introduction": "This document contains report for Release Verification of Helmfile Executor. The Helmfile Executor is verified both in Docker environment (the design environment) and in Kubernetes environment (production environment).",
+    "limitations": {
+      "overview": "The following Acceptance Tests have not been executed:",
+      "limitation_list": [
+        {"name": "Instantiate and update workload instance through helmfile builder with charts in specified order"}
+      ]
+    },
+    "trs": [],
+    "testsite": [
+      {"testenvname": "Docker Environment", "description": [{"key":"Hardware", "value": "\n16 GB RAM\n4 vCPU"}, {"key":"OS","value":"redhat_enterprise_linux_7.8"}, {"key":"Docker version", "value":"docker: 19.03.13"}]},
+      {"testenvname": "Kubernetes Environment", "description": [{"key":"k8s version", "value":"v1.23.6"}, {"key":"Kaas Version", "value":"1.24.2"}]}
+    ],
+    "baseline": [],
+    "testtools": [
+      {"toolname": "TestNG", "description": "TestNG is a testing framework inspired from JUnit and NUnit but introducing some new functionalities that make it more powerful and easier to use. It supports test configured by annotations, data-driven testing, parametric tests, etc."}
+    ],
+    "characteristics": [
+      {
+        "aspect": "Deployment Characteristics", "aspectdescription": "The startup times below measures the time until the complete service is available. The deployment is done with helm default values. The deployment of other services that the Helmfile Executor is dependent on is not considered.",
+        "kpis": [{"description": "Deployment time, two pods, basic setup", "result": "approximately 7 seconds"}, {"description": "Docker image size", "result": "670 MB"}]
+      }
+    ],
+    "testresults": [
+      {"suitename": "Workload Instance tests", "junitxml": "build/testcase.xml"}
+    ],
+    "references": [
+      {"docname": "Helmfile Executor Service User Guide", "docno": "\n https://adp.ericsson.se/marketplace/helmfile-executor/documentation/development/dpi/service-user-guide"}
+    ]
+  }
+}

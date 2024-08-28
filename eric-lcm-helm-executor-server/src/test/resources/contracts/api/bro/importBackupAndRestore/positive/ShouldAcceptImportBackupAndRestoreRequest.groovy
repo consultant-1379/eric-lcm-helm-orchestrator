@@ -1,0 +1,53 @@
+/*******************************************************************************
+ * COPYRIGHT Ericsson 2024
+ *
+ *
+ *
+ * The copyright to the computer program(s) herein is the property of
+ *
+ * Ericsson Inc. The programs may be used and/or copied only with written
+ *
+ * permission from Ericsson Inc. or in accordance with the terms and
+ *
+ * conditions stipulated in the agreement/contract under which the
+ *
+ * program(s) have been supplied.
+ ******************************************************************************/
+
+package contracts.api.bro.importBackupAndRestore.positive
+
+import org.springframework.cloud.contract.spec.Contract
+
+Contract.make {
+    description("""
+Represents a successful scenario of Import Backup 
+
+```
+given:
+  client requests Import Backup and Restore operation
+when:
+  a valid request is submitted
+then:
+  the response is returned
+```
+
+""")
+    request {
+        method 'POST'
+        url "/cnwlcm/v1/backup_and_restore/imports"
+        headers {
+            contentType(applicationJson())
+        }
+        body(file("bro_request.json"))
+    }
+    response {
+        status CREATED()
+        body("""
+{
+    "id" : "123456"
+}
+            """
+        )
+    }
+}
+

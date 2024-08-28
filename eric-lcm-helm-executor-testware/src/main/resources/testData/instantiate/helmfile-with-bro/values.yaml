@@ -1,0 +1,14 @@
+global:
+  default:
+    timeout: 300
+    wait: true
+  app:
+    enabled: true
+    namespace:
+  pullSecret:
+  registry:
+    url:
+
+eric-ctrl-bro:
+  enabled: true
+

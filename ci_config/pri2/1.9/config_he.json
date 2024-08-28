@@ -1,0 +1,49 @@
+{
+    "git_collector__Feature": {
+        "id_pattern": "(CAM-[0-9]+|IDUN-[0-9]+) Feature:.*?"
+    },
+    "git_collector__Bug": {
+        "id_pattern": "(CAM-[0-9]+|IDUN-[0-9]+) Bug:.*?"
+    },
+    "git_collector__Deprecation": {
+        "id_pattern": "(CAM-[0-9]+|IDUN-[0-9]+) Deprecation:.*?"
+    },
+    "git_collector__Vulnerabilities": {
+        "id_pattern": "(CAM-[0-9]+|IDUN-[0-9]+) Vulnerability:.*?"
+    },
+    "git_collector__Abrupt_nbc": {
+        "id_pattern": "(CAM-[0-9]+|IDUN-[0-9]+) Abrupt_NBC:.*?"
+    },
+    "jira_collector__No_feature_in_jira": {
+        "jira_url": "https://jira-oss.seli.wh.rnd.internal.ericsson.com",
+        "jql": "key = ${id} AND type != Bug AND status IN (Closed, Done) AND (project = 'CAM' OR (project = 'IDUN' AND cf[32858] = 'Sunflowers'))"
+    },
+    "jira_collector__Bug": {
+        "jira_url": "https://jira-oss.seli.wh.rnd.internal.ericsson.com",
+        "jql": "key = ${id} AND type=Bug AND status IN (Closed, Done) AND (project = 'CAM' OR (project = 'IDUN' AND cf[32858] = 'Sunflowers'))"
+    },
+    "jira_collector__unfinished_tasks": {
+        "jira_url": "https://jira-oss.seli.wh.rnd.internal.ericsson.com",
+        "jql": "key = ${id} AND status NOT IN (Done, Closed) AND (project = 'CAM' OR (project = 'IDUN' AND cf[32858] = 'Sunflowers'))"
+    },
+    "jira_collector__open_bug": {
+        "jira_url": "https://jira-oss.seli.wh.rnd.internal.ericsson.com",
+        "jql": "(project = 'CAM' OR (project = 'IDUN' AND cf[32858] = 'Sunflowers')) AND type=Bug AND status NOT IN (Done, Closed)"
+    },
+    "jira_collector__Deprecation_done": {
+        "jira_url": "https://jira-oss.seli.wh.rnd.internal.ericsson.com",
+        "jql": "key = ${id} AND status IN (Closed, Done) AND (project = 'CAM' OR (project = 'IDUN' AND cf[32858] = 'Sunflowers'))"
+    },
+    "jira_collector__Deprecation_approved": {
+        "jira_url": "https://eteamproject.internal.ericsson.com",
+        "jql": "project = \"ADP Program\" AND type = Deprecation AND \"GS/RS Microservices\" = \"Helmfile Executor\" AND status not in (Done, Closed, Cancelled)"
+    },
+    "jira_collector__Vulnerabilities": {
+        "jira_url": "https://jira-oss.seli.wh.rnd.internal.ericsson.com",
+        "jql": "key = ${id} AND status IN (Closed, Done) AND (project = 'CAM' OR (project = 'IDUN' AND cf[32858] = 'Sunflowers'))"
+    },
+    "jira_collector__Abrupt_nbc": {
+        "jira_url": "https://jira-oss.seli.wh.rnd.internal.ericsson.com",
+        "jql": "key = ${id} AND status IN (Closed, Done) AND (project = 'CAM' OR (project = 'IDUN' AND cf[32858] = 'Sunflowers'))"
+    }
+}

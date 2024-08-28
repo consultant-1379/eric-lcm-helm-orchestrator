@@ -1,0 +1,77 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+spring:
+  main.banner-mode: "off"
+  application:
+    name: eric-lcm-helm-executor
+
+  datasource:
+    url: jdbc:postgresql://localhost:8200/postgres  # Prerequisite:: have the port forwarding to postgres in the cluster in place
+    username: postgres
+    password: postgres
+    hikari:
+      data-source-properties: stringtype=unspecified
+    jpa:
+      open-in-view: false
+      properties:
+        hibernate:
+          jdbc:
+            lob:
+              # Included to hide exception which does not fail startup. More info: https://hibernate.atlassian.net/browse/HHH-12368
+              non_contextual_creation: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+        use_jdbc_metadata_defaults: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+directory:
+  root: ${java.io.tmpdir}
+  certificates: /tmp/certificates
+
+operation:
+  timeout: 5
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+  certificates:
+    enrollment:
+      enabled: true
+
+ericsson:
+  tracing:
+    enabled: false
+    exporter:
+      endpoint: http://test
+      protocol: test
+    sampler:
+      jaeger_remote:
+        endpoint: http://test
+    endpoints:
+      exclude: /actuator/prometheus, /actuator/health,/ping, /metric

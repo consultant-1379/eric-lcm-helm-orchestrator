@@ -1,0 +1,12 @@
+nmapConfig:
+  services:
+    - name: "eric-lcm-helm-executor"
+      protocol:
+        - "tcp"
+        - "udp"
+        - "sctp"
+      additionalParams:
+        - "-v"
+        - "-p T:0-10240,U:1-1024,S:1-1024"
+        - "--stats-every 100"
+  reportDir : "va_reports"

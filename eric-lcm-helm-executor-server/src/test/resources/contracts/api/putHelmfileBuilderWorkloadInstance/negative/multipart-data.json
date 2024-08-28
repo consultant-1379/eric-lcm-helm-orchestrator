@@ -1,0 +1,7 @@
+{
+  "additionalParameters": {
+    "login" : "supersecretlogin",
+    "password" : "supersecretvalue",
+    "secretname" : "test-secret"
+  }
+}

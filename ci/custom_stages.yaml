@@ -1,0 +1,13 @@
+modelVersion: 2.0
+
+stage-marker-build:
+  - name: hybrid_ci_building_images.jenkinsfile
+
+stage-marker-package:
+  - name: hybrid_ci_init_image_publish.jenkinsfile
+
+stage-marker-helm:
+  - name: hybrid_ci_helm_intall.jenkinsfile
+
+stage-marker-publish:
+  - name: hybrid_init_image_publish.jenkinsfile

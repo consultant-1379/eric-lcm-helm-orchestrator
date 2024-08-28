@@ -1,0 +1,4 @@
+apiVersion: v2
+description: A simple helm chart for testing
+name: busybox-simple-chart
+version: 1.32.0

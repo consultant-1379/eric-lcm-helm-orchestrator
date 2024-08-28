@@ -1,0 +1,113 @@
+{
+    "ADP-Microservice-Characteristics-Report": {
+      "model_version" : "0.0.4",
+      "service": {
+        "name": "Helmfile Executor",
+        "version": "0.3.1"
+      },
+      "resource-configuration": [
+        {
+          "flavor": "minimum",
+          "resources": [
+            {
+              "pod": "eric-lcm-helm-executor-d4c7667b9-8dlz4",
+              "instances": 1,
+              "containers": [
+                {
+                  "image-size": "670Mi",
+                  "name": "eric-lcm-helm-executor",
+                  "cpu-req": "250m",
+                  "cpu-limit": "500m",
+                  "mem-req": "500Mi",
+                  "mem-limit": "1Gi"
+                },
+                {
+                  "image-size": "127Mi",
+                  "name": "eric-lcm-helm-executor-init",
+                  "cpu-req": "250m",
+                  "cpu-limit": "500m",
+                  "mem-req": "500Mi",
+                  "mem-limit": "1Gi"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "use-case": "Manually instantiate application",
+          "description": "This service will accept Helmfile.tgz files and apply them to a target cluster.",
+          "duration": 600,
+          "labels": [
+            "performance"
+          ],
+          "service-configuration": {},
+          "used-resources-configuration": 
+            {
+              "flavor": "minimum",
+              "resources": [
+                {
+                  "pod": "eric-lcm-helm-executor-d4c7667b9-8dlz4",
+                  "containers": [
+                    {
+                      "name": "eric-lcm-helm-executor",
+                      "cpu-req": "250m",
+                      "cpu-limit": "500m",
+                      "mem-req": "500Mi",
+                      "mem-limit": "1Gi"
+                    },
+                    {
+                      "name": "eric-lcm-helm-executor-init",
+                      "cpu-req": "250m",
+                      "cpu-limit": "500m",
+                      "mem-req": "500Mi",
+                      "mem-limit": "1Gi"
+                    }
+                  ]
+                }
+              ]
+            }
+          ,
+          "traffic": {
+            "tps": "5",
+            "Request-avg-size": "6.73kb",
+            "total-requests": "20",
+            "total-errors": "0",
+            "latency": "4343ms"
+          },
+          "metrics": [
+            {
+              "pod": "eric-lcm-helm-executor-d4c7667b9-8dlz4",
+              "container": "eric-lcm-helm-executor",
+              "metrics": {
+                "cpu_avg_milli_cores": 2,
+                "memory_avg_mib": 18
+              }
+            }
+          ],
+          "additional-results": {
+            "logging": {
+              "events-rate": "",
+              "event-avg-size": ""
+            }
+          }
+        }
+      ],
+      "test-environment": {
+        "cluster": "hahn117",
+        "cpu": {
+          "model": "Xeon_Phi-31S1P",
+          "CPU-MHz": 2400,
+          "bogomips": 4589.37
+        },
+        "memory": "298Gi",
+        "kaas": "CCD-2.15.1",
+        "kubernetes-version": "1.21.1",
+        "other-info": {
+          "description_url": "http://url"
+        }
+      }
+    }
+  }
+

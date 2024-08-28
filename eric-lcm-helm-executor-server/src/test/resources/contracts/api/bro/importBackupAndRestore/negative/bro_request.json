@@ -1,0 +1,5 @@
+{
+  "uri": "http://0.0.0.0:7001/v1/backup-manager/default-db/backup/export-test",
+  "password": "123456",
+  "backupManagerId": "DEFAULT"
+}

@@ -1,0 +1,62 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: eric-lcm-helm-executor
+  title: Helmfile Executor
+  description: "This service will accept Helmfile.tgz files and apply them to a target cluster. This results in one or more Helm releases installed on the cluster in one or more namespaces, in parallel/sequential groups. Helmfile leverages the helm-diff plugin to find out what Helm releases need to be updated and delegates the execution to Helm itself. To support legacy this service will also accept integration charts for those who haven't migrated to Helmfile yet"
+  annotations:
+    backstage.io/source-location: url:https://gerrit-gamma.gic.ericsson.se/plugins/gitiles/OSS/com.ericsson.orchestration.mgmt/eric-lcm-helm-orchestrator
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=eric-lcm-helm-executor'
+    sonarqube.org/project-key: com.ericsson.oss.management:eric-lcm-helm-executor
+    gerrit/component: OSS/com.ericsson.orchestration.mgmt/eric-lcm-helm-orchestrator
+    jira.com/project-keys: IDUN
+    jira.com/filter-ids: "218092"
+    jenkins:
+      fem4s11-eiffel052.eiffel.gic.ericsson.se:8443/CN-AM_Lcm-Helm-Executor_PreCodeReview/,
+      fem4s11-eiffel052.eiffel.gic.ericsson.se:8443/CN-AM_CI-jira_comment/
+    spinnaker.io/application-name: app-mgr-e2e-cicd
+    spinnaker.io/pipelines: eric-lcm-helm-executor-E2E-Flow
+  links:
+    - url: https://mimer.internal.ericsson.com/productPage?activeView=productDetails&productNumber=APR201514
+      title: Mimer
+      icon: dashboard
+    - url: https://eteamspace.internal.ericsson.com/display/IDUN/Team+Sunflowers
+      title: Team Sunflowers Confluence
+      icon: dashboard
+    - url: https://adp.ericsson.se/marketplace/helmfile-executor
+      title: ADP
+      icon: dashboard
+  tags:
+    - ericsson-intelligent-controller
+  roles:
+    product-owner: zgumand
+    microservice-architect: zkariho
+    line-manager: zityvol
+    scrum-master: zvaadlr
+    ci-spoc: zrsesre
+    security-master: zolesav
+  approval:
+    date: 12-03-24
+    approver: epagrac
+
+spec:
+  system: app-management
+  lifecycle: production
+  owner: sunflowers
+  type: microservice

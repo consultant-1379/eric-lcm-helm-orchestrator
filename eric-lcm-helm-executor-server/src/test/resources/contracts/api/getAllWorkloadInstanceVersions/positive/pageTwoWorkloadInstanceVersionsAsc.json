@@ -1,0 +1,40 @@
+{
+  "_links": {
+    "first": {
+      "href": "https://host/cnwlcm/v1/workload_instances/testId/versions?page=1&size=2"
+    },
+    "prev": {
+      "href": "https://host/cnwlcm/v1/workload_instances/testId/versions?page=1&size=2"
+    },
+    "self": {
+      "href": "https://host/cnwlcm/v1/workload_instances/testId/versions?page=2&size=2"
+    },
+    "next": {
+      "href": "https://host/cnwlcm/v1/workload_instances/testId/versions?page=3&size=2"
+    },
+    "last": {
+      "href": "https://host/cnwlcm/v1/workload_instances/testId/versions?page=5&size=2"
+    }
+  },
+  "_page": {
+    "number": 2,
+    "size": 2,
+    "totalPages": 5,
+    "totalElements": 9
+  },
+  "content":
+  [
+    {
+      "id": "firstId",
+      "version": "1",
+      "helmSourceVersion": "1.2.3-4",
+      "valuesVersion": "0e35ed30-d438-4b07-a82b-cab447424d30"
+    },
+    {
+      "id": "secondId",
+      "version": "2",
+      "helmSourceVersion": "1.2.3-5",
+      "valuesVersion": "0e35ed30-d438-4b07-a82b-cab447424d30"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+modelVersion: 2.0
+
+properties:
+  - apr-product-number: "APR201514"
+  - cav-product-number: CAV101964
+  - cbos-image-name: "sles"
+  - cbos-image-repo: "armdocker.rnd.ericsson.se/proj-ldc/common_base_os_release"
+  - cbos-image-version: "6.13.0-10"
+  - characteristics-report-dest-file-name: ${project-artifact-id}_${characteristics-report-source-file-name}
+  - characteristics-report-source-file-name: characteristics-report.json
+  - characteristics-report-source-file-path: ${fragments-dir}/${characteristics-report-source-file-name}
+  - cpi-folder-name: ${project-artifact-id}
+  # Directory where dependencies-3pp.yaml is generated or updated
+  - ci-artifacts-directory: generated/dependencies
+  # Directory where dependencies-3pp.yaml and dependencies-metadata.yaml are stored
+  - dependencies-files-folder: ci-cd/config/dependencies
+  - dependencies-file-path: ci-cd/config/dependencies/dependencies-3pp.yaml
+  - docker-image-name: ${project-artifact-id}
+  - docker-initcontainer-name: ${project-artifact-id}-init
+  - dpraf-config-file: 'ci_config/dpraf_config.yaml'
+  - dpraf-output-dir: 'build/dpraf-output'
+  - eridoc-config-sec-report: "ci_config/eridoc_config_sec_report.yaml"
+  - eridoc-config: "ci_config/eridoc_config.yaml"
+  - folder-id-2-0: 0b004cffc9136fab
+  - fossa-team-name: ADP-CNAM
+  - fragments-dir: "ci_config/fragments"
+  - gerrit-repo-name: OSS/com.ericsson.orchestration.mgmt/eric-lcm-helm-orchestrator
+  - gerrit-url: "https://gerrit-gamma.gic.ericsson.se/a/plugins/gitiles/OSS/com.ericsson.orchestration.mgmt/eric-lcm-helm-orchestrator"
+  - helm-chart-name: ${project-artifact-id}
+  - image-drop-repopath: proj-ra-cnam
+  - image-product-number: "CXU1011119"
+  - jira-component-name: ${service-name}
+  - license-agreement-file-name: license.agreement.json
+  - license-agreement-file-path: ${fragments-dir}/${license-agreement-file-name}
+  - pm-metrics-dest-file-name: ${project-artifact-id}_${pm-metrics-source-file-name}
+  - pm-metrics-source-file-name: pm-metrics.json
+  - pm-metrics-source-file-path: ${fragments-dir}/${pm-metrics-source-file-name}
+  - pri-manual-input: "ci_config/pri_manual_input.json"
+  - pri-release-input: "build/pri/pri_input.json"
+  - project-artifact-id: eric-lcm-helm-executor
+  - service-name: "Helmfile Executor"
+  - service-ports-dest-file-name: ${project-artifact-id}_${service-ports-source-file-name}
+  - service-ports-source-file-name: service-ports.json
+  - service-ports-source-file-path: ${fragments-dir}/${service-ports-source-file-name}
+  - src-doc-cav-product-number: CAV101964_1
+  - stdout-version: "1.3.2"
+  - structure-output-dir: "build/structure-output"
+  - container-id: 207487
+  - helm-diff_version: "v3.9.5"
+  - helm_version: "v3.14.4"
+  - helmfile_version: "0.163.1"
+  - postgresql_version: "postgresql14"
+  - initcontainer-image-prod-number: "CXU1011169"
+  - initcontainer-image-prod-name: "Helmfile Executor InitContainer Image"
+  - image-prod-name: "Helmfile Executor - Image"
+  - image-path: proj-ra-cnam
+  - image-path-ci-internal: proj-eric-oss-ci-internal
+  - image-path-drop: proj-eric-oss-drop
+  - image-registry-name: armdocker.rnd.ericsson.se

@@ -1,0 +1,22 @@
+{{- if and .Values.dst.enabled (not (eq (include "eric-lcm-helm-executor.tls-enable" .) "false")) }}
+apiVersion: siptls.sec.ericsson.com/v1
+kind: InternalCertificate
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}-dst-sip-tls-cert
+  annotations:
+    {{- include "eric-lcm-helm-executor.annotations" . | nindent 4 }}
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+spec:
+ kubernetes:
+  generatedSecretName: {{ template "eric-lcm-helm-executor.name" . }}-dst-sip-tls-cert
+  certificateName: cert.pem
+  privateKeyName: key.pem
+ certificate:
+  subject:
+    cn: {{ template "eric-lcm-helm-executor.name" . }}
+  issuer:
+   reference: {{ .Values.dst.service }}-ca
+  extendedKeyUsage:
+   tlsClientAuth: true
+   tlsServerAuth: false
+{{- end }}

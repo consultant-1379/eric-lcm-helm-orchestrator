@@ -1,0 +1,22 @@
+{{- if (not (eq (include "eric-lcm-helm-executor.tls-enable" .) "false")) }}
+apiVersion: siptls.sec.ericsson.com/v1
+kind: InternalCertificate
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}-postgres-sip-tls-ca-cert
+  annotations:
+    {{- include "eric-lcm-helm-executor.annotations" . | nindent 4 }}
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+spec:
+ kubernetes:
+  generatedSecretName: {{ template "eric-lcm-helm-executor.name" . }}-postgres-sip-tls-ca-cert
+  certificateName: cert.pem
+  privateKeyName: key.pem
+ certificate:
+  subject:
+   cn: postgres
+  issuer:
+   reference: {{ .Values.postgress.service }}-client-ca
+  extendedKeyUsage:
+   tlsClientAuth: true
+   tlsServerAuth: false
+{{- end }}

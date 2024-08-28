@@ -1,0 +1,43 @@
+{
+  "metadata" : {
+    "serviceHelmChartName" : "eric-lcm-helm-executor",
+    "usedSchemaVersion" : "2.0",
+    "fileVersion" : "0.2.0",
+    "dateEdited" : "2022-03-11"
+  },
+  "internalPorts": [
+    {
+      "serviceInterfaceName": "REST API",
+      "protocol": "HTTP",
+      "ipAddressType": "",
+      "port": 8888,
+      "transportProtocol": "TCP",
+      "ipVersion": ["IPv4", "IPv6"]
+    },
+    {
+      "serviceInterfaceName": "REST API (TLS enabled)",
+      "protocol": "HTTPS",
+      "ipAddressType": "",
+      "port": 8888,
+      "transportProtocol": "TCP",
+      "ipVersion": ["IPv4", "IPv6"]
+    },
+    {
+      "serviceInterfaceName": "Liveness",
+      "protocol": "HTTPS",
+      "ipAddressType": "",
+      "port": 8888,
+      "transportProtocol": "TCP",
+      "ipVersion": "IPv4"
+    },
+    {
+      "serviceInterfaceName": "Readiness",
+      "protocol": "HTTPS",
+      "ipAddressType": "",
+      "port": 8888,
+      "transportProtocol": "TCP",
+      "ipVersion": "IPv4"
+    }
+  ],
+  "externalPorts": []
+}

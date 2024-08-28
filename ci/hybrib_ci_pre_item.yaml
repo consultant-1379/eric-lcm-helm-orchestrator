@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: eric-data-document-database-pg-credentials
+type: Opaque
+data:
+  custom-pwd: Y3VzdG9tcHdk
+  custom-user: Y3VzdG9tbmFtZQ==
+  metrics-pwd: bWV0cmljc3B3ZA==
+  replica-pwd: cmVwbGljYXB3ZA==
+  replica-user: cmVwbGljYXVzZXI=
+  super-pwd: c3VwZXJwd2Q=
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: eric-lcm-helm-chart-registry
+type: Opaque
+data:
+  BASIC_AUTH_PASS: cGFzcw==
+  BASIC_AUTH_USER: YWRtaW4=
+  url: aHR0cDovL2VyaWMtbGNtLWhlbG0tY2hhcnQtcmVnaXN0cnkuZHJvcC1leGVjdXRvci5zdmMuY2x1c3Rlci5sb2NhbDo4MDgw

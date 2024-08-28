@@ -1,0 +1,5 @@
+dependencies:
+- condition: eric-ctrl-bro.enabled
+  name: eric-ctrl-bro
+  repository: "file://charts/eric-ctrl-bro"
+  version: 4.9.0-21

@@ -1,0 +1,184 @@
+modelVersion: 2.0
+fosses:
+  - product_number: CAX1056158
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "This project contains core low-level incremental ('streaming') parser and generator abstractions used by Jackson Data Processor. It also includes the default implementation of handler types (parser, generator) that handle JSON format. We use it in our application."
+  - product_number: CAX1056155
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "It builds on core streaming parser/generator package, and uses Jackson Annotations for configuration. We use it in our application."
+  - product_number: CTX1021238
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "Uber-project for (some) standard Jackson textual format backends: csv, properties, yaml (xml to be added in future). We use it in our 
+      application."
+  - product_number: CAX1057258
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License 
+      Agreement file."
+    usage: |
+        "A JSON Schema validation implementation in pure Java, which aims for correctness and performance, in that order. We use it in our application."
+  - product_number: CAX1053602
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "Commons IO is a library of utilities to assist with developing IO functionality. We use it in our application."
+  - product_number: CTX1022189
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "Java client for Kubernetes. We use it in our application."
+  - product_number: CTX1023759
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "An application metrics facade for the most popular monitoring tools. Think SLF4J, but for metrics. We use it in our application."
+  - product_number: CTX1023044
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "This is the report tool to generate the test report. We use it in our application."
+  - product_number: CAX1058435
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "Automated JSON API documentation for API's built with Spring."
+  - product_number: CAX1056692
+    license: Apache-2.0
+    obligation: |
+      "Ericsson must give any recipients of the software a copy of the Apache license. Ericsson must cause any modified 
+      files to carry prominent notices stating that Ericsson changed the files. In any source form Ericsson distributes,
+      all copyright, patent, trademark and attribution notices must be retained."
+    usage: |
+      "Examples and server integrations for generating the Swagger API Specification, which enables easy access to your REST API"
+  - product_number: CTX1021856
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "Maven Artifact classes, providing Artifact interface (javadoc), with its DefaultArtifact implementation (source). We use it in our application."
+  - product_number: CAX1059392
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "This is a free and open-source implementation of the Jakarta Servlet, Jakarta Expression Language, and WebSocket technologies."
+  - product_number: CAX1056970
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "Flyway is an open-source database migration tool. We use it in our application."
+  - product_number: CTX1027927
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "JsonNullable wrapper class and Jackson module to support meaningful null values. We use it in our application."
+  - product_number: CAX1053319
+    license: BSD-2-Clause
+    obligation: |
+      "Redistribution of source code must retain the copyright notice, the list of conditions and the BSD warranty 
+      disclaimer. Redistributions in binary form of the software must reproduce the copyright notice, the BSD list of 
+      conditions and the BSD warranty disclaimer in the documentation and/or materials provided with the distribution.
+      You are required to include a copy of the license in distributions that you make. You are required to ensure that
+      the software displays a particular notice at runtime. You are required to disclaim warranties on behalf of others.
+      You are expressly forbidden from using the name of the author(s) or distributor(s) to promote or advertise the 
+      software. There are (or You intend to place) additional restrictions. Specific instructions for handling 
+      attributions: Redistributions of source code, and in binary form(...)"
+    usage: |
+      "JDBC Driver allows Java programs to connect to a PostgreSQL database using standard, database independent Java code. It is a pure Java (Type
+      IV) implementation. We use it in our application."
+  - product_number: CAX1056250
+    license: MIT
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "Project Lombok is a java library that automatically plugs into your editor and build tools, spicing up your java. We use it in our application."
+  - product_number: CAX1058168
+    license: Apache-2.0
+    obligation: |
+      "Ericsson must give any recipients of the software a copy of the Apache license. Ericsson must cause any modified 
+      files to carry prominent notices stating that Ericsson changed the files. In any source form Ericsson distributes,
+      all copyright, patent, trademark and attribution notices must be retained."
+    usage: |
+      "Spring Boot makes it easy to create Spring-powered, production-grade applications and services with absolute minimum fuss.
+      It takes an opinionated view of the Spring platform so that new and existing users can quickly get to the bits they need"
+  - product_number: CAX1056595
+    license: Apache-2.0
+    obligation: |
+      "Ericsson must give any recipients of the software a copy of the Apache license. Ericsson must cause any modified 
+      files to carry prominent notices stating that Ericsson changed the files. In any source form Ericsson distributes,
+      all copyright, patent, trademark and attribution notices must be retained."
+    usage: |
+      "Spring Retry provides an abstraction around retrying failed operations, with an emphasis on declarative control 
+      of the process and policy-based behaviour that is easy to extend and customize. For instance, you can configure
+      a plain POJO operation to retry if it fails, based on the type of exception, and with a fixed dor exponential backoff."
+  - product_number: CAX1053104
+    license: Apache-2.0
+    obligation: |
+      "Ericsson must give any recipients of the software a copy of the Apache license. Ericsson must cause any modified 
+      files to carry prominent notices stating that Ericsson changed the files. In any source form Ericsson distributes,
+      all copyright, patent, trademark and attribution notices must be retained."
+    usage: |
+      "Spring Framework is a Java platform that provides comprehensive infrastructure support for developing Java applications. We use it in our 
+      application."
+  - product_number: CAX1056183
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "TestNG is a testing framework inspired from JUnit and NUnit but introducing some new functionality that make it more powerful and easier to use."
+  - product_number: CAX1056807
+    license: Apache-2.0
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "SnakeYAML is a YAML parser and emitter for the Java programming language. We use it in our application."
+  - product_number: CTX1034475
+    license: MIT
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "Helm Plugin - Install Helm Charts directly from Git repositories"
+  - product_number: CAX1055867
+    license: GPL-2.0-only
+    obligation: |
+      "Including copy right notice and license terms in the CPI document Free Open Source Software in Alarm Handler or added in the License Agreement file."
+    usage: |
+      "C library and a set of command-line programs for Linux providing a simple interface to inotify. These programs can be used to monitor and act upon filesystem events."
+  - product_number: CAX1055342
+    license: LGPL-2.1-only
+    obligation: |
+      "Ericsson must on each copy publish an appropriate copyright notice and disclaimer of warranty, and keep intact all notices that refer to LGPL License. Ericsson must distribute a copy of the LGPL license along with the LGPL-FOSS. The modified work must itself be a software library. The files modified must carry prominent notices stating that you changed the files and the date of any change. Ericsson must distribute the complete corresponding machine-readable source code of the LGPL-FOSS to receivers, including modifications and additions that constitute derivative work within the meaning of LGPL.. The scope of deliverables that Ericsson must provide to the user under LGPL includes preferred form of the source code for making modifications to it. It must include associated interface definition files, scripts used to control compilation and installation of the executable and tools use to compile (or information on the tools used, if they are proprietary)."
+    usage: |
+      "Logback is intended as a successor to the popular log4j project, picking up where log4j leaves off. Logback's basic architecture is sufficiently generic so as to apply under different circumstances. At present time, logback is divided into three modules, logbackcore, logback-classic and logback-access."
+  - product_number: CAX1059199
+    license: Apache-2.0
+    obligation: | 
+      "Ericsson must give any recipients of the software a copy of the Apache license. Ericsson must cause any modified 
+       files to carry prominent notices stating that Ericsson changed the files. In any source form Ericsson distributes,
+       all copyright, patent, trademark and attribution notices must be retained."
+    usage: | 
+      "Rich and fluent assertions for testing for Java"
+  - product_number: CAX1058747
+    license: Apache-2.0
+    obligation:  | 
+      "Ericsson must give any recipients of the software a copy of the Apache license. Ericsson must cause any modified 
+      files to carry prominent notices stating that Ericsson changed the files. In any source form Ericsson distributes,
+      all copyright, patent, trademark and attribution notices must be retained."
+    usage:  | 
+      "A Java DSL for synchronizing asynchronous operations"

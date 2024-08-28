@@ -1,0 +1,1 @@
+ALTER TABLE operation ADD PODS_STATE operation_state;

@@ -1,0 +1,5 @@
+{
+  "workloadInstanceName": "invalid-url",
+  "namespace": "test-namespace",
+  "url": "https://localhost:8080/invalid-url"
+}

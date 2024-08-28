@@ -1,0 +1,8 @@
+eric-ctrl-bro:
+  enabled: true
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+      size: "15Gi"
+  bro:
+    enableNotifications: true

@@ -1,0 +1,5 @@
+{
+  "workloadInstanceName": "successfulpost",
+  "namespace": "tom",
+  "cluster": "invalid_name"
+}

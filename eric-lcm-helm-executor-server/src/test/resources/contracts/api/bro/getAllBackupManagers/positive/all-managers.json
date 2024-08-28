@@ -1,0 +1,53 @@
+{
+  "_links": {
+    "first": {
+      "href": "https://host/cnwlcm/v1/backup_and_restore/managers?page=1"
+    },
+    "prev": {
+      "href": null
+    },
+    "self": {
+      "href": "https://host/cnwlcm/v1/backup_and_restore/managers?page=1"
+    },
+    "next": {
+      "href": null
+    },
+    "last": {
+      "href": "https://host/cnwlcm/v1/backup_and_restore/managers?page=1"
+    }
+  },
+  "_page": {
+    "number": 1,
+    "size": 15,
+    "totalPages": 1,
+    "totalElements": 5
+  },
+  "content":
+  [
+    {
+      "id": "FirstManager",
+      "backupType": "type",
+      "backupDomain": "domain"
+    },
+    {
+      "id": "SecondManager",
+      "backupType": "type",
+      "backupDomain": "domain"
+    },
+    {
+      "id": "ThirdManager",
+      "backupType": "type",
+      "backupDomain": "domain"
+    },
+    {
+      "id": "FourthManager",
+      "backupType": "type",
+      "backupDomain": "domain"
+    },
+    {
+      "id": "FifthManager",
+      "backupType": "type",
+      "backupDomain": "domain"
+    }
+  ]
+}

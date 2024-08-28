@@ -1,0 +1,18 @@
+{{- if eq (include "eric-ran-rad-rce-base.securityPolicy.roleBinding" .) "true" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "eric-ran-rad-rce-base.security-policy.name" . }}
+  labels: {{- include "eric-ran-rad-rce-base.labels" . | nindent 4 }}
+  annotations:
+    {{- $roleBindingAnnotations := include "eric-ran-rad-rce-base.securityPolicy.annotations" . | fromYaml -}}
+    {{- $defaultAnnotations := include "eric-ran-rad-rce-base.annotations" . | fromYaml -}}
+    {{- include "eric-ran-rad-rce-base.mergeAnnotations" (dict "location" .Template.Name "sources" (list $roleBindingAnnotations $defaultAnnotations)) | trim | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "eric-ran-rad-rce-base.securityPolicy.reference" . | trim }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "eric-ran-rad-rce-base.service-account.name" . }}
+{{- end -}}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Values of eric-lcm-helm-executor",
+  "type": "object",
+  "properties": {
+    "resources": {
+      "description": "Resources",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "eric-lcm-helm-executor": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "jvm": {
+              "type": "object",
+              "description": "JVM",
+              "additionalProperties": true,
+              "properties": {
+                "initialMemoryAllocationPercentage": {"minimum": 1,"maximum": 100,"type": "integer"},
+                "smallMemoryAllocationMaxPercentage": {"minimum": 1,"maximum": 100,"type": "integer"},
+                "largeMemoryAllocationMaxPercentage": {"minimum": 1,"maximum": 100,"type": "integer"}
+              },
+              "required": [
+                "initialMemoryAllocationPercentage",
+                "smallMemoryAllocationMaxPercentage",
+                "largeMemoryAllocationMaxPercentage"
+              ]}}}}
+    }
+  }
+}

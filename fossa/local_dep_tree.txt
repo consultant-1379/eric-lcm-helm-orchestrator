@@ -1,0 +1,118 @@
+com.ericsson.oss.management:eric-lcm-helm-executor-testware:jar:0.31.0-SNAPSHOT
++- org.assertj:assertj-core:jar:3.23.1:compile
+|  \- net.bytebuddy:byte-buddy:jar:1.14.13:compile
++- org.testng:testng:jar:7.7.0:compile
+|  +- org.slf4j:slf4j-api:jar:2.0.13:compile
+|  +- com.beust:jcommander:jar:1.82:compile
+|  \- org.webjars:jquery:jar:3.6.1:runtime
++- io.qameta.allure:allure-testng:jar:2.17.3:compile
+|  +- io.qameta.allure:allure-java-commons:jar:2.17.3:compile
+|  |  \- io.qameta.allure:allure-model:jar:2.17.3:compile
+|  \- io.qameta.allure:allure-test-filter:jar:2.17.3:runtime
++- org.projectlombok:lombok:jar:1.18.28:compile
++- org.springframework:spring-web:jar:6.0.19:compile
+|  +- org.springframework:spring-beans:jar:6.0.19:compile
+|  +- org.springframework:spring-core:jar:6.0.19:compile
+|  |  \- org.springframework:spring-jcl:jar:6.0.19:compile
+|  \- io.micrometer:micrometer-observation:jar:1.11.11:compile
+|     \- io.micrometer:micrometer-commons:jar:1.11.11:compile
++- org.springframework:spring-jdbc:jar:6.0.19:compile
+|  \- org.springframework:spring-tx:jar:6.0.19:compile
++- org.awaitility:awaitility:jar:4.2.0:compile
+|  \- org.hamcrest:hamcrest:jar:2.2:compile
++- commons-io:commons-io:jar:2.15.0:compile
++- org.apache.commons:commons-text:jar:1.10.0:compile
+|  \- org.apache.commons:commons-lang3:jar:3.12.0:compile
++- io.fabric8:kubernetes-client:jar:6.2.0:compile
+|  +- io.fabric8:kubernetes-client-api:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-core:jar:6.2.0:compile
+|  |  |  \- io.fabric8:kubernetes-model-common:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-gatewayapi:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-rbac:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-admissionregistration:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-apps:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-autoscaling:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-apiextensions:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-batch:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-certificates:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-coordination:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-discovery:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-events:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-extensions:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-flowcontrol:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-networking:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-metrics:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-policy:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-scheduling:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-storageclass:jar:6.2.0:compile
+|  |  +- io.fabric8:kubernetes-model-node:jar:6.2.0:compile
+|  |  +- org.yaml:snakeyaml:jar:2.0:compile
+|  |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.15.4:compile
+|  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.15.4:compile
+|  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.15.4:compile
+|  +- io.fabric8:kubernetes-httpclient-okhttp:jar:6.2.0:runtime
+|  |  \- com.squareup.okhttp3:logging-interceptor:jar:4.12.0:runtime
+|  \- io.fabric8:zjsonpatch:jar:0.3.0:compile
++- org.postgresql:postgresql:jar:42.5.5:compile
+|  \- org.checkerframework:checker-qual:jar:3.5.0:runtime
++- com.ericsson.oss.orchestration.eo:eric-common-logging:jar:2.0.1:runtime
+|  +- org.springframework:spring-context:jar:6.0.19:runtime
+|  |  +- org.springframework:spring-aop:jar:6.0.19:runtime
+|  |  \- org.springframework:spring-expression:jar:6.0.19:runtime
+|  +- net.logstash.logback:logstash-logback-encoder:jar:7.3:runtime
+|  +- ch.qos.logback:logback-classic:jar:1.4.14:runtime
+|  |  \- ch.qos.logback:logback-core:jar:1.4.14:runtime
+|  +- org.springframework.boot:spring-boot-starter:jar:3.1.11:runtime
+|  |  +- org.springframework.boot:spring-boot:jar:3.1.11:runtime
+|  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:3.1.11:runtime
+|  |  +- org.springframework.boot:spring-boot-starter-logging:jar:3.1.11:runtime
+|  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.20.0:runtime
+|  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.20.0:runtime
+|  |  |  \- org.slf4j:jul-to-slf4j:jar:2.0.13:runtime
+|  |  \- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:runtime
+|  +- org.springframework.security:spring-security-core:jar:6.1.9:runtime
+|  |  \- org.springframework.security:spring-security-crypto:jar:6.1.9:runtime
+|  +- jakarta.servlet:jakarta.servlet-api:jar:6.0.0:runtime
+|  +- org.springframework.kafka:spring-kafka:jar:3.0.16:runtime
+|  |  +- org.springframework:spring-messaging:jar:6.0.19:runtime
+|  |  +- org.springframework.retry:spring-retry:jar:2.0.2:runtime
+|  |  +- org.apache.kafka:kafka-clients:jar:3.4.1:runtime
+|  |  |  +- com.github.luben:zstd-jni:jar:1.5.2-1:runtime
+|  |  |  +- org.lz4:lz4-java:jar:1.8.0:runtime
+|  |  |  \- org.xerial.snappy:snappy-java:jar:1.1.8.4:runtime
+|  |  \- com.google.code.findbugs:jsr305:jar:3.0.2:runtime
+|  +- com.fasterxml.jackson.core:jackson-databind:jar:2.15.4:compile
+|  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.15.4:compile
+|  \- org.apache.httpcomponents.client5:httpclient5:jar:5.2.3:runtime
+|     +- org.apache.httpcomponents.core5:httpcore5:jar:5.2.4:runtime
+|     \- org.apache.httpcomponents.core5:httpcore5-h2:jar:5.2.4:runtime
++- io.micrometer:micrometer-tracing-bridge-otel:jar:1.1.7:compile
+|  +- io.micrometer:micrometer-tracing:jar:1.1.12:compile
+|  |  +- io.micrometer:context-propagation:jar:1.0.6:compile
+|  |  \- aopalliance:aopalliance:jar:1.0:compile
+|  +- io.opentelemetry:opentelemetry-api:jar:1.25.0:compile
+|  |  \- io.opentelemetry:opentelemetry-context:jar:1.25.0:compile
+|  +- io.opentelemetry:opentelemetry-semconv:jar:1.25.0-alpha:compile
+|  +- io.opentelemetry:opentelemetry-sdk-common:jar:1.25.0:compile
+|  +- io.opentelemetry:opentelemetry-sdk-trace:jar:1.25.0:compile
+|  +- io.opentelemetry:opentelemetry-sdk:jar:1.25.0:compile
+|  |  \- io.opentelemetry:opentelemetry-sdk-logs:jar:1.25.0-alpha:runtime
+|  |     +- io.opentelemetry:opentelemetry-api-logs:jar:1.25.0-alpha:runtime
+|  |     \- io.opentelemetry:opentelemetry-api-events:jar:1.25.0-alpha:runtime
+|  +- io.opentelemetry.instrumentation:opentelemetry-instrumentation-api-semconv:jar:1.25.1-alpha:compile
+|  |  \- io.opentelemetry.instrumentation:opentelemetry-instrumentation-api:jar:1.25.1:compile
+|  \- io.opentelemetry:opentelemetry-extension-trace-propagators:jar:1.25.0:compile
++- io.opentelemetry:opentelemetry-exporter-otlp:jar:1.25.0:compile
+|  +- io.opentelemetry:opentelemetry-sdk-metrics:jar:1.25.0:compile
+|  +- io.opentelemetry:opentelemetry-exporter-otlp-common:jar:1.25.0:runtime
+|  \- io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:jar:1.25.0:runtime
+\- io.opentelemetry:opentelemetry-sdk-extension-jaeger-remote-sampler:jar:1.25.0:compile
+   +- io.opentelemetry:opentelemetry-exporter-common:jar:1.25.0:runtime
+   \- com.squareup.okhttp3:okhttp:jar:4.12.0:runtime
+      +- com.squareup.okio:okio:jar:3.6.0:runtime
+      |  \- com.squareup.okio:okio-jvm:jar:3.6.0:runtime
+      |     \- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.8.22:runtime
+      \- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.8.22:runtime
+         +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.8.22:runtime
+         |  \- org.jetbrains:annotations:jar:13.0:runtime
+         \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.8.22:runtime

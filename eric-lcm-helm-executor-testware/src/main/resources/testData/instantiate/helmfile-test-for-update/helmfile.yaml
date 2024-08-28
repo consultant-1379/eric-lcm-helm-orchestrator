@@ -1,0 +1,23 @@
+releases:
+  - name: cn-am-test-app-a
+    chart: {{ .Values | get "cn-am-test-app-a.registry" "./test-charts" }}/cn-am-test-app-a
+    installed: {{ and ( .Values | get "global.app.enabled") ( .Values | get "cn-am-test-app-a.enabled") }}
+    namespace: {{ .Values | get "global.app.namespace" }}
+    values:
+      - ./values-templates/cn-am-test-app-a.yaml.gotmpl
+
+  - name: cn-am-test-app-b
+    chart: {{ .Values | get "cn-am-test-app-b.registry" "./test-charts" }}/cn-am-test-app-b
+    installed: {{ and ( .Values | get "global.app.enabled") ( .Values | get "cn-am-test-app-b.enabled") }}
+    namespace: {{ .Values | get "global.app.namespace" }}
+    values:
+      - ./values-templates/cn-am-test-app-b.yaml.gotmpl
+    needs:
+      - cn-am-test-app-a
+
+  - name: cn-am-test-app-c
+    chart: {{ .Values | get "cn-am-test-app-c.registry" "./test-charts" }}/cn-am-test-app-c
+    installed: {{ and ( .Values | get "global.app.enabled") ( .Values | get "cn-am-test-app-c.enabled") }}
+    namespace: {{ .Values | get "global.app.namespace" }}
+    values:
+      - ./values-templates/cn-am-test-app-c.yaml.gotmpl

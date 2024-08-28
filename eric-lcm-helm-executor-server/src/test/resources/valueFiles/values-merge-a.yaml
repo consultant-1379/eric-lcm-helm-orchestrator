@@ -1,0 +1,6 @@
+eric-pm-server:
+  server:
+    ingress:
+      enabled: true
+    persistentVolume:
+      storageClass: network-block

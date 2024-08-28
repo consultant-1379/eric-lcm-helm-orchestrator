@@ -1,0 +1,68 @@
+[
+    {
+    "Impact_on_Users_Deprecation": [
+        "No User impact",
+        "No APIs were deprecated in this version"
+    ],
+    "Exemptions": [
+        "No specific exemption is created for this release."
+    ],
+    "New_and_Updated_2PP_3PP": [
+        {
+            "Name": "Common Base OS Base Image",
+            "Product_id": "CXC 201 2032",
+            "Old_version": "5.14.0",
+            "New_version": "5.15.0",
+            "Comments": "2PP"
+        }
+    ],
+    "Repository_helm_link": [
+        {
+            "Title": "Helmfile Executor HELM",
+            "Folder_Link": "https://arm.sero.gic.ericsson.se/artifactory/proj-bdgs-cn-app-mgmt-released-helm",
+            "Chart_Name": "eric-lcm-helm-executor"
+        }
+    ],
+    "Upgrade_Information": [
+        "Only upgrade from 0.1.0 (R1A) is supported to current version."
+    ],
+    "Marketplace": {
+        "service_url": "https://adp.ericsson.se/marketplace/helmfile-executor"
+    },
+    "PRA_Checklist": [
+        {
+            "document_number": "15311-FCP1322463",
+            "revision": "A"
+        }
+    ],
+    "Release_criteria_unfulfillments": [
+    ],
+    "API": [
+    ],
+    "SW_Library": [
+    ],
+    "CPI": [
+    ],
+    "Product_Description": [
+        "Helmfile Executor service will accept Helmfile.tgz files and apply them to a target cluster"
+    ],
+    "Support_link": {
+        "title": "ADP Support",
+        "url": "https://jira-oss.seli.wh.rnd.internal.ericsson.com/projects/CAM/summary"
+    },
+    "Reusable_Images": [
+    ],
+    "Unsupported_Upgrade_Rollback_Path": [
+    ],
+    "Reason_For_Major_Version_Update": [
+    ],
+    "Restrictions_Limitations": [
+    ],
+    "Stakeholder_Verification": [
+    ],
+    "Support": [
+    ],
+    "References": [
+    ]
+  }
+]

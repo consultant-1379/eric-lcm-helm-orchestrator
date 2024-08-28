@@ -1,0 +1,24 @@
+helmDefaults:
+  wait: {{ .Values | get "global.default.wait" true }}
+  timeout: {{ .Values | get "global.default.timeout" }}
+  createNamespace: true
+
+---
+
+releases:
+  - name: eric-ctrl-bro
+    chart: ./values-templates/eric-ctrl-bro
+    namespace: {{ .Values | get "global.app.namespace" }}
+    installed: {{ and ( .Values | get "global.app.enabled") ( .Values | get "eric-ctrl-bro.enabled") }}
+    values:
+      - "./values-templates/eric-ctrl-bro.yaml.gotmpl"
+
+#Chart has invalid image tag
+  - name: busybox
+    chart: ./values-templates/busybox
+    namespace: {{ .Values | get "global.app.namespace" }}
+    installed: {{ and ( .Values | get "global.app.enabled") ( .Values | get "busybox.enabled") }}
+    values:
+      - "./values-templates/busybox.yaml.gotmpl"
+
+

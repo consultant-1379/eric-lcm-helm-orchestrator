@@ -1,0 +1,209 @@
+#================================
+#Value for duplicate variables
+BRO_BRA_STATE: &BRO_BRA_STATE false
+storageClass: &storageClass "network-block"
+object-storage-mn-credentials: &objectStorageMnCred "eric-data-object-storage-mn"
+document-database-pg-host: &databasePgHost "eric-data-document-database-pg"
+document-database-pg-credentials: &databasePgCred "eric-data-document-database-pg-credentials"
+eric-lcm-db-user-name: &dbLcmUser "customname"
+container_cred_id: &container_cred_id "container_cred_id"
+container_cred_pass: &container_cred_pass "container_cred_pass"
+#================================
+global:
+  timezone: UTC
+  security:
+    tls:
+      enabled: false
+  iamClientSecretEnabled: false
+  networkPolicy:
+    enabled: false
+  registry:
+    imagePullPolicy: Always
+    pullSecret: "regcred"
+  pullSecret: "regcred"
+  extraEnv:
+    container_cred_id: *container_cred_id
+    container_cred_pass: *container_cred_pass
+  adpBR:
+    brLabelKey: adpbrlabelkey
+
+rstate: RSTATE
+
+nameOverride: ""
+fullnameOverride: ""
+
+eric-lcm-helm-executor:
+  enabled: true
+  replicaCount: "1"
+  release-secret:
+    name: eric-lcm-helm-executor-release-secret
+  networkPolicy:
+    enabled: false
+  container-registry:
+    url: ""
+    kubernetesSecretName: "eric-lcm-helm-executor-container-creds"
+    keyForUserId: *container_cred_id
+    keyForUserPw: *container_cred_pass
+  helm-registry:
+    service: "eric-lcm-helm-chart-registry"
+    externalPort: 8080
+    name: "internal"
+    credentials:
+      kubernetesSecretName: "eric-lcm-helm-chart-registry"
+      keyForUserId: "BASIC_AUTH_USER"
+      keyForUserPw: "BASIC_AUTH_PASS"
+      username: "admin"
+  postgress:
+    service: *databasePgHost
+    credentials:
+      kubernetesSecretName: *databasePgCred
+      keyForUserId: "custom-user"
+      keyForUserPw: "custom-pwd"
+      keyForSuperPw: "super-pwd"
+      dbLCMUsername: *dbLcmUser
+  replicaCount: 2
+  imageCredentials:
+    lcm-helm-executor:
+      pullSecret: "regcred"
+      registry:
+        url: "armdocker.rnd.ericsson.se"
+        imagePullPolicy: "IfNotPresent"
+      repoPath: "proj-ra-cnam"
+
+eric-cnom-server:
+  enabled: false
+  imageCredentials:
+    pullSecret: "regcred"
+  ingress:
+    enabled: false
+    certificates:
+      enabled: false
+  searchEngine:
+    tls:
+      enabled: false
+  features:
+    statusOverview: true
+    alarmViewer: true
+    centralConfigurationRepository: true
+    logViewer: true
+    nrfProvisionUeGroupProfile: false
+    nrfProvisionUeIndividualProfile: false
+    nrfProvisionNfProfile: false
+    nrfProvisionNrfAddress: false
+    nssfProvision: false
+
+eric-cnom-document-database-mg:
+  enabled: false
+  imageCredentials:
+    pullPolicy: Always
+    registry:
+      pullSecret: "regcred"
+
+eric-lcm-container-registry:
+  enabled: false
+  ingress:
+    enabled: true
+    useHttpProxy: false
+    hostname: ""
+    generateSelfSignedCerts: false
+    tls:
+      secretName: "eric-container-registry-tls-secret"
+  registry:
+    metrics:
+      enabled: true
+    users:
+      secret: "container-registry-users-secret"
+      name: *container_cred_id
+      password: *container_cred_pass
+    storage:
+      s3:
+        enabled: true
+        authSecret: *objectStorageMnCred
+        host: "eric-data-storage"
+  persistence:
+    enabled: false
+  brAgent:
+    enabled: *BRO_BRA_STATE
+  resources:
+    registry:
+      requests:
+        memory: 128Mi
+        cpu: 50m
+      limits:
+        memory: 1280Mi
+        cpu: 500m
+    sidecar:
+      requests:
+        memory: 64Mi
+        cpu: 150m
+      limits:
+        memory: 640Mi
+        cpu: 750m
+    init:
+      requests:
+        memory: 64Mi
+        cpu: 50m
+      limits:
+        memory: 128Mi
+        cpu: 100m
+
+eric-lcm-helm-chart-registry:
+  enabled: true
+  env:
+    secret:
+      BASIC_AUTH_USER: "admin"
+      BASIC_AUTH_PASS: "pass"
+    s3:
+      enabled: true
+      host: "eric-data-storage"
+    s3Secret: *objectStorageMnCred
+  persistentVolumeClaim:
+    enabled: false
+  ingress:
+    enabled: false
+  brAgent:
+    enabled: *BRO_BRA_STATE
+  resources:
+    registry:
+      requests:
+        memory: 128Mi
+        cpu: 50m
+      limits:
+        memory: 640Mi
+        cpu: 250m
+    sidecar:
+      requests:
+        memory: 64Mi
+        cpu: 150m
+      limits:
+        memory: 640Mi
+        cpu: 750m
+    init:
+      requests:
+        memory: 64Mi
+        cpu: 50m
+      limits:
+        memory: 128Mi
+        cpu: 100m
+
+eric-pmda:
+  enabled: false
+
+eric-data-storage:
+  enabled: true
+  credentials:
+    kubernetesSecretName: *objectStorageMnCred
+  autoEncryption:
+    enabled: false
+  brAgent:
+    enabled: *BRO_BRA_STATE
+    logLevel: "debug"
+    brLabelKey: adpbrlabelkey
+    brLabelValue: "eric-data-storage"
+    backupTypeList:
+      - all-application-data
+    properties:
+      backup_data_path: "cr-registry, hcr-registry"
+    tls:
+      paths:
+        clientCerts: /etc/tls/cert/client

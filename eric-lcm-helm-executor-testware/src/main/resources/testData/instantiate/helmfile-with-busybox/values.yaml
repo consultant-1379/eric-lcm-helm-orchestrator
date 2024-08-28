@@ -1,0 +1,16 @@
+global:
+  # Secret must be manually created in the namespace, no default value
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  timezone: UTC
+  default:
+    timeout: 300
+    wait: true
+  app:
+    enabled: true
+    namespace:
+
+busybox:
+  enabled: true
+

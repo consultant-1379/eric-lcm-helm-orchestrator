@@ -1,0 +1,235 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+timezone: "UTC"
+
+logPath: "/logs"
+
+labels: {}
+
+service:
+  port: 8888
+
+container-registry:
+  url: ""
+  credentials:
+    kubernetesSecretName: "eric-lcm-helm-executor-container-creds"
+    keyForUserId: "container_cred_id"
+    keyForUserPw: "container_cred_pass"
+
+helm-registry:
+  service: "eric-lcm-helm-chart-registry"
+  externalPort: 8080
+  name: "internal"
+  credentials:
+    kubernetesSecretName: "eric-lcm-helm-chart-registry"
+    keyForUserId: "BASIC_AUTH_USER"
+    keyForUserPw: "BASIC_AUTH_PASS"
+    #Username for helm registry auth is mandatory in case MTLS enable (global.security.tls.enable=true).
+    #Necessary for generate auth certificate with correct CN.
+    username: ""
+
+postgress:
+  service: "eric-data-document-database-pg"
+  port: 5432
+  dbName: "lcm-exec-db"
+  credentials:
+    kubernetesSecretName: "eric-data-document-database-pg-credentials"
+    keyForUserId: "custom-user"
+    keyForUserPw: "custom-pwd"
+    keyForSuperPw: "super-pwd"
+    dbLCMUsername: ""
+
+resources:
+  eric-lcm-helm-executor:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+      ephemeral-storage: ""
+    limits:
+      cpu: "400m"
+      memory: "1.5Gi"
+      ephemeral-storage: ""
+    jvm:
+      initialMemoryAllocationPercentage: 50
+      smallMemoryAllocationMaxPercentage: 75
+      largeMemoryAllocationMaxPercentage: 75
+  init:
+    requests:
+      cpu: "50m"
+      memory: "50Mi"
+      ephemeral-storage: ""
+    limits:
+      cpu: "50m"
+      memory: "50Mi"
+      ephemeral-storage: ""
+
+executorConfig:
+  bro:
+    host: "eric-ctrl-bro"
+    port: 7001
+  lightWeightMode:
+    enabled: false
+  auto-rollback:
+    enabled: false
+  operation:
+    timeout: 5
+  logging:
+    level:
+      root: INFO
+  deleteNamespace:
+    default: true
+
+replicaCount: 2
+
+terminationGracePeriodSeconds: 30
+
+updateStrategy:
+  type: "RollingUpdate"
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+
+bandwidth:
+  maxEgressRate: 100M
+
+probes:
+  eric-lcm-helm-executor:
+    livenessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 200
+      periodSeconds: 30
+      timeoutSeconds: 5
+    readinessProbe:
+      initialDelaySeconds: 20
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 15
+
+storage:
+  tmpdir:
+    storageAllocation: 3Gi
+    storageMedium: ""
+  homedir:
+    storageAllocation: 3Gi
+    storageMedium: ""
+  logdir:
+    storageAllocation: 3Gi
+    storageMedium: ""
+
+certificates:
+  path: "/workdir/certificates"
+  enrollment:
+    enabled: false
+
+affinity:
+  podAntiAffinity: "soft"
+  topologyKey: "kubernetes.io/hostname"
+
+nodeSelector: {}
+
+topologySpreadConstraints: []
+
+securityContext:
+  enabled: true
+
+tolerations:
+  eric-lcm-helm-executor: []
+
+podPriority:
+  eric-lcm-helm-executor:
+    priorityClassName:
+
+appArmorProfile:
+  type: ""
+  localhostProfile:
+
+seccompProfile:
+  type: ""
+  localhostProfile:
+
+security:
+  tls:
+    enabled: false
+
+logshipper:
+  enabled: false
+
+log:
+  eric-lcm-helm-executor:
+    level: debug
+
+prometheus:
+  path: /actuator/prometheus
+  scrape: true
+  role: pod
+  interval: 15s
+
+imageCredentials:
+  eric-lcm-helm-executor:
+    registry:
+      url:
+      imagePullPolicy:
+    pullSecret:
+  initContainer:
+    registry:
+      url:
+      imagePullPolicy:
+    pullSecret:
+  pullSecret:
+
+podDisruptionBudget:
+  minAvailable : "50%"
+
+annotations: {}
+
+networkPolicy:
+  enabled: true
+  matchLabels: []
+
+serviceMesh:
+  virtualService-config:
+    timeout: 45s
+    retries: 2
+    perTryTimeout: 15s
+  destinationRule-config:
+    connectionPool:
+      http1MaxPendingRequests: 1000
+      http2MaxRequests: 1000
+      maxRequestsPerConnection: 100
+      maxConnections: 50
+    outlierDetection:
+      baseEjectionTime: 1m
+      consecutive5xxErrors: 3
+      interval: 10s
+      maxEjectionPercent: 10
+
+# Distributed Systems Tracing
+dst:
+  enabled: true
+  service: "eric-dst-collector"
+  collector:
+    host: "https://eric-dst-collector"
+    protocol: grpc
+    portOtlpGrpc: 4317
+    portOtlpHttp: 4318
+    portJaegerGrpc: 14250
+  producer:
+    type: B3,W3C
+
+
+
+

@@ -1,0 +1,5 @@
+{{- if .Values.logshipper.enabled }}
+{{- if eq "true" (include "eric-lcm-helm-executor.log-streaming-activated" .) }}
+  {{- include "eric-log-shipper-sidecar.logshipper-sidecar-configmap" . }}
+{{- end }}
+{{- end }}

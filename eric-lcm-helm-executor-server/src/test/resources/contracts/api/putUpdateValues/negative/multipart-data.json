@@ -1,0 +1,7 @@
+{
+  "additionalParameters": {
+    "one" : "param#1",
+    "two" : "param#2",
+    "three" : "param#3"
+  }
+}

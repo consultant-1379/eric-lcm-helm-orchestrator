@@ -1,0 +1,38 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+  annotations:
+  {{- include "eric-lcm-helm-executor.annotations" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: http
+  selector:
+    app: {{ template "eric-lcm-helm-executor.name" . }}
+    release: {{ .Release.Name }}
+{{- if .Values.global }}
+{{- if .Values.global.internalIPFamily }}
+  ipFamilies: [{{ .Values.global.internalIPFamily | quote }}]
+{{- end }}
+{{- end }}

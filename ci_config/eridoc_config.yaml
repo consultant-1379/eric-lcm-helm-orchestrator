@@ -1,0 +1,22 @@
+repository: eridoca
+folderId: 0b004cffc9136fab
+documents:
+  - title: "{servicename} {semver} Test Specification Report"
+    folderId: 0b004cffc9136fab
+    file: "./marketplace/test_specification/TestSpecification.docx"
+    decimal-class: "152 41"
+    individual-number: "APR 201 514/0"
+    eri_document_type: "Test Specification"
+    lang: "en"
+    format: "msw12"
+
+  - title: "{servicename} {semver} Test Report"
+    folderId: 0b004cffc9136fab
+    file: "./marketplace/test_report/TestReport.docx"
+    strategy: "ordinal"
+    decimal-class: "152 83"
+    individual-number: "APR 201 514/0"
+    eri_document_type: "Test Report"
+    lang: "en"
+    format: "msw12"
+

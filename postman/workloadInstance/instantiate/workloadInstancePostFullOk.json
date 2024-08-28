@@ -1,0 +1,10 @@
+{
+  "workloadInstanceName": "successfulpost",
+  "timeout": 5,
+  "namespace": "<YOUR_NAMESPACE>",
+  "crdNamespace": "crdnamespace",
+  "cluster": "kubernetes",
+  "additionalParameters": {
+    "cn-am-test-app-a.enabled": true
+  }
+}

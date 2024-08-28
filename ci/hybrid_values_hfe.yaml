@@ -1,0 +1,63 @@
+#================================
+#Value for duplicate variables
+BRO_BRA_STATE: &BRO_BRA_STATE false
+storageClass: &storageClass "network-block"
+document-database-pg-credentials: &databasePgCred "eric-data-document-database-pg-credentials"
+eric-lcm-db-user-name: &dbLcmUser "customname"
+container_cred_id: &container_cred_id "container_cred_id"
+container_cred_pass: &container_cred_pass "container_cred_pass"
+#================================
+global:
+  timezone: UTC
+  security:
+    tls:
+      enabled: false
+  iamClientSecretEnabled: false
+  networkPolicy:
+    enabled: false
+  extraEnv:
+    container_cred_id: *container_cred_id
+    container_cred_pass: *container_cred_pass
+  adpBR:
+    brLabelKey: adpbrlabelkey
+
+rstate: RSTATE
+
+nameOverride: ""
+fullnameOverride: ""
+
+#eric-lcm-helm-executor:
+enabled: true
+replicaCount: "1"
+release-secret:
+  name: eric-lcm-helm-executor-release-secret
+networkPolicy:
+  enabled: false
+container-registry:
+  url: ""
+  kubernetesSecretName: "eric-lcm-helm-executor-container-creds"
+  keyForUserId: *container_cred_id
+  keyForUserPw: *container_cred_pass
+helm-registry:
+  service: "eric-lcm-helm-chart-registry"
+  externalPort: 8080
+  name: "internal"
+  credentials:
+    kubernetesSecretName: "eric-lcm-helm-chart-registry"
+    keyForUserId: "BASIC_AUTH_USER"
+    keyForUserPw: "BASIC_AUTH_PASS"
+    username: "admin"
+postgress:
+  service: eric-data-document-database-pg
+  credentials:
+    kubernetesSecretName: *databasePgCred
+    keyForUserId: "custom-user"
+    keyForUserPw: "custom-pwd"
+    keyForSuperPw: "super-pwd"
+    dbLCMUsername: *dbLcmUser
+replicaCount: 2
+imageCredentials:
+  lcm-helm-executor:
+    registry:
+      url: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-ra-cnam"

@@ -1,0 +1,55 @@
+{{- $global := fromJson (include "eric-ran-rad-rce-base.global" .) -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "eric-ran-rad-rce-base.helm-test-pod-name" . }}
+  labels: {{- include "eric-ran-rad-rce-base.labels" . | nindent 4 }}
+  annotations:
+    {{- $helmTestAnnotations := dict "helm.sh/hook" "test" "helm.sh/hook-weight" "0" "helm.sh/hook-delete-policy" "before-hook-creation,hook-succeeded" -}}
+    {{- $defaultAnnotations := include "eric-ran-rad-rce-base.annotations" . | fromYaml -}}
+    {{- include "eric-ran-rad-rce-base.mergeAnnotations" (dict "location" .Template.Name "sources" (list $helmTestAnnotations $defaultAnnotations)) | trim | nindent 4 }}
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+  containers:
+    {{- $helmTestContainerName := include "eric-ran-rad-rce-base.helm-test-container-name" . }}
+    - name: {{ $helmTestContainerName }}
+      image: {{ template "eric-ran-rad-rce-base.imagePath" (dict "root" . "container" $helmTestContainerName) }}
+      imagePullPolicy: {{ template "eric-ran-rad-rce-base.imagePullPolicy" (dict "root" . "container" $helmTestContainerName) }}
+      env:
+        - name: SERVICE_PORT
+          value: "{{ .Values.service.port }}"
+        - name: SERVICE_NAME
+          value: {{ include "eric-ran-rad-rce-base.name" . }}
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        privileged: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+      resources: {{- toYaml (index .Values.resources "helm-test") | nindent 8 }}
+      volumeMounts:
+        - name: tmplog
+          mountPath: "/tmp/log"
+  volumes:
+    - emptyDir: {}
+      name: tmplog
+  {{- with index .Values.podPriority "eric-ran-rad-rce-base-test" "priorityClassName" }}
+  priorityClassName: {{ . | quote }}
+  {{- end }}
+  {{- with (index .Values.tolerations "eric-ran-rad-rce-base-test") }}
+  tolerations: {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+  {{- if include "eric-ran-rad-rce-base.pullSecrets" . }}
+  imagePullSecrets:
+    - name: {{ template "eric-ran-rad-rce-base.pullSecrets" . }}
+  {{- end }}
+
+  {{- if (or (index .Values.nodeSelector "eric-ran-rad-rce-base-test") $global.nodeSelector) }}
+  nodeSelector: {{- include "eric-ran-rad-rce-base.nodeSelector" (merge (dict "workload" "eric-ran-rad-rce-base-test") .) | nindent 4 }}
+  {{- end }}
+
+

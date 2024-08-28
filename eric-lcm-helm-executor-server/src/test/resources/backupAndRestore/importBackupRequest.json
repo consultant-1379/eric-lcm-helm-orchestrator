@@ -1,0 +1,5 @@
+{
+  "backupManagerId": "DEFAULT",
+  "uri": "sftp://foo@10.210.58.134:2222/test/backupName",
+  "password": "12345t6"
+}

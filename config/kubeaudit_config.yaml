@@ -1,0 +1,32 @@
+Kubeaudit:
+  Product: "eric-lcm-helm-executor"
+  Product_internal: "Helmfile Executor"
+  Product_contact: "PDLSUNFLOW@pdl.internal.ericsson.com"
+  ClusterMode:
+    Scan: False
+    KubeconfigFile: "config"
+    Namespace: "va-scan-ns"
+    AuditPickerFile: ""
+    Autofix : False
+    AutofixedFile: "fixed_conf"
+    ReportFormat: 'json'
+    DisplayReportConsole: true
+  ManifestMode:
+    Scan: True
+    SkipTests: false
+    armLinks:
+      Links:
+#        - "https://arm.sero.gic.ericsson.se/artifactory/proj-bdgs-cn-app-mgmt-drop-helm/eric-lcm-helm-executor/eric-lcm-helm-executor-{version}.tgz"
+      valuesOverride:
+    offlineArtifacts:
+      name:
+      valuesOverride:
+    AuditPickerFile: ""
+    Autofix : False
+    AutofixDir: "fixed"
+    ReportFormat: 'json'
+    DisplayReportConsole: true
+  CustomRun:
+    Scan: False
+    Parameters: ""
+    DisplayReportConsole: True

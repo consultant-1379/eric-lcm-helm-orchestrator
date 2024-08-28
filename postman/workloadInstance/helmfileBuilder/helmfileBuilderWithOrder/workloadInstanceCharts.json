@@ -1,0 +1,29 @@
+{
+  "workloadInstanceName": "successfulpost",
+  "timeout": 2,
+  "namespace": "<NAMESPACE>",
+  "repository": "https://arm.sero.gic.ericsson.se/artifactory/proj-adp-gs-all-helm",
+  "charts" :[
+    {
+      "order": 2,
+      "name": "eric-ctrl-bro",
+      "version": "5.0.0-9",
+      "crd": false
+    },
+    {
+      "order": 3,
+      "name": "eric-data-search-engine-curator",
+      "version": "2.8.0-3",
+      "crd": false
+    },
+    {
+      "order": 1,
+      "name": "eric-sec-key-management",
+      "version": "2.24.0+10",
+      "crd": false
+    }
+  ],
+  "additionalParameters": {
+    "eric-ctrl-bro.bro.enableAgentDiscovery": true
+  }
+}

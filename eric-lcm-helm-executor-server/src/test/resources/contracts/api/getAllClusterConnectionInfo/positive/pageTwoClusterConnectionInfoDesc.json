@@ -1,0 +1,37 @@
+{
+  "_links": {
+    "first": {
+      "href": "https://host/cnwlcm/v1/cluster_connection_info?page=1&size=2&sort=name,desc"
+    },
+    "prev": {
+      "href": "https://host/cnwlcm/v1/cluster_connection_info?page=1&size=2&sort=name,desc"
+    },
+    "self": {
+      "href": "https://host/cnwlcm/v1/cluster_connection_info?page=2&size=2&sort=name,desc"
+    },
+    "next": {
+      "href": "https://host/cnwlcm/v1/cluster_connection_info?page=3&size=2&sort=name,desc"
+    },
+    "last": {
+      "href": "https://host/cnwlcm/v1/cluster_connection_info?page=5&size=2&sort=name,desc"
+    }
+  },
+  "_page": {
+    "number": 2,
+    "size": 2,
+    "totalPages": 5,
+    "totalElements": 9
+  },
+  "content": [
+    {
+      "id": "firstId",
+      "name": "testName",
+      "status": "NOT_IN_USE"
+    },
+    {
+      "id": "secondId",
+      "name": "secondTestName",
+      "status": "NOT_IN_USE"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{{- $global := fromJson (include "eric-ran-rad-rce-base.global" .) -}}
+{{- if .Values.apiGatewayRoute.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "eric-ran-rad-rce-base.name" . }}-create-api-gateway-routes
+  annotations:
+{{ include "eric-ran-rad-rce-base.annotations" . | indent 4 }}
+    "helm.sh/hook": post-install, post-upgrade, post-rollback
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+spec:
+  backoffLimit: 8
+  template:
+    spec:
+      {{- with index .Values.podPriority "eric-ran-rad-rce-base" "priorityClassName" }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "eric-ran-rad-rce-base.service-account.name" . }}
+      {{- if include "eric-ran-rad-rce-base.pullSecrets" .}}
+      imagePullSecrets:
+        - name: {{ template "eric-ran-rad-rce-base.pullSecrets" . }}
+      {{- end }}
+      restartPolicy: Never
+      {{- if (or (index .Values.nodeSelector "eric-ran-rad-rce-base") $global.nodeSelector) }}
+      nodeSelector: {{- include "eric-ran-rad-rce-base.nodeSelector" (merge (dict "workload" "eric-ran-rad-rce-base") .) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-route-config
+          image: {{ template "eric-ran-rad-rce-base.imagePath" (dict "root" . "container" "eric-ran-rad-rce-base") }}
+          imagePullPolicy: {{ template "eric-ran-rad-rce-base.imagePullPolicy" (dict "root" . "container" "eric-ran-rad-rce-base") }}
+          command: ["/app/create_api_gateway_routes.sh"]
+          env:
+            - name: INGRESS_HOST
+              value: "{{ .Values.ingress.host }}"
+            - name: UNIQUE_PATH_NAME
+              value: "{{ .Values.ingress.uniquePathName }}"
+            - name: NS
+              value: "{{- .Release.Namespace -}}"
+            - name: SERVICE_PORT
+              value: "{{ .Values.service.port }}"
+            - name: SERVICE_NAME
+              value: "{{ include "eric-ran-rad-rce-base.name" . }}"
+            - name: SVR_SERVICE_PATH
+              value: "{{ .Values.apiGatewayRoute.svr.path }}"
+            - name: UI_SERVICE_PATH
+              value: "{{ .Values.apiGatewayRoute.ui.path }}"
+            - name: API_GATEWAY_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "eric-ran-rad-rce-base.name" . }}-api-gateway-secret"
+                  key: system-user
+            - name: API_GATEWAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "eric-ran-rad-rce-base.name" . }}-api-gateway-secret"
+                  key: system-user-pwd
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+          resources:
+            {{- toYaml (index .Values "resources" "eric-ran-rad-rce-base") | nindent 12 }}
+      {{- with (index .Values.tolerations "eric-ran-rad-rce-base") }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -1,0 +1,572 @@
+modelVersion: 2.0
+
+docker-images:
+  - adp-release-auto: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-adp-release-auto:latest
+  - adp-prim-bookmark: armdocker.rnd.ericsson.se/proj-adp-cicd-dev/adp-prim-bookmark:latest
+  - vhub: armdocker.rnd.ericsson.se/proj-scp-client/prod/sc-platform/sc-platform-client:latest
+
+import:
+  common: common-properties.yaml
+
+properties:
+  - helm-chart-repo: https://arm.sero.gic.ericsson.se/artifactory/proj-bdgs-cn-app-mgmt-drop-helm
+  - helm-chart-released-repo: https://arm.sero.gic.ericsson.se/artifactory/proj-bdgs-cn-app-mgmt-released-helm
+  - helm-chart-virtual-released-repo: https://arm.sero.gic.ericsson.se/artifactory/proj-bdgs-cn-app-mgmt-released-helm
+  - helm-chart-artifact-url: ${helm-chart-released-repo}/${common.helm-chart-name}/${var.helmchart-file-name}
+  - doc-arm-repo: https://arm.sero.gic.ericsson.se/artifactory/proj-bdgs-cn-app-mgmt-released-helm
+  - cpi-input-repo: https://arm.sero.gic.ericsson.se/artifactory/proj-adp-cpi-input-released-generic-local
+  - image-released-proj: proj-cnam-pra
+  - image-manifest-url: https://armdocker.rnd.ericsson.se/artifactory/docker-v2-global-local/${image-released-proj}/${common.docker-image-name}/${env.RELEASE_CANDIDATE}/manifest.json
+  - initcontainer-manifest-url: https://armdocker.rnd.ericsson.se/artifactory/docker-v2-global-local/${image-released-proj}/${common.docker-initcontainer-name}/${env.RELEASE_CANDIDATE}/manifest.json
+  - image-drop-path: armdocker.rnd.ericsson.se/${common.image-drop-repopath}/${common.docker-image-name}
+  - initcontainer-drop-path: armdocker.rnd.ericsson.se/${common.image-drop-repopath}/${common.docker-initcontainer-name}
+  - image-released-path: armdocker.rnd.ericsson.se/${image-released-proj}/${common.docker-image-name}:${env.RELEASE_CANDIDATE}
+  - initcontainer-released-path: armdocker.rnd.ericsson.se/${image-released-proj}/${common.docker-initcontainer-name}:${env.RELEASE_CANDIDATE}
+  - git-clone-url: https://gerrit-gamma.gic.ericsson.se/a/OSS/com.ericsson.orchestration.mgmt/eric-lcm-helm-orchestrator
+  - helm-chart-released-folder: 'build/released-charts'
+  - structure-data-file-location: ${doc-arm-repo}/documents/${var.semver}/${common.helm-chart-name}-structured-data.json
+  - structure-data-file: build/structure-output/${common.helm-chart-name}-structured-data.json
+  - gitca-repo-name: adp-helmfile-executor
+  - aca-container-name: adp-helmfile-executor
+  - aca-chart-repo: https://lib.sw.ericsson.net/helm/${aca-container-name}
+  - generated-ug-fragments-dir: build/fragmets
+  - test_report_allure_suites: "${env.JENKINS_URL}/view/CN-AM/job/CN-AM_Lcm-Helm-Executor_NightTests/allure/data/suites.csv"
+  - test_report_junit_xml: "build"
+  - test_report_filename: "testcase.xml"
+
+env:
+  - AMADM100_USER
+  - AMADM100_PASS
+  - ARMDOCKER_TOKEN
+  - BRANCH_NAME (default=master)
+  - DRY_RUN (default=true)
+  - ERIDOC_PASSWORD
+  - ERIDOC_USERNAME
+  - EVMS_API_KEY
+  - GERRIT_PASSWORD
+  - GERRIT_USERNAME
+  - HELM_TOKEN
+  - JENKINS_URL (default='https://fem4s11-eiffel052.eiffel.gic.ericsson.se:8443/jenkins')
+  - JIRA_PASSWORD
+  - JIRA_USERNAME
+  - MARKETPLACE_TOKEN
+  - MUNIN_TOKEN
+  - PLMS_PASSWORD
+  - PLMS_USERNAME
+  - PRI_APPROVER (default="EPKANTO")
+  - PRI_PREPARED (default="adpauto")
+  - PRI_RESPONSIBLE (default="EPKANTO")
+  - PWD
+  - RELEASE_CANDIDATE
+  - VERSION_UPDATE (default=MINOR)
+  - VHUB_API_TOKEN
+
+var:
+  - cbos-semver
+  - commithash
+  - helmchart-file-name
+  - released-version
+  - semver
+  - sha256-helm
+  - sha256-image
+  - sha256-initcontainer
+  - verification-report-document-id
+  - verification-report-revision
+  - verification-report-title
+  - version
+
+rules:
+  clean:
+    - task: tmp
+      cmd: rm -rf .bob/
+    - task: artifact-properties
+      cmd: rm -f artifact.properties
+    - task: clean-build-folder
+      cmd: rm -rf build/
+
+  init:
+    - task: generate-released-version
+      docker-image: adp-release-auto
+      cmd:
+        - version-handler convert-version
+          -s ${env.RELEASE_CANDIDATE} -o ${env.PWD}/.bob/var.released-version
+        - cat ${env.PWD}/.bob/var.released-version | cut -d '+' -f 1 > ${env.PWD}/.bob/var.semver
+        - cp ${env.PWD}/.bob/var.released-version ${env.PWD}/.bob/var.version
+    - task: helmchart-file-name
+      cmd: echo ${common.helm-chart-name}-${var.released-version}.tgz > ${env.PWD}/.bob/var.helmchart-file-name
+    - task: adp-artifacts-properties
+      docker-image: adp-release-auto
+      cmd: generate-adp-artifacts --chart-name ${common.helm-chart-name}
+                                  --chart-version ${var.released-version}
+                                  --chart-repo ${helm-chart-released-repo}
+                                  --aca-chart-repo ${aca-chart-repo}
+    - task: cbos-semver
+      cmd:
+        - docker pull ${image-drop-path}:${env.RELEASE_CANDIDATE}
+        - docker inspect ${image-drop-path}:${env.RELEASE_CANDIDATE} | grep common_base_os | head -n1 | awk -F "\"" '{print $4}' | cut -d '-' -f 1 > ${env.PWD}/.bob/var.cbos-semver
+
+  generate-characteristics-report:
+    - task: characteristics-report
+      docker-image: adp-release-auto
+      cmd: characteristics-report generate -f ${common.characteristics-report-source-file-path}
+                                           -out marketplace
+                                           -api ${env.HELM_TOKEN}
+                                           -url ${doc-arm-repo}/documents/${var.semver}
+
+  eridoc-load:
+    - task: eridoc-approve
+      docker-image: adp-release-auto
+      docker-envs:
+        - GERRIT_USERNAME
+        - GERRIT_PASSWORD
+      cmd:
+        - eridoc upload --config ${common.eridoc-config}
+            --no-validate-certificates
+            --username ${env.GERRIT_USERNAME}
+            --password ${env.GERRIT_PASSWORD}
+            --set semver="${var.semver}"
+            --set servicename="${common.service-name}"
+            --debug
+            --dry-run ${env.DRY_RUN}
+  eridoc-approve:
+    - task: eridoc-approve
+      docker-image: adp-release-auto
+      docker-envs:
+        - GERRIT_USERNAME
+        - GERRIT_PASSWORD
+      cmd:
+        - eridoc approve --config ${common.eridoc-config}
+            --no-validate-certificates
+            --username ${env.GERRIT_USERNAME}
+            --password ${env.GERRIT_PASSWORD}
+            --set semver="${var.semver}"
+            --set servicename="${common.service-name}"
+            --debug
+            --dry-run ${env.DRY_RUN}
+        - eridoc approve --config ${common.eridoc-config-sec-report}
+            --no-validate-certificates
+            --username ${env.GERRIT_USERNAME}
+            --password ${env.GERRIT_PASSWORD}
+            --set version="${var.semver}"
+            --set servicename="${common.service-name}"
+            --debug
+            --dry-run ${env.DRY_RUN}
+
+  artifact-dr-checker:
+    - task: artifact-dr-check
+      docker-image: adp-release-auto
+      cmd: artifact-dr-check
+        -u "${structure-data-file-location}"
+        -t "${env.HELM_TOKEN}"
+        -n "${common.service-name}"
+        -r html
+        -o "${env.PWD}/build"
+        -v "${var.semver}"
+        --debug
+
+  generate-doc-zip-package:
+    - task: create_fragments-dir
+      cmd:
+       - mkdir -p ${generated-ug-fragments-dir}
+    - task: generate-pm-metrics-md-fragment
+      docker-image: adp-release-auto
+      cmd:
+        - pm-metrics generate-markdown --json ${common.pm-metrics-source-file-path}
+                                       --output ${generated-ug-fragments-dir}/pm_metrics.md
+    - task: generate-test-report
+      docker-image: adp-release-auto
+      cmd:
+        - mkdir -p build/
+        - ./scripts/allure_suite_csv_to_xml.sh ${test_report_junit_xml} ${test_report_allure_suites} ${test_report_filename} "${env.AMADM100_USER}" "${env.AMADM100_PASS}"
+        - test-report generate --reportdata=marketplace/test_report/TestReport.json
+                               --output=${env.PWD}/marketplace/test_report/TestReport.docx
+                               --relversion="${common.service-name} ${var.semver} PRA"
+                               --preparedby="adpauto"
+    - task: generate-service-ports-md-fragment
+      docker-image: adp-release-auto
+      cmd:
+        - service-ports generate-markdown --json ${common.service-ports-source-file-path}
+                                          --output ${generated-ug-fragments-dir}/service_ports.md
+    - task: md-to-pdf
+      docker-image: adp-release-auto
+      cmd: 'doc-handler generate --config ${env.PWD}/marketplace/md_config.yaml
+                                 --output ${env.PWD}/.bob/build/doc/pdf
+                                 --format pdf
+                                 --stylesheet ${env.PWD}/marketplace/pdf_style.css'
+
+    - task: generate-svl-md
+      docker-image: adp-release-auto
+      cmd: doc-handler generate-svl-replacement
+           --product-number "${common.apr-product-number}"
+           --product-version ${var.semver}
+           --output ${env.PWD}/.bob/build/doc-svl
+           --format html
+           --zip
+    - task: generate-doc-zip
+      docker-image: adp-release-auto
+      cmd: 'doc-handler generate --config marketplace/md_config.yaml
+                                 --output ${env.PWD}/.bob/build/doc-archive
+                                 --format html
+                                 --zip'
+
+  structure-data-generate:
+    - task: create-report-dir
+      cmd: mkdir -p ${common.structure-output-dir}
+    - task: structure-data-generate
+      docker-image: adp-release-auto
+      cmd: structure-data generate --service-name ${common.helm-chart-name}
+                                   --apr-product ${common.apr-product-number}
+                                   --foss-license-agreement ${cpi-input-repo}/${common.cpi-folder-name}/${var.semver}/${common.license-agreement-file-name}
+                                   --characteristic-report ${doc-arm-repo}/documents/${var.semver}/${common.characteristics-report-dest-file-name}
+                                   --pm-metrics ${doc-arm-repo}/documents/${var.semver}/${common.pm-metrics-dest-file-name}
+                                   --service_ports ${doc-arm-repo}/documents/${var.semver}/${common.service-ports-dest-file-name}
+                                   --output ${common.structure-output-dir}
+    - task: structure-data-validate
+      docker-image: adp-release-auto
+      cmd: structure-data validate --file ${env.PWD}/${structure-data-file}
+    - task: structure-data-upload
+      docker-image: adp-release-auto
+      cmd: structure-data upload --file ${env.PWD}/${structure-data-file}
+                                   --url ${doc-arm-repo}/documents/${var.semver}
+                                   --token ${env.HELM_TOKEN}
+                                   --dry-run ${env.DRY_RUN}
+
+  marketplace-upload:
+    - task: run-generate-marketplace-config-function
+      docker-image: adp-release-auto
+      cmd: marketplace generate-upload-config
+                       --report ${common.pri-release-input}
+                       --marketplace-upload-config-template ${env.PWD}/marketplace/marketplace_upload_pra.config.yaml
+                       --output ${env.PWD}/build/
+    - task: upload-doc-to-arm
+      docker-image: adp-release-auto
+      cmd: marketplace upload
+                       --arm-api-token ${env.HELM_TOKEN}
+                       --arm-url ${doc-arm-repo}/${common.product-name}
+                       --version ${var.semver}
+                       --config ${env.PWD}/build/marketplace_upload_config.yaml
+                       --debug
+                       --refresh
+                       --portal-token ${env.MARKETPLACE_TOKEN}
+                       --dry-run ${env.DRY_RUN}
+
+  publish-released-docker-image:
+    - task: image-pull
+      cmd:
+       - docker pull ${image-drop-path}:${env.RELEASE_CANDIDATE}
+       - docker pull ${initcontainer-drop-path}:${env.RELEASE_CANDIDATE}
+    - task: image-tag-released
+      cmd:
+       - docker tag ${image-drop-path}:${env.RELEASE_CANDIDATE} ${image-released-path}
+       - docker tag ${initcontainer-drop-path}:${env.RELEASE_CANDIDATE} ${initcontainer-released-path}
+    - task: release-docker-image
+      cmd:
+       - export DOCKER_CONFIG=${env.PWD}/.bob/.docker &&
+         docker login --username=${env.GERRIT_USERNAME} --password=${env.GERRIT_PASSWORD} ${image-released-path} &&
+         docker push ${image-released-path} &&
+         docker push ${initcontainer-released-path}
+
+  publish-released-helm-chart:
+    - task: generate-release-chart
+      docker-image: adp-release-auto
+      docker-flags:
+        - "--env GERRIT_USERNAME"
+        - "--env HELM_TOKEN"
+      cmd:
+        - mkdir -p ${helm-chart-released-folder}
+        - generate_release_helm_package
+            --repo ${helm-chart-repo}
+            --chart-name ${common.helm-chart-name}
+            --chart-version ${env.RELEASE_CANDIDATE}
+            --output ${helm-chart-released-folder}
+            --chart-released-version ${var.released-version}
+            --helm-user ${env.GERRIT_USERNAME}
+            --arm-api-token ${env.HELM_TOKEN}
+            --replace eric-product-info.yaml:${common.image-drop-repopath}=${image-released-proj}
+    - task: release-helm-package
+      docker-image: adp-release-auto
+      docker-flags:
+        - "--env GERRIT_USERNAME"
+        - "--env HELM_TOKEN"
+      cmd: upload_helm_package
+           --chart-filename "${helm-chart-released-folder}/${common.helm-chart-name}-${var.released-version}.tgz"
+           --chart-repo ${helm-chart-released-repo}
+           --helm-user ${env.GERRIT_USERNAME}
+           --helm-token ${env.HELM_TOKEN}
+           --virtual-repo ${helm-chart-virtual-released-repo}
+           --skip-existing-version
+           --properties product_metadata=${structure-data-file-location}
+           --dry-run ${env.DRY_RUN}
+
+
+  generate-document-list:
+    - task: output-dir
+      cmd: mkdir -p build/pri
+    - task: generate-pri-inputs
+      docker-image: adp-release-auto
+      docker-envs:
+        - ERIDOC_USERNAME
+        - ERIDOC_PASSWORD
+      cmd:
+        - munin-doc search --product-structure ci_config/plms/product_structure.yaml
+                           --documents ci_config/plms/documents.yaml
+                           --pri-input ${common.pri-release-input}
+                           --version ${var.released-version}
+                           --set CBOS_VERSION=${var.cbos-semver}
+                           --latest-approved
+    - task: retrieve-document-data-from-pri-input
+      docker-image: adp-release-auto
+      cmd:
+        - jq -r '.[0]["Verification_Report"]["Document_id"]' ${common.pri-release-input} > ${env.PWD}/.bob/var.verification-report-document-id
+        - jq -r '.[0]["Verification_Report"]["Title"]' ${common.pri-release-input} > ${env.PWD}/.bob/var.verification-report-title
+        - jq -r '.[0]["Verification_Report"]["Rev"]' ${common.pri-release-input} > ${env.PWD}/.bob/var.verification-report-revision
+
+  fetch-artifact-checksums:
+    - task: init
+      docker-image: adp-release-auto
+      cmd:
+        - git show-ref --hash ${env.RELEASE_CANDIDATE} > .bob/var.commithash
+        - arm get-checksum --url ${helm-chart-artifact-url} --sha256 --apikey ${env.HELM_TOKEN} --output .bob/var.sha256-helm --dry-run ${env.DRY_RUN}
+        - arm get-checksum --url ${image-manifest-url} --sha256 --apikey ${env.ARMDOCKER_TOKEN} --output .bob/var.sha256-image --dry-run ${env.DRY_RUN}
+        - arm get-checksum --url ${initcontainer-manifest-url} --sha256 --apikey ${env.ARMDOCKER_TOKEN} --output .bob/var.sha256-initcontainer --dry-run ${env.DRY_RUN}
+
+  generate-pri:
+    - task: generate-pri
+      docker-image: adp-release-auto
+      docker-flags:
+        - --env GERRIT_USERNAME
+        - --env GERRIT_PASSWORD
+        - --env JIRA_SERVER
+        - --env JIRA_USERNAME
+        - --env JIRA_PASSWORD
+        - --env ERIDOC_USERNAME
+        - --env ERIDOC_PASSWORD
+      cmd:
+        - pri2  --config ci_config/pri2/1.9
+                --product-revision ${var.released-version}
+                --product-release-number ${var.released-version}
+                --jira-component-long-name "${common.service-name}"
+                --gerrit-url ${common.gerrit-url}
+                --release-report ${common.pri-release-input}
+                --pri-manual-json ${common.pri-manual-input}
+                --pri-config-extra ci_config/pri2/1.9/config_he.json
+                --output-dir marketplace/pri
+                --checksum helm=${var.sha256-helm}
+                --checksum image=${var.sha256-image}
+                --checksum initcontainer=${var.sha256-initcontainer}
+                --eridoc-config ${common.eridoc-config}
+                --eridoc-prepared ${env.PRI_PREPARED}
+                --eridoc-approver ${env.PRI_PREPARED}
+                --eridoc-responsible ${env.PRI_RESPONSIBLE}
+                --eridoc-set servicename="${common.service-name}"
+                --eridoc-set semver=${var.semver}
+                --to-change "HEAD"
+                --folder-id ${common.folder-id-2-0}
+                --mimer
+                --debug
+                --generate-release-mail
+                --approve
+                --upload
+                --dry-run ${env.DRY_RUN}
+
+  # Set artifact URLs in PLMS via GitCA/ACA image and helm repos
+  archive-artifacts:
+    - task: archive-commit
+      docker-image: adp-release-auto
+      docker-envs:
+        - GERRIT_USERNAME
+        - GERRIT_PASSWORD
+      cmd: gitca register-plm --commithash ${var.commithash}
+                              --product-number ${common.cav-product-number}
+                              --version ${var.semver}
+                              --name ${gitca-repo-name}
+                              --username ${env.GERRIT_USERNAME}
+                              --password ${env.GERRIT_PASSWORD}
+                              --dry-run ${env.DRY_RUN}
+    - task: archive-images-and-helm
+      docker-image: adp-release-auto
+      docker-in-docker: socket
+      docker-envs:
+        - GERRIT_USERNAME
+        - GERRIT_PASSWORD
+      cmd: aca upload-archive --chart-version ${var.released-version}
+                              --chart-path ${helm-chart-released-folder}/${common.helm-chart-name}-${var.released-version}.tgz
+                              --replace ${common.image-drop-repopath}=${aca-container-name}
+                              --replace ${image-released-proj}=${aca-container-name}
+                              --replace proj-adp-log-released=adp-logshipper
+                              --2pp-images logshipper
+                              --skip-2pp-check
+                              --helm-container ${aca-container-name}
+                              --username ${env.GERRIT_USERNAME}
+                              --password ${env.GERRIT_PASSWORD}
+                              --debug
+                              --dry-run ${env.DRY_RUN}
+
+  munin-release-version:
+    - task: release-versions
+      docker-image: adp-release-auto
+      cmd:
+       - munin release-versions
+         -t ${env.MUNIN_TOKEN}
+         -c ${env.PWD}/ci_config/plms/product_structure.yaml
+         -v ${var.semver}
+         --debug
+         --set CBOS_VERSION=${var.cbos-semver}
+         --wait-prim-target 60
+         --dry-run ${env.DRY_RUN}
+
+  # Create bookmarks in PLMS
+  munin-create-bookmarks:
+    - task: create-bookmarks
+      docker-image: adp-release-auto
+      docker-flags:
+        - "--env MUNIN_TOKEN=${env.MUNIN_TOKEN}"
+      cmd:
+        - munin create-bookmarks
+          -t ${env.MUNIN_TOKEN}
+          -c ci_config/plms/product_structure.yaml
+          -v ${var.semver}  --debug
+          --set CBOS_VERSION=${var.cbos-semver}
+          --wait-prim-target 1800
+          --dry-run ${env.DRY_RUN}
+
+  upload-cpi-fragment:
+    - task: validate-pm-metrics-json
+      docker-image: adp-release-auto
+      cmd:
+        - pm-metrics validate --metrics-file ${common.pm-metrics-source-file-path}
+
+    - task: upload-pm-metrics-json
+      docker-image: adp-release-auto
+      cmd: upload_file.sh -f "${common.pm-metrics-source-file-path}"
+                          -c "${doc-arm-repo}/documents/${var.semver}/${common.pm-metrics-dest-file-name}"
+                          -t "${env.HELM_TOKEN}"
+                          -d ${env.DRY_RUN}
+
+    - task: validate-service-ports-json
+      docker-image: adp-release-auto
+      cmd:
+        - service-ports validate -f ${common.service-ports-source-file-path}
+
+    - task: upload-service-ports-json
+      docker-image: adp-release-auto
+      cmd: upload_file.sh -f "${common.service-ports-source-file-path}"
+                          -c "${doc-arm-repo}/documents/${var.semver}/${common.service-ports-dest-file-name}"
+                          -t "${env.HELM_TOKEN}"
+                          -d ${env.DRY_RUN}
+
+    - task: validate-characteristics-report-json
+      docker-image: adp-release-auto
+      cmd:
+        - characteristics-report validate -f ${common.characteristics-report-source-file-path}
+    - task: upload-characteristics-report-json
+      docker-image: adp-release-auto
+      cmd: upload_file.sh -f "${common.characteristics-report-source-file-path}"
+                          -c "${doc-arm-repo}/documents/${var.semver}/${common.characteristics-report-dest-file-name}"
+                          -t "${env.HELM_TOKEN}"
+                          -d ${env.DRY_RUN}
+
+    - task: upload-characteristics-report-json
+      docker-image: adp-release-auto
+      cmd: upload_file.sh -f "${common.characteristics-report-source-file-path}"
+                          -c "${doc-arm-repo}/documents/${var.semver}/${common.characteristics-report-dest-file-name}"
+                          -t "${env.HELM_TOKEN}"
+                          -d ${env.DRY_RUN}
+
+    - task: validate-license-agreement-json
+      docker-image: adp-release-auto
+      cmd:
+        - license-agreement validate -l "${common.license-agreement-file-path}"
+
+    - task: upload-license-agreement-json
+      docker-image: adp-release-auto
+      cmd: upload_file.sh -f "${common.license-agreement-file-path}"
+                          -r "${cpi-input-repo}/${common.cpi-folder-name}/${var.semver}/"
+                          -t "${env.HELM_TOKEN}"
+                          -d ${env.DRY_RUN}
+
+  evms-registration:
+    - task: evms-registration
+      docker-image: adp-release-auto
+      docker-flags:
+        - "--env EVMS_API_KEY"
+      cmd: dependencies register
+           --evms
+           --evms-user=${env.GERRIT_USERNAME}
+           --evms-product-name "${common.service-name}"
+           --evms-product-version ${var.version}
+           --dependencies ${common.dependencies-file-path}
+           --debug
+           --dry-run ${env.DRY_RUN}
+
+  create-pra-git-tag:
+    - task: git-tag
+      docker-image: adp-release-auto
+      docker-flags:
+        - "--env GERRIT_USERNAME"
+        - "--env GERRIT_PASSWORD"
+      cmd: version-handler create-git-tag
+           --tag v${var.released-version}
+           --message "PRA Release ${var.released-version}"
+           --git-repo-url ${git-clone-url}
+           --commitid ${env.RELEASE_CANDIDATE}
+           --dry-run ${env.DRY_RUN}
+
+  increment-version-prefix:
+    - task: git-push-version-prefix-increment
+      docker-image: adp-release-auto
+      docker-flags:
+        - "--env GERRIT_USERNAME"
+        - "--env GERRIT_PASSWORD"
+      cmd: version-handler increment
+           --step-version-prefix ${env.VERSION_UPDATE}
+           --git-repo-url ${git-clone-url}
+           --branch ${env.BRANCH_NAME}
+           --dry-run ${env.DRY_RUN}
+
+  plm-checker:
+    - task: prim-check
+      docker-image: adp-release-auto
+      cmd: plm-dr-check --product-number ${common.apr-product-number}
+                        --version ${var.semver}
+                        --munin-apitoken ${env.MUNIN_TOKEN}
+                        --username ${env.PLMS_USERNAME}
+                        --password ${env.PLMS_PASSWORD}
+                        --output-directory ${env.PWD}/build
+                        --report-format html
+                        --ignore-failure
+                        --dry-run ${env.DRY_RUN}
+
+  marketplace-checker:
+    - task: marketplace-checker
+      docker-image: adp-release-auto
+      cmd: marketplace check-documents --arm-api-token ${env.HELM_TOKEN}
+                                       --version ${var.semver}
+                                       --released-doc-repo ${doc-arm-repo}/${common.product-name}
+                                       --output-directory ${env.PWD}/build
+                                       --report-format html
+                                       --mimer
+                                       --skip-dr=DR-D470211-280
+                                       --dry-run ${env.DRY_RUN}
+
+  vhub-set-release:
+    - task: vhub-set-release-product-name
+      docker-image: vhub
+      cmd: --api_key ${env.VHUB_API_TOKEN} set_version_status
+           --product_name ${common.helm-chart-name}
+           --version ${var.released-version}
+           --status released
+    - task: vhub-set-release-product-number
+      docker-image: vhub
+      cmd: --api_key ${env.VHUB_API_TOKEN} set_version_status
+           --product_number ${common.apr-product-number}
+           --version ${var.released-version}
+           --status released
+
+  cleanup-images:
+    - task: remove-images
+      cmd:
+        - docker rmi --force ${image-drop-path}:${env.RELEASE_CANDIDATE} >/dev/null 2>&1
+        - docker rmi --force ${initcontainer-drop-path}:${env.RELEASE_CANDIDATE} >/dev/null 2>&1
+        - docker rmi --force ${image-released-path} >/dev/null 2>&1
+        - docker rmi --force ${initcontainer-released-path} >/dev/null 2>&1

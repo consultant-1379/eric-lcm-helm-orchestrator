@@ -1,0 +1,17 @@
+productName: "RAN Composition Engine Base Skeleton"
+productNumber: "CXD 101 685"
+images:
+  eric-ran-rad-rce-base:
+    productName: "eric-ran-rad-rce-base"
+    productNumber: "CXU 101 2105"
+    registry: "docker.ci.hahn117.rnd.gic.ericsson.se"
+    repoPath: "proj-exilis-drop"
+    name: "eric-ran-rad-rce-base"
+    tag: 1.22.0-3
+  helm-test:
+    productName: "eric-ran-rad-rce-base-helm-test"
+    productNumber: "CXU 000 0363"
+    registry: "docker.ci.hahn117.rnd.gic.ericsson.se"
+    repoPath: "proj-exilis-drop"
+    name: "eric-ran-rad-rce-base-helm-test"
+    tag: 1.22.0-3

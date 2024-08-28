@@ -1,0 +1,7 @@
+service:
+  name: OSS CN AM LCM
+  design_responsible: BDGSGHF
+  apr_product:
+      number: APR 111 11/1
+  cav_product:
+      number: CAF 111 11/1

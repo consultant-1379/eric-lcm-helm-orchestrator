@@ -1,0 +1,9 @@
+releases:
+  - name: busybox
+    chart: ./values-templates/busybox
+    namespace: {{ .Values | get "global.app.namespace" }}
+    installed: {{ ( .Values | get "global.app.enabled") }}
+    values:
+      - ./values-templates/busybox.yaml.gotmpl
+
+

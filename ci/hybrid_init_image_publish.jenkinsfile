@@ -1,0 +1,7 @@
+def bob = "./bob/bob"
+
+def custom_ruleset = "${bob} -r ci/custom_ruleset.yaml"
+
+stage('Init image publish(custom stage)') {
+    sh "${custom_ruleset} init-image-publish"
+}

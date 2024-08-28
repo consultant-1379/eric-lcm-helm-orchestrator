@@ -1,0 +1,46 @@
+
+global:
+  networkPolicy:
+    enabled: {{ .Values | get "global.networkPolicy.enabled" }}
+  registry:
+    imagePullPolicy: {{ .Values | get "global.registry.imagePullPolicy" }}
+    pullSecret: {{ .Values | get "global.registry.pullSecret" }}
+  security:
+    tls:
+      enabled: {{ .Values | get "global.security.tls.enabled" }}
+
+brAgent:
+  enabled: {{ .Values | get "eric-lcm-helm-chart-registry.brAgent.enabled" }}
+
+env:
+  secret:
+    BASIC_AUTH_USER: {{ .Values | get "eric-lcm-helm-chart-registry.env.secret.BASIC_AUTH_USER" }}
+    BASIC_AUTH_PASS: {{ .Values | get "eric-lcm-helm-chart-registry.env.secret.BASIC_AUTH_PASS" }}
+ingress:
+  enabled: {{ .Values | get "eric-lcm-helm-chart-registry.ingress.enabled" }}
+  hostname: {{ .Values | get "eric-lcm-helm-chart-registry.ingress.hostname" }}
+  useHttpProxy: {{ .Values | get "eric-lcm-helm-chart-registry.ingress.useHttpProxy" }}
+  tls:
+    secretName: {{ .Values | get "eric-lcm-helm-chart-registry.ingress.tls.secretName" }}
+resources:
+  registry:
+    requests:
+      memory: {{ .Values | get "eric-lcm-helm-chart-registry.resources.registry.requests.memory" }}
+      cpu: {{ .Values | get "eric-lcm-helm-chart-registry.resources.registry.requests.cpu" }}
+    limits:
+      memory: {{ .Values | get "eric-lcm-helm-chart-registry.resources.registry.limits.memory" }}
+      cpu: {{ .Values | get "eric-lcm-helm-chart-registry.resources.registry.limits.cpu" }}
+  sidecar:
+    requests:
+      memory: {{ .Values | get "eric-lcm-helm-chart-registry.resources.sidecar.requests.memory" }}
+      cpu: {{ .Values | get "eric-lcm-helm-chart-registry.resources.sidecar.requests.cpu" }}
+    limits:
+      memory: {{ .Values | get "eric-lcm-helm-chart-registry.resources.sidecar.limits.memory" }}
+      cpu: {{ .Values | get "eric-lcm-helm-chart-registry.resources.sidecar.limits.cpu" }}
+  init:
+    requests:
+      memory: {{ .Values | get "eric-lcm-helm-chart-registry.resources.init.requests.memory" }}
+      cpu: {{ .Values | get "eric-lcm-helm-chart-registry.resources.init.requests.cpu" }}
+    limits:
+      memory: {{ .Values | get "eric-lcm-helm-chart-registry.resources.init.limits.memory" }}
+      cpu: {{ .Values | get "eric-lcm-helm-chart-registry.resources.init.limits.cpu" }}

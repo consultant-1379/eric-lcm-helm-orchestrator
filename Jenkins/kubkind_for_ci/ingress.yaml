@@ -1,0 +1,45 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+{{ if and (.Values.ingress.enabled) (.Values.ingress.hostname) ( eq (.Values.security.servicemesh.sidecar) false ) }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}
+  annotations:
+    {{- include "eric-lcm-helm-executor.annotations" . | nindent 4 }}
+    {{- if .Values.ingress.ingressClass }}
+    kubernetes.io/ingress.class: {{.Values.ingress.ingressClass | quote }}
+    {{- end }}
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+spec:
+  {{- if (not (eq (include "eric-lcm-helm-executor.tls-enable" .) "false")) }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.hostname }}
+      secretName: {{ template "eric-lcm-helm-executor.ingressTLSSecret" . }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.path | quote }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "eric-lcm-helm-executor.name" . }}
+                port:
+                  number: {{ .Values.service.port }}
+{{- end -}}

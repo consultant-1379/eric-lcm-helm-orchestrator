@@ -1,0 +1,10 @@
+{
+  "repository": "https://arm.sero.gic.ericsson.se/artifactory/proj-adp-gs-all-helm",
+  "charts" :[
+    {
+      "name": "chart-1",
+      "version": "5.0.0-9",
+      "crd": false
+    }
+  ]
+}

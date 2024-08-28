@@ -1,0 +1,9 @@
+{
+  "additionalParameters":
+    {
+      "cn-am-test-app-a.enabled": true,
+      "cn-am-test-app-b.enabled": false,
+      "cn-am-test-app-c.enabled": false
+    },
+  "timeout": 5
+}

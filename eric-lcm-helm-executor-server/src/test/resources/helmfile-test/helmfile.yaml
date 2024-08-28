@@ -1,0 +1,12 @@
+helmfiles:
+  - path: crds-helmfile.yaml
+    values:
+    - {{ toYaml .Values | nindent 6 }}
+
+releases:
+  - name: cn-am-test-app
+    chart: {{ .Values | get "cn-am-test-app.registry" "./test-charts" }}/cn-am-test-app
+    installed: {{ .Values | get "cn-am-test-app.enabled" false }}
+    namespace: {{ .Values | get "global.app.namespace" }}
+    values:
+      - ./values-templates/cn-am-test-app.yaml.gotmpl

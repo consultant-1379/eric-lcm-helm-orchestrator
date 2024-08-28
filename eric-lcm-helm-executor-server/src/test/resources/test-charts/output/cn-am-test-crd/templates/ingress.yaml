@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Ingress
+metadata:
+  name: ingress-demo2
+  annotations:
+    cert-manager.io/issuer: "crypt-staging"
+spec:
+  tls:
+    - hosts:
+          - ingress-demo
+      secretName: ingress-demo-tls2

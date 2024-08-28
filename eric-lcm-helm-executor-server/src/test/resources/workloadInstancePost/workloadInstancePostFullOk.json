@@ -1,0 +1,15 @@
+{
+  "workloadInstanceName": "successfulpost",
+  "timeout":123,
+  "namespace": "tom",
+  "crdNamespace": "crdNamespace",
+  "cluster": "clusterName",
+  "additionalParameters": {
+    "tags.all": false,
+    "tags.pm": true,
+    "eric-adp-gs-testapp.ingress.enabled": false,
+    "eric-pm-server.server.ingress.enabled": false,
+    "influxdb.ext.apiAccessHostname": "influxdb-service2-instantiate",
+    "pm-testapp.ingress.domain": "server-instantiate"
+  }
+}

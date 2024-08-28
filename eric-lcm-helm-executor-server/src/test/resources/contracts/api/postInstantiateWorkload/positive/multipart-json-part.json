@@ -1,0 +1,9 @@
+{
+  "workloadInstanceId": "testId",
+  "workloadInstanceName": "testName",
+  "namespace": "testNamespace",
+  "cluster": "testCluster",
+  "additionalParameters": {
+    "testKey": "testValue"
+  }
+}

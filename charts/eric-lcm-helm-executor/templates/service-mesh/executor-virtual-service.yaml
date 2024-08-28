@@ -1,0 +1,40 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+{{- if and ( eq (include "eric-lcm-helm-executor.tls-enable" .) "true" ) (eq (include "eric-lcm-helm-executor.service-mesh-enabled" .) "true") }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ template "eric-lcm-helm-executor.name" . }}-virtual-service
+  labels: {{- include "eric-lcm-helm-executor.labels" . | nindent 4 }}
+  annotations:
+  {{- include "eric-lcm-helm-executor.annotations" .| nindent 4 }}
+spec:
+  exportTo:
+    - "."
+  hosts:
+    - {{ template "eric-lcm-helm-executor.name" . }}
+  http:
+    - retries:
+        attempts: {{ index .Values "serviceMesh" "virtualService-config" "retries" }}
+        perTryTimeout: {{ index .Values "serviceMesh" "virtualService-config" "perTryTimeout" }}
+        retryOn: "5xx,reset,connect-failure"
+      timeout: {{ index .Values "serviceMesh" "virtualService-config" "timeout" }}
+      route:
+        - destination:
+            host: {{ template "eric-lcm-helm-executor.name" . }}
+            port:
+              number: {{ .Values.service.port }}
+{{- end }}

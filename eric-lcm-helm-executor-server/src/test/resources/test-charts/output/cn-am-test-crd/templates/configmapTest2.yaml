@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: someName2
+  labels:
+    app: app
+    chart: chart
+    release: release
+data:
+  application.yaml: |
+    spring:
+      datasource: somesourse

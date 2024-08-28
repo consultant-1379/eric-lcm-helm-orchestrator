@@ -1,0 +1,49 @@
+bases:
+  - repositories.yaml
+  - environments.yaml
+
+---
+helmDefaults:
+  wait: {{ .Values | get "global.default.wait" true }}
+  timeout: {{ .Values | get "global.default.timeout" }}
+
+missingFileHandler: Error
+
+helmfiles:
+  - path: crds-helmfile.yaml
+    values:
+      - {{ toYaml .Values | nindent 6 }}
+
+releases:
+  - name: prerequisite
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: {{ .Values | get "prerequisite.registry" "../values-templates" }}/prerequisite
+    installed: {{ .Values | get "prerequisite.enabled" true }}
+  - name: eric-lcm-container-registry
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: {{ .Values | get "eric-lcm-container-registry.registry" "adp" }}/eric-lcm-container-registry
+    version: 4.6.0+30
+    installed: {{ .Values | get "eric-lcm-container-registry.enabled" true }}
+    values:
+      - values-templates/container-registry.yaml.gotmpl
+  - name: eric-lcm-helm-chart-registry
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: {{ .Values | get "eric-lcm-container-registry.registry" "adp" }}/eric-lcm-helm-chart-registry
+    version: 3.7.0-12
+    installed: {{ .Values | get "eric-lcm-helm-chart-registry.enabled" true }}
+    values:
+      - values-templates/helm-chart-registry.yaml.gotmpl
+  - name: eric-lcm-helm-executor
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: {{ .Values | get "eric-lcm-helm-executor.registry" "cn-app" }}/eric-lcm-helm-executor
+    version: 0.1.0-120
+    installed: {{ .Values | get "eric-lcm-helm-executor.enabled" true }}
+    values:
+      - values-templates/eric-lcm-helm-executor.yaml.gotmpl
+  - name: eric-data-document-database-pg
+    namespace: {{ .Values | get "global.app.namespace" }}
+    chart: {{ .Values | get "eric-data-document-database-pg.registry" "adp" }}/eric-data-document-database-pg
+    version: 6.0.0-26
+    installed: {{ .Values | get "eric-data-document-database-pg.enabled" true }}
+    values:
+      - values-templates/eric-data-document-database-pg.yaml.gotmpl
